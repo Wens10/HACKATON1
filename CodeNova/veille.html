@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Veille-Tech | CodeNova</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* --- VARIABLES & DESIGN SYSTEM CODENOVA --- */
+        :root {
+            --primary: #7c4dff;
+            /* Violet signature */
+            --primary-light: #f3efff;
+            --bg-dark: #1a1f2c;
+            /* Fond sombre du header */
+            --text-main: #1a1f2c;
+            --text-muted: #64748b;
+            --white: #ffffff;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--text-main);
+            background-color: #f8fafc;
+            line-height: 1.6;
+        }
+
+        /* --- HEADER & HERO SECTION --- */
+        .hero {
+            background: var(--bg-dark);
+            /* Style identique au header CodeNova */
+            color: var(--white);
+            padding: 80px 10% 120px;
+            text-align: center;
+        }
+
+        .badge {
+            background: rgba(124, 77, 255, 0.2);
+            color: #a78bfa;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+        }
+
+        .hero p {
+            color: #cbd5e1;
+            max-width: 700px;
+            margin: 0 auto 10px;
+        }
+
+        /* --- BARRE DE RECHERCHE AVANCÉE --- */
+        .search-container {
+            max-width: 1000px;
+            margin: -40px auto 40px;
+            padding: 0 20px;
+        }
+
+        .search-card {
+            background: var(--white);
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .search-group {
+            flex: 2;
+            min-width: 250px;
+            position: relative;
+        }
+
+        .filter-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 12px 20px;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-light);
+        }
+
+        /* --- GRILLE D'ARTICLES --- */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px 80px;
+        }
+
+        .articles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .article-card {
+            background: var(--white);
+            border-radius: 24px;
+            /* Coins arrondis CodeNova */
+            overflow: hidden;
+            border: 1px solid #f1f5f9;
+            transition: var(--transition);
+        }
+
+        .article-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow);
+        }
+
+        .article-image {
+            width: 100%;
+            height: 200px;
+            background: #e2e8f0;
+            object-fit: cover;
+        }
+
+        .article-body {
+            padding: 25px;
+        }
+
+        .article-category {
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .article-body h3 {
+            font-size: 1.4rem;
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+
+        .article-body p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+        }
+
+        .article-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 20px;
+            border-top: 1px solid #f1f5f9;
+        }
+
+        .author {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.85rem;
+        }
+
+        .author-img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #ddd;
+        }
+
+        /* --- ÉLÉMENTS AVANCÉS --- */
+        .stats-bar {
+            display: flex;
+            gap: 15px;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+
+            .search-card {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <div class="logo">Code<span>Nova</span></div>
+        <div class="nav-links">
+            <a href="#about">À propos</a>
+            <a href="#team">Equipe</a>
+            <a href="#projects">Projet</a>
+            <a href="#">Veille-tech</a>
+            <a href="#contact" class="btn-contact">Contact</a>
+        </div>
+    </nav>
+    <header class="hero">
+        <span class="badge">Innovation & Tech</span>
+        <h1>Veille-Tech CodeNova</h1>
+        <p>Découvrez les dernières tendances technologiques et innovations du développement web.</p>
+        <p style="font-size: 0.9rem; opacity: 0.8;">Une initiative collaborative animée par nos experts pour suivre les
+            avancées de demain.</p>
+    </header>
+
+    <div class="search-container">
+        <div class="search-card">
+            <div class="search-group">
+                <input type="text" id="searchInput" placeholder="Rechercher un sujet, une techno...">
+            </div>
+            <div class="filter-group">
+                <select id="categoryFilter">
+                    <option value="all">Toutes les catégories</option>
+                    <option value="frontend">Frontend</option>
+                    <option value="backend">Backend</option>
+                    <option value="devops">DevOps</option>
+                    <option value="mobile">Mobile</option>
+                    <option value="ai">Intelligence Artificielle</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <main class="container">
+        <div class="articles-grid">
+
+            <article class="article-card">
+                <div class="article-image"
+                    style="background: url('https://images.unsplash.com/photo-1633356122544-f134324a6cee?auto=format&fit=crop&w=800&q=80') center/cover;">
+                </div>
+                <div class="article-body">
+                    <span class="article-category">Frontend</span>
+                    <h3>L'ascension de React Server Components</h3>
+                    <p>Pourquoi cette nouvelle architecture change radicalement la façon dont nous construisons des
+                        interfaces performantes.</p>
+
+                    <div class="article-footer">
+                        <div class="author">
+                            <div class="author-img"></div>
+                            <span>Par <strong>Sophie Martin</strong></span>
+                        </div>
+                        <div class="stats-bar">
+                            <span>⏱ 5 min</span>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <article class="article-card">
+                <div class="article-image"
+                    style="background: url('https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=800&q=80') center/cover;">
+                </div>
+                <div class="article-body">
+                    <span class="article-category">DevOps</span>
+                    <h3>Automatisation avec GitHub Actions</h3>
+                    <p>Optimisez vos déploiements et sécurisez votre code grâce aux pipelines CI/CD modernes.</p>
+
+                    <div class="article-footer">
+                        <div class="author">
+                            <div class="author-img"></div>
+                            <span>Par <strong>Thomas Dubois</strong></span>
+                        </div>
+                        <div class="stats-bar">
+                            <span>⏱ 8 min</span>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+        </div>
+    </main>
+
+</body>
+
+</html>
