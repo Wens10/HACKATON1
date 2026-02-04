@@ -1,0 +1,214 @@
+       * {
+           margin: 0;
+           padding: 0;
+           font-family: sans-serif;
+       }
+
+       /* Global */
+       :root {
+           --main-color: rgb(47, 47, 184);
+           --primary-color: #2340a0;
+           /* Indigo moderne */
+           --text-main: #1e293b;
+           --text-muted: #64748b;
+           --bg-gradient: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+           --card-bg: rgba(255, 255, 255, 0.8);
+       }
+
+       /* --- Styles Généraux --- */
+       body {
+           font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+           background-color: #f8fafc;
+           margin: 0;
+           color: #334155;
+       }
+
+       main {
+           padding: 40px 20px;
+       }
+
+       .container {
+           max-width: 1200px;
+           margin: 0 auto;
+       }
+
+       /* --- Barre de Recherche --- */
+       .search-bar {
+           display: flex;
+           gap: 15px;
+           margin-bottom: 30px;
+       }
+
+       .search-input-wrapper {
+           flex-grow: 1;
+       }
+
+       .search-input-wrapper input {
+           width: 100%;
+           padding: 12px 15px;
+           border: 1px solid #cbd5e1;
+           border-radius: 8px;
+           font-size: 16px;
+           outline: none;
+       }
+
+       .btn-search {
+           background-color: var(--main-color);
+           color: white;
+           border: none;
+           padding: 0 25px;
+           border-radius: 8px;
+           cursor: pointer;
+           font-weight: 600;
+       }
+
+       /* --- Layout Principal --- */
+       .main-layout {
+           display: grid;
+           grid-template-columns: 280px 1fr;
+           gap: 30px;
+       }
+
+       /* --- Sidebar Filtres --- */
+       .filters-sidebar {
+           background: white;
+           padding: 20px;
+           border-radius: 12px;
+           border: 1px solid #e2e8f0;
+           height: fit-content;
+       }
+
+       .filter-group {
+           margin-bottom: 25px;
+       }
+
+       .filter-group label {
+           display: block;
+           font-weight: bold;
+           margin-bottom: 10px;
+           font-size: 14px;
+       }
+
+       .filter-group select,
+       .filter-group input[type="text"] {
+           width: 100%;
+           padding: 8px;
+           border: 1px solid #e2e8f0;
+           border-radius: 6px;
+       }
+
+       .checkbox-list {
+           display: flex;
+           flex-direction: column;
+           gap: 8px;
+           font-size: 14px;
+       }
+
+       /* Barre de prix (Range) */
+       .price-slider {
+           width: 100%;
+           cursor: pointer;
+           accent-color: var(--main-color);
+       }
+
+       .price-display {
+           display: flex;
+           justify-content: space-between;
+           font-size: 12px;
+           color: #64748b;
+           margin-top: 5px;
+       }
+
+       /* --- Grille de Cartes --- */
+       .cards-grid {
+           display: grid;
+           grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+           gap: 20px;
+       }
+
+       .card-link {
+           text-decoration: none;
+           color: inherit;
+           display: block;
+       }
+
+       .card {
+           background: white;
+           border-radius: 12px;
+           border: 1px solid #e2e8f0;
+           overflow: hidden;
+           transition: transform 0.2s, box-shadow 0.2s;
+       }
+
+       .card:hover {
+           transform: translateY(-4px);
+           box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+       }
+
+       .card-image {
+           height: 180px;
+           position: relative;
+       }
+
+       .card-image img {
+           width: 100%;
+           height: 100%;
+           object-fit: cover;
+       }
+
+       .badge-verified {
+           position: absolute;
+           top: 10px;
+           right: 10px;
+           background: #dcfce7;
+           color: #15803d;
+           font-size: 11px;
+           font-weight: bold;
+           padding: 4px 8px;
+           border-radius: 4px;
+       }
+
+       .card-content {
+           padding: 20px;
+       }
+
+       .card-name {
+           margin: 0;
+           font-size: 18px;
+           font-weight: bold;
+       }
+
+       .card-category {
+           color: #2563eb;
+           font-size: 12px;
+           text-transform: uppercase;
+           letter-spacing: 0.5px;
+           margin-top: 5px;
+       }
+
+       .card-footer {
+           margin-top: 20px;
+           padding-top: 15px;
+           border-top: 1px solid #f1f5f9;
+           display: flex;
+           justify-content: space-between;
+           align-items: center;
+       }
+
+       .price {
+           font-weight: bold;
+           font-size: 18px;
+       }
+
+       .btn-profile {
+           color: var(--main-color);
+           font-weight: 600;
+           font-size: 14px;
+       }
+
+       /* --- Responsive --- */
+       @media (max-width: 768px) {
+           .main-layout {
+               grid-template-columns: 1fr;
+           }
+       }
