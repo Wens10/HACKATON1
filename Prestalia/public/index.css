@@ -548,26 +548,27 @@ section {
   margin-bottom: 4rem;
 }
 
-#pro button {
+#pro a {
+  text-decoration: none;
   display: flex;
   flex-direction: row;
   align-items: center;
   gap: .5rem;
   color: #fff;
-  padding: 1rem 2rem;
+  padding: 10px;
   font-size: 1.2rem;
   border-radius: 10px;
   background: var(--primary-color);
   border: none;
   cursor: pointer;
 }
-#pro button:hover {
+#pro a:hover {
   background: var(--text-main);
   color: #fff;
   transition: all 0.3s ease;
 }
 
-#pro button .svg {
+#pro a .svg {
   width: 2rem;
 }
 
