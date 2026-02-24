@@ -13,9 +13,79 @@ import {
 import exitClusterEvent from "../events/master/cluster/exit";
 import messageClusterEvent from "../events/master/cluster/message";
 import {ensureSiteCertificate} from "../utils/master/functions/certs";
+import {DatabaseSync} from "node:sqlite";
+import "dotenv/config";
+import {existsSync, readFileSync, writeFileSync} from "fs";
+import {randomBytes} from "crypto";
 
 export default (async (cluster) => {
-  if (!cluster.workers) return console.log("Liste des workers manquante");
+  if (!cluster.workers) return log("Liste des workers manquante");
+
+  if (process.env["NODE_ENV"] === "development") {
+    const DEV_ARGON2_SECRET_PATH = join(workingDirPath, ".argon2_dev_secret"),
+      DEV_JWT_SECRET_PATH = join(workingDirPath, ".jwt_dev_secret");
+
+    if (existsSync(DEV_ARGON2_SECRET_PATH))
+      process.env["ARGON2_SECRET"] = readFileSync(
+        DEV_ARGON2_SECRET_PATH,
+        "utf-8",
+      );
+    else {
+      const secret = randomBytes(32).toString("hex");
+
+      writeFileSync(DEV_ARGON2_SECRET_PATH, secret, {encoding: "utf-8"});
+
+      process.env["ARGON2_SECRET"] = secret;
+
+      log(
+        `Génération du secret "${secret}" pour argon2 dans le fichier ${DEV_ARGON2_SECRET_PATH}`,
+      );
+    }
+
+    if (existsSync(DEV_JWT_SECRET_PATH))
+      process.env["JWT_SECRET"] = readFileSync(DEV_JWT_SECRET_PATH, "utf-8");
+    else {
+      const secret = randomBytes(32).toString("hex");
+
+      writeFileSync(DEV_JWT_SECRET_PATH, secret, {encoding: "utf-8"});
+
+      process.env["JWT_SECRET"] = secret;
+
+      log(
+        `Génération du secret "${secret}" pour jwt dans le fichier ${DEV_JWT_SECRET_PATH}`,
+      );
+    }
+  }
+
+  if (!process.env["ARGON2_SECRET"])
+    throw new Error(
+      "ARGON2_SECRET est obligatoire dans le .env pour lancer en mode production!",
+    );
+
+  if (!process.env["JWT_SECRET"])
+    throw new Error(
+      "JWT_SECRET est obligatoire dans le .env pour lancer en mode production!",
+    );
+
+  const db = new DatabaseSync(join(workingDirPath, "database.db"));
+
+  db.exec(`
+    PRAGMA journal_mode = WAL;
+    PRAGMA synchronous = NORMAL;
+    PRAGMA foreign_keys = ON;
+  `);
+
+  db.prepare(
+    `
+      CREATE TABLE IF NOT EXISTS users (
+        id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+        name VARCHAR(100) NOT NULL,
+        email VARCHAR(320) NOT NULL,
+        password VARCHAR(512) NOT NULL,
+        type VARCHAR(100) NOT NULL DEFAULT 'user'
+      )
+    `,
+  ).run();
 
   log(`Processus primaire lancé`);
 
