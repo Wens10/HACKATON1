@@ -75,20 +75,32 @@ export default (async (cluster) => {
       PRAGMA synchronous = NORMAL;
       PRAGMA foreign_keys = ON;
 
+      CREATE TABLE categories (
+        id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+        created_at DATETIME NOT NULL DEFAULT (DATETIME('now', 'subsec', 'utc')),
+        name VARCHAR(100) NOT NULL,
+        logo VARCHAR(300)
+      );
+
       CREATE TABLE IF NOT EXISTS users (
         id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
         created_at DATETIME NOT NULL DEFAULT (DATETIME('now', 'subsec', 'utc')),
         name VARCHAR(100) NOT NULL,
         email VARCHAR(320) NOT NULL,
-        password VARCHAR(512) NOT NULL,
-        type VARCHAR(100) NOT NULL DEFAULT 'user',
+        password VARCHAR(512) NOT NULL
+      );
+
+      CREATE TABLE IF NOT EXISTS providers (
+        id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+        created_at DATETIME NOT NULL DEFAULT (DATETIME('now', 'subsec', 'utc')),
         valided BOOLEAN,
         tel VARCHAR(20),
-        category VARCHAR(30) NOT NULL DEFAULT 'Autres',
+        category INTEGER,
         descr VARCHAR(1000),
         exp INTEGER,
         price FLOAT,
-        days INTEGER
+        days INTEGER,
+        FOREIGN KEY(category) REFERENCES categories(id)
       );
 
       CREATE TABLE IF NOT EXISTS certificates (
@@ -98,7 +110,18 @@ export default (async (cluster) => {
         author INTEGER NOT NULL,
         path VARCHAR(300) NOT NULL,
         valided BOOLEAN,
-        FOREIGN KEY(author) REFERENCES users(id)
+        FOREIGN KEY(author) REFERENCES providers(id)
+      );
+
+      CREATE TABLE reservations (
+        id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+        created_at DATETIME NOT NULL DEFAULT (DATETIME('now', 'subsec', 'utc')),
+        author INTEGER NOT NULL,
+        provider INTEGER NOT NULL,
+        price FLOAT NOT NULL,
+        date DATETIME NOT NULL,
+        FOREIGN KEY(author) REFERENCES users(id),
+        FOREIGN KEY(provider) REFERENCES providers(id)
       );
     `,
   );

@@ -1,7 +1,6 @@
 import {
   Context,
   hasProps,
-  log,
   resolveAPIRequest,
   resolveRessourceRequest,
   SUPPORTED_METHODS,
@@ -190,11 +189,7 @@ export function verifyPassword(
       nonce: Buffer.from(params.nonce, "hex"),
       onlyHash: true,
     })
-      .then((pwdHash) => {
-        log(password, params, hash, pwdHash);
-
-        resolve(pwdHash === params.hash);
-      })
+      .then((pwdHash) => resolve(pwdHash === params.hash))
       .catch((reason) => reject(reason));
   });
 }
