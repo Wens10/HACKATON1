@@ -69,23 +69,39 @@ export default (async (cluster) => {
 
   const db = new DatabaseSync(join(workingDirPath, "database.db"));
 
-  db.exec(`
-    PRAGMA journal_mode = WAL;
-    PRAGMA synchronous = NORMAL;
-    PRAGMA foreign_keys = ON;
-  `);
-
-  db.prepare(
+  db.exec(
     `
+      PRAGMA journal_mode = WAL;
+      PRAGMA synchronous = NORMAL;
+      PRAGMA foreign_keys = ON;
+
       CREATE TABLE IF NOT EXISTS users (
         id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+        created_at DATETIME NOT NULL DEFAULT (DATETIME('now', 'subsec', 'utc')),
         name VARCHAR(100) NOT NULL,
         email VARCHAR(320) NOT NULL,
         password VARCHAR(512) NOT NULL,
-        type VARCHAR(100) NOT NULL DEFAULT 'user'
-      )
+        type VARCHAR(100) NOT NULL DEFAULT 'user',
+        valided BOOLEAN,
+        tel VARCHAR(20),
+        category VARCHAR(30) NOT NULL DEFAULT 'Autres',
+        descr VARCHAR(1000),
+        exp INTEGER,
+        price FLOAT,
+        days INTEGER
+      );
+
+      CREATE TABLE IF NOT EXISTS certificates (
+        id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+        created_at DATETIME NOT NULL DEFAULT (DATETIME('now', 'subsec', 'utc')),
+        name VARCHAR(100),
+        author INTEGER NOT NULL,
+        path VARCHAR(300) NOT NULL,
+        valided BOOLEAN,
+        FOREIGN KEY(author) REFERENCES users(id)
+      );
     `,
-  ).run();
+  );
 
   log(`Processus primaire lancé`);
 
