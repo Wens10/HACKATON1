@@ -2,7 +2,12 @@ import {Context, error, hasProps, Http2Context} from "@server/core";
 import {DatabaseSync} from "node:sqlite";
 import {availableParallelism, totalmem} from "os";
 import {sign, verify} from "jsonwebtoken";
-import {cookieToJSON, hashPassword} from "../../utils/workers/functions";
+import {
+  cookieToJSON,
+  hashPassword,
+  isValidEmail,
+  isValidPassword,
+} from "../../utils/workers/functions";
 
 const jwtSecret = process.env["JWT_SECRET"];
 
@@ -53,13 +58,15 @@ export default ((context, headers, db) => {
     .on("end", () => {
       const params = new URLSearchParams(data),
         name = params.get("name"),
-        email = params.get("email"),
-        password = params.get("password");
+        email = params.get("email")?.trim().normalize("NFKC").toLowerCase(),
+        password = params.get("password")?.normalize("NFKC");
 
       if (!name || name === "") return context.respond(400, {end: true});
       if (!email || email === "") return context.respond(400, {end: true});
+      if (!isValidEmail(email)) return context.respond(400, {end: true});
       if (!password || password === "")
         return context.respond(400, {end: true});
+      if (!isValidPassword(password)) return context.respond(400, {end: true});
 
       try {
         const userExist = Boolean(

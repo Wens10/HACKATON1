@@ -14,6 +14,7 @@ import {
   argon2Sync,
   randomBytes,
 } from "crypto";
+import {EMAIL_REGEX} from "./constants";
 
 export async function handleRequest(
   context: Context,
@@ -192,4 +193,43 @@ export function verifyPassword(
       .then((pwdHash) => resolve(pwdHash === params.hash))
       .catch((reason) => reject(reason));
   });
+}
+
+/**
+ * Basé sur :
+ * - https://www.rfc-editor.org/rfc/rfc5322
+ * - https://www.rfc-editor.org/rfc/rfc5234
+ * - https://www.rfc-editor.org/rfc/rfc5321
+ * - https://www.rfc-editor.org/rfc/rfc1035
+ * - https://www.rfc-editor.org/rfc/rfc1123
+ */
+export function isValidEmail(email: string): boolean {
+  if (email.length > 254) return false;
+
+  const index = email.lastIndexOf("@");
+
+  if (index < 1 || index > 63) return false;
+
+  const regex = EMAIL_REGEX,
+    [, domain] = regex.exec(email) ?? [];
+
+  if (!domain) return false;
+
+  for (const label of domain.split(".")) if (label.length > 63) return false;
+
+  return true;
+}
+
+export function isValidPassword(password: string): boolean {
+  // Entropie: password.length * Math.log2(nb_chars);
+  // Recommandation: entropie >= 80;
+  //
+  // password.length * Math.log2(nb_chars) >= 80 <=> password.length >= 80 / Math.log2(nb_chars)
+  // Avec 95 caractères: password.length >= 80 / Math.log2(95) <=> password.length >= 12.176827737059469;
+  // On arrondi au supérieur: password.length >= ⌈12.176827737059469⌉ <=> password.length >= 13
+  if (password.length < 13) return false; // minimum 13 caractères
+  if (password.length > 64) return false; // maximum 64 caractères
+  if (new Set(password).size < 8) return false; // minimum 8 caractères uniques
+
+  return true;
 }

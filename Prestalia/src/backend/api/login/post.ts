@@ -51,8 +51,8 @@ export default ((context, headers, db) => {
     .on("data", (chunk) => (data += chunk))
     .on("end", () => {
       const params = new URLSearchParams(data),
-        email = params.get("email"),
-        password = params.get("password");
+        email = params.get("email")?.trim().normalize("NFKC").toLowerCase(),
+        password = params.get("password")?.normalize("NFKC");
 
       if (!email || email === "") return context.respond(400, {end: true});
       if (!password || password === "")

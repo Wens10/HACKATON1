@@ -75,7 +75,7 @@ export default (async (cluster) => {
       PRAGMA synchronous = NORMAL;
       PRAGMA foreign_keys = ON;
 
-      CREATE TABLE categories (
+      CREATE TABLE IF NOT EXISTS categories (
         id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
         created_at DATETIME NOT NULL DEFAULT (DATETIME('now', 'subsec', 'utc')),
         name VARCHAR(100) NOT NULL,
@@ -113,7 +113,7 @@ export default (async (cluster) => {
         FOREIGN KEY(author) REFERENCES providers(id)
       );
 
-      CREATE TABLE reservations (
+      CREATE TABLE IF NOT EXISTS reservations (
         id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
         created_at DATETIME NOT NULL DEFAULT (DATETIME('now', 'subsec', 'utc')),
         author INTEGER NOT NULL,
