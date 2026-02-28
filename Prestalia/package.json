@@ -1,5 +1,5 @@
 {
-  "name": "singlesite",
+  "name": "prestalia",
   "version": "1.0.0",
   "description": "",
   "main": "dist/backend/server.js",
@@ -10,7 +10,7 @@
     "build": "npx tsc -b",
     "predev": "npm run lint:fix && npm run format && npm run build",
     "start": "node dist/server.js",
-    "dev": "npm run predev && cross-env NODE_ENV=development node dist/server.js"
+    "dev": "npm run predev && node dist/server.js"
   },
   "keywords": [],
   "author": "",
@@ -26,7 +26,6 @@
     "@eslint/js": "^9.39.1",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^24.10.1",
-    "cross-env": "^10.1.0",
     "eslint": "^10.0.2",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.4",

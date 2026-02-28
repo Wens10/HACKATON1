@@ -1,6 +1,9 @@
 import {
   Context,
+  error,
   hasProps,
+  Http2Context,
+  MIME_TYPES,
   resolveAPIRequest,
   resolveRessourceRequest,
   SUPPORTED_METHODS,
@@ -15,6 +18,9 @@ import {
   randomBytes,
 } from "crypto";
 import {EMAIL_REGEX} from "./constants";
+import {DatabaseSync} from "node:sqlite";
+import {readFileSync} from "fs";
+import {availableParallelism, totalmem} from "os";
 
 export async function handleRequest(
   context: Context,
@@ -232,4 +238,198 @@ export function isValidPassword(password: string): boolean {
   if (new Set(password).size < 8) return false; // minimum 8 caractères uniques
 
   return true;
+}
+
+export function isAdminExists(context: Context, db: DatabaseSync) {
+  if (process.env["ADMIN_EXISTS"] === "1") return true;
+
+  try {
+    const adminExists = db
+      .prepare("SELECT id FROM users WHERE role = 'admin' LIMIT 1")
+      .get();
+
+    if (adminExists) {
+      process.env["ADMIN_EXISTS"] = "1";
+
+      return true;
+    }
+  } catch (err) {
+    error(err);
+  }
+
+  let data = "";
+
+  switch (context.method) {
+    case "GET":
+      try {
+        const file = readFileSync(join(workingDirPath, "admin/login.html"));
+
+        context
+          .respond(200, {
+            headers: {
+              "content-type": MIME_TYPES[".html"],
+              "content-length": file.length,
+            },
+          })
+          .end(file);
+      } catch (err) {
+        error(err);
+      }
+      break;
+    case "HEAD":
+      try {
+        const file = readFileSync(join(workingDirPath, "admin/login.html"));
+
+        context
+          .respond(200, {
+            headers: {
+              "content-type": MIME_TYPES[".html"],
+              "content-length": file.length,
+            },
+          })
+          .end();
+      } catch (err) {
+        error(err);
+      }
+      break;
+    case "POST":
+      (context instanceof Http2Context ? context.stream : context.req)
+        .on("error", (err) => error(err))
+        .on("data", (chunk) => (data += chunk))
+        .on("end", () => {
+          const params = new URLSearchParams(data),
+            defaultPassword = params.get("default-password"),
+            name = params.get("name"),
+            email = params.get("email")?.trim().normalize("NFKC").toLowerCase(),
+            password = params.get("password")?.normalize("NFKC");
+
+          // Mot de passe par défaut
+          if (!defaultPassword || defaultPassword === "")
+            return context
+              .respond(400, {
+                headers: {"content-type": "text/plain; charset=utf-8"},
+              })
+              .end("Le mot de passe par défaut ne peut pas être vide");
+
+          if (
+            defaultPassword !==
+            process.env["ADMIN_DEFAULT_PASSWORD"]?.normalize("NFKC")
+          )
+            return context
+              .respond(400, {
+                headers: {"content-type": "text/plain; charset=utf-8"},
+              })
+              .end("Le mot de passe par défaut ne correspond pas");
+
+          // Nom
+          if (!name || name === "")
+            return context
+              .respond(400, {
+                headers: {"content-type": "text/plain; charset=utf-8"},
+              })
+              .end("Le nom ne peut pas être vide");
+
+          // Email
+          if (!email || email === "")
+            return context
+              .respond(400, {
+                headers: {"content-type": "text/plain; charset=utf-8"},
+              })
+              .end("L'email ne peut pas être vide");
+          if (!isValidEmail(email))
+            return context
+              .respond(400, {
+                headers: {"content-type": "text/plain; charset=utf-8"},
+              })
+              .end("L'email est invalide");
+
+          // Mot de passe
+          if (!password || password === "")
+            return context
+              .respond(400, {
+                headers: {"content-type": "text/plain; charset=utf-8"},
+              })
+              .end("Le mot de passe ne peut pas être vide");
+
+          if (!isValidPassword(password))
+            return context
+              .respond(400, {
+                headers: {"content-type": "text/plain; charset=utf-8"},
+              })
+              .end("Le mot de passe est invalide");
+
+          try {
+            const userExist = Boolean(
+              db.prepare("SELECT * FROM users WHERE email = ?").get(email),
+            );
+
+            if (userExist)
+              return context
+                .respond(400, {
+                  headers: {"content-type": "text/plain; charset=utf-8"},
+                })
+                .end("Email déjà utilisé par un utilisateur");
+          } catch (err) {
+            error(err);
+
+            return context
+              .respond(500, {
+                headers: {"content-type": "text/plain; charset=utf-8"},
+              })
+              .end(
+                "Erreur interne lors de la vérification de l'utilisation de l'email, voir logs",
+              );
+          }
+
+          return hashPassword(
+            password,
+            {
+              parallelism: Math.min(availableParallelism(), 8),
+              tagLength: 64,
+              memory: Math.floor(Math.min(totalmem() * 0.05, 1 << 28) / 1024),
+              passes: 3,
+            },
+            {secret: process.env["ARGON2_SECRET"]},
+          )
+            .then((hash) => {
+              try {
+                db.prepare(
+                  "INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, 'admin')",
+                ).get(name, email, hash);
+
+                return context.respond(303, {
+                  headers: {location: "/"},
+                  end: true,
+                });
+              } catch (err) {
+                error(err);
+
+                return context
+                  .respond(500, {
+                    headers: {"content-type": "text/plain; charset=utf-8"},
+                  })
+                  .end(
+                    "Erreur interne lors de la création du compte, voir logs",
+                  );
+              }
+            })
+            .catch((reason) => {
+              error(reason);
+
+              return context
+                .respond(500, {
+                  headers: {"content-type": "text/plain; charset=utf-8"},
+                })
+                .end(
+                  "Erreur interne lors du hashage du mot de passe, voir logs",
+                );
+            });
+        });
+      break;
+    default:
+      context.respond(405, {end: true, headers: {allow: "GET, POST"}});
+      break;
+  }
+
+  return false;
 }

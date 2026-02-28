@@ -10,7 +10,7 @@ import {
   workingDirPath,
 } from "@server/core";
 import config from "../config";
-import {handleRequest} from "../utils/workers/functions";
+import {handleRequest, isAdminExists} from "../utils/workers/functions";
 import {join} from "path";
 import {DatabaseSync} from "node:sqlite";
 
@@ -27,12 +27,17 @@ export default (() => {
 
   const secureServer = createSecureServer(DEFAULT_SECURE_SERVER_OPTIONS)
     .on("request", (req, res) => {
-      if (req.httpVersionMajor < 2)
-        handleRequest(new Http1Context(req, res), [], [db]);
+      if (req.httpVersionMajor < 2) {
+        const context = new Http1Context(req, res);
+
+        if (isAdminExists(context, db)) handleRequest(context, [], [db]);
+      }
     })
-    .on("stream", (stream, headers) =>
-      handleRequest(new Http2Context(stream, headers), [], [db]),
-    );
+    .on("stream", (stream, headers) => {
+      const context = new Http2Context(stream, headers);
+
+      if (isAdminExists(context, db)) handleRequest(context, [], [db]);
+    });
 
   createHTTPServer(config.httpPort);
 
