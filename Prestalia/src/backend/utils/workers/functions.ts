@@ -395,7 +395,9 @@ export function isAdminExists(context: Context, db: DatabaseSync) {
               try {
                 db.prepare(
                   "INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, 'admin')",
-                ).get(name, email, hash);
+                ).run(name, email, hash);
+
+                process.env["ADMIN_EXISTS"] = "1";
 
                 return context.respond(303, {
                   headers: {location: "/"},
