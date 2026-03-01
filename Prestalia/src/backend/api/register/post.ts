@@ -1,4 +1,4 @@
-import {Context, error, hasProps, Http2Context} from "@server/core";
+import {Context, error, hasProps, Http2Context} from "../../core";
 import {DatabaseSync} from "node:sqlite";
 import {availableParallelism, totalmem} from "os";
 import {sign, verify} from "jsonwebtoken";
@@ -7,7 +7,7 @@ import {
   hashPassword,
   isValidEmail,
   isValidPassword,
-} from "../../utils/workers/functions";
+} from "../../utils/functions";
 
 const jwtSecret = process.env["JWT_SECRET"];
 

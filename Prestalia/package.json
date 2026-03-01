@@ -2,22 +2,21 @@
   "name": "prestalia",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/backend/server.js",
+  "main": "dist/base/server.js",
   "scripts": {
     "format": "prettier --write src/**/*.ts",
     "lint": "eslint src/**/*.ts --max-warnings=0",
     "lint:fix": "eslint src/**/*.ts --max-warnings=0 --fix",
     "build": "npx tsc -b",
     "predev": "npm run lint:fix && npm run format && npm run build",
-    "start": "node dist/server.js",
-    "dev": "npm run predev && node dist/server.js"
+    "start": "node dist/base/server.js",
+    "dev": "npm run predev && node dist/base/server.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
-    "@server/core": "file:./core",
     "chokidar": "^5.0.0",
     "dotenv": "^17.3.1",
     "jsonwebtoken": "^9.0.3"

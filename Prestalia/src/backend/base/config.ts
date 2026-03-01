@@ -1,4 +1,4 @@
-import {Config} from "./base/utils/common/interfaces";
+import {Config} from "./utils/common/interfaces";
 
 const config: Config = {
   certDirPath: "./cert",

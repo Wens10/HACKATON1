@@ -1,7 +1,7 @@
-import {Context, error, hasProps, Http2Context} from "@server/core";
+import {Context, error, hasProps, Http2Context} from "../../core";
 import {DatabaseSync} from "node:sqlite";
 import {sign, verify} from "jsonwebtoken";
-import {cookieToJSON, verifyPassword} from "../../utils/workers/functions";
+import {cookieToJSON, verifyPassword} from "../../utils/functions";
 
 const jwtSecret = process.env["JWT_SECRET"];
 
