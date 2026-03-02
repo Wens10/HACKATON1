@@ -27,7 +27,8 @@ export default (() => {
     if (hasProps(start, {default: "function"}))
       start.default(pageParams, apiParams);
   } catch (error) {
-    /* empty */
+    if (!hasProps(error, {code: "string"}) || error.code !== "MODULE_NOT_FOUND")
+      throw error;
   }
 
   const secureServer = createSecureServer(DEFAULT_SECURE_SERVER_OPTIONS)

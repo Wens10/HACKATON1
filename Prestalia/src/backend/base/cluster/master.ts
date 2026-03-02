@@ -25,7 +25,8 @@ export default (async (cluster) => {
 
     if (hasProps(start, {default: "function"})) start.default();
   } catch (error) {
-    /* empty */
+    if (!hasProps(error, {code: "string"}) || error.code !== "MODULE_NOT_FOUND")
+      throw error;
   }
 
   // Check si le certificat est bientôt expiré et si c'est le cas le met à jour et le renvoi à tous les workers
