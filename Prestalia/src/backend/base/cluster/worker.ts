@@ -24,15 +24,11 @@ export default (() => {
   try {
     const start: unknown = require(join(workingDirPath, "dist/start/worker"));
 
-    log("START", start);
-
     if (hasProps(start, {default: "function"}))
       start.default(pageParams, apiParams);
   } catch (error) {
     /* empty */
   }
-
-  log(pageParams, apiParams);
 
   const secureServer = createSecureServer(DEFAULT_SECURE_SERVER_OPTIONS)
     .on("request", (req, res) => {
