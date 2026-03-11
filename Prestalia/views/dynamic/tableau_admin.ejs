@@ -19,29 +19,34 @@
       --border: #e5e7eb;
     }
 
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
     body {
       font-family: 'Inter', system-ui, sans-serif;
       background-color: var(--bg);
       color: var(--text);
       margin: 0;
-      padding: 30px;
     }
 
     .container {
+      padding: 1rem;
       max-width: 1200px;
       margin: 0 auto;
     }
 
-    .header {
+    .title {
       margin-bottom: 25px;
     }
 
-    .header h1 {
+    .title h1 {
       font-size: 24px;
       margin: 0;
     }
 
-    .header p {
+    .title p {
       color: var(--text-light);
       margin: 5px 0;
     }
@@ -234,10 +239,10 @@
 <body>
   <%- include("/header") %>
   <div class="container">
-    <header class="header">
+    <div class="title">
       <h1>Tableau de bord Administrateur</h1>
       <p>Gestion de la plateforme Prestalia</p>
-    </header>
+    </div>
     <div class="stats-grid">
       <div class="card stat-card">
         <div>

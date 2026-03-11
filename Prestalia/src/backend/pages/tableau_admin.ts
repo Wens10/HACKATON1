@@ -18,13 +18,14 @@ export default (async (context, db) => {
   if (payload === false || !hasProps(payload, {userId: "number"})) throw null;
 
   const user = db
-    .prepare("SELECT name, role, email FROM users WHERE id = ?")
+    .prepare("SELECT role FROM users WHERE id = ?")
     .get(payload.userId);
 
   if (!user) throw null;
+  if (user["role"] !== "admin") throw null;
 
   return renderFile(
-    join(DEFAULT_EJS_DYNAMIC_PAGE_DIR, "tableau.ejs"),
+    join(DEFAULT_EJS_DYNAMIC_PAGE_DIR, "tableau_admin.ejs"),
     {user},
     {root: DEFAULT_EJS_COMPONENT_DIR},
   );
