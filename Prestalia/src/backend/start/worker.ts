@@ -2,7 +2,7 @@ import {join} from "path";
 import {workingDirPath} from "../core";
 import {DatabaseSync} from "node:sqlite";
 
-export default ((_pageParams, apiParams) => {
+export default ((pageParams, apiParams) => {
   const db = new DatabaseSync(join(workingDirPath, "database.db"));
 
   db.exec(`
@@ -11,6 +11,7 @@ export default ((_pageParams, apiParams) => {
     PRAGMA foreign_keys = ON;
   `);
 
+  pageParams.push(db);
   apiParams.push(db);
 
   // eslint-disable-next-line no-unused-vars

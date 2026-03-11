@@ -10,17 +10,25 @@ import {
   workingDirPath,
 } from "../core";
 import config from "../config";
-import {join} from "path";
+import {dirname, join} from "path";
 import {
   Argon2Algorithm,
   Argon2Parameters,
   argon2Sync,
   randomBytes,
 } from "crypto";
-import {EMAIL_REGEX} from "./constants";
+import {
+  DEFAULT_EJS_COMPONENT_DIR,
+  DEFAULT_EJS_DIST_DIR,
+  DEFAULT_EJS_STATIC_PAGE_DIR,
+  EMAIL_REGEX,
+} from "./constants";
 import {DatabaseSync} from "node:sqlite";
-import {readFileSync} from "fs";
+import {readdir, readFileSync} from "fs";
 import {availableParallelism, totalmem} from "os";
+import {renderFile} from "ejs";
+import {mkdir, writeFile} from "fs/promises";
+import {verify} from "jsonwebtoken";
 
 export async function handleRequest(
   context: Context,
@@ -448,4 +456,48 @@ export function isAdminExists(context: Context, params: any[]) {
   }
 
   return false;
+}
+
+export function renderStaticEJSFiles(options?: {
+  staticPageDir?: string;
+  distDir?: string;
+  componentsDir?: string;
+}) {
+  const staticPageDir = options?.staticPageDir ?? DEFAULT_EJS_STATIC_PAGE_DIR,
+    distDir = options?.distDir ?? DEFAULT_EJS_DIST_DIR,
+    componentsDir = options?.componentsDir ?? DEFAULT_EJS_COMPONENT_DIR;
+
+  readdir(staticPageDir, {recursive: true, encoding: "utf8"}, (err, files) => {
+    if (err) throw err;
+
+    files
+      .filter((file) => file.endsWith(".ejs"))
+      .forEach((file) => {
+        renderFile(
+          join(staticPageDir, file),
+          {},
+          {root: componentsDir},
+          async (err, str) => {
+            if (err) throw err;
+
+            await mkdir(dirname(join(distDir, file)), {recursive: true});
+            await writeFile(join(distDir, `${file.slice(0, -4)}.html`), str);
+          },
+        );
+      });
+  });
+}
+
+export function verfyJWT(token: string) {
+  const jwtSecret = process.env["JWT_SECRET"];
+
+  if (!jwtSecret) throw new Error("Le secret JWT est manquant");
+
+  try {
+    const payload = verify(token, jwtSecret, {algorithms: ["HS512"]});
+
+    return payload;
+  } catch (error) {
+    return false;
+  }
 }

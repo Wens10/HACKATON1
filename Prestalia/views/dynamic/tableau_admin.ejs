@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tableau de bord Administrateur</title>
+  <link rel="stylesheet" href="/css/header.css">
+  <link rel="stylesheet" href="/css/footer.css">
+  <style>
+    :root {
+      --bg: #f3f4f6;
+      --card-bg: #ffffff;
+      --primary: #2563eb;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --text: #111827;
+      --text-light: #6b7280;
+      --border: #e5e7eb;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      margin: 0;
+      padding: 30px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .header {
+      margin-bottom: 25px;
+    }
+
+    .header h1 {
+      font-size: 24px;
+      margin: 0;
+    }
+
+    .header p {
+      color: var(--text-light);
+      margin: 5px 0;
+    }
+
+    /* Stats */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      padding: 20px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+    }
+
+    .stat-card {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .stat-card h2 {
+      margin: 5px 0;
+      font-size: 28px;
+    }
+
+    .icon-circle {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .blue {
+      background: #eff6ff;
+    }
+
+    .green {
+      background: #ecfdf5;
+    }
+
+    .orange {
+      background: #fffbeb;
+    }
+
+    .red {
+      background: #fef2f2;
+    }
+
+    /* Table Section */
+    .table-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .filter-btn {
+      padding: 6px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: white;
+      cursor: pointer;
+      margin-left: 5px;
+      font-size: 14px;
+    }
+
+    .filter-btn.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    .admin-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    .admin-table th {
+      padding: 12px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-light);
+      font-size: 13px;
+      text-transform: uppercase;
+    }
+
+    .admin-table td {
+      padding: 15px 12px;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+    }
+
+    .user-cell {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .avatar {
+      width: 35px;
+      height: 35px;
+      background: #ddd;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Badges */
+    .badge {
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .badge-success {
+      background: #dcfce7;
+      color: #15803d;
+    }
+
+    .badge-warning {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    /* Buttons Actions */
+    .btn-details {
+      border: 1px solid var(--primary);
+      color: var(--primary);
+      background: white;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .btn-approve {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .btn-reject {
+      background: var(--danger);
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    /* Bottom Layout */
+    .bottom-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 20px;
+      margin-top: 30px;
+    }
+
+    .warning-card {
+      background: #fffdf0;
+      border-color: #fde68a;
+    }
+
+    .cat-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .count {
+      background: #f3f4f6;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+  <%- include("/header") %>
+  <div class="container">
+    <header class="header">
+      <h1>Tableau de bord Administrateur</h1>
+      <p>Gestion de la plateforme Prestalia</p>
+    </header>
+    <div class="stats-grid">
+      <div class="card stat-card">
+        <div>
+          <p>Total prestataires</p>
+          <h2>6</h2><small>Tous statuts</small>
+        </div>
+        <div class="icon-circle blue">👥</div>
+      </div>
+      <div class="card stat-card">
+        <div>
+          <p>En attente</p>
+          <h2>1</h2><small class="text-warning">Action requise</small>
+        </div>
+        <div class="icon-circle orange">🕒</div>
+      </div>
+      <div class="card stat-card">
+        <div>
+          <p>Approuvés</p>
+          <h2>5</h2><small>Actifs</small>
+        </div>
+        <div class="icon-circle green">✅</div>
+      </div>
+      <div class="card stat-card">
+        <div>
+          <p>Rejetés</p>
+          <h2>0</h2><small>Refusés</small>
+        </div>
+        <div class="icon-circle red">❌</div>
+      </div>
+    </div>
+    <section class="card table-section">
+      <div class="table-header">
+        <h2>Gestion des prestataires</h2>
+        <div class="filter-group">
+          <button class="filter-btn active">Tous</button>
+          <button class="filter-btn">En attente (1)</button>
+          <button class="filter-btn">Approuvés</button>
+          <button class="filter-btn">Rejetés</button>
+        </div>
+      </div>
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Prestataire</th>
+            <th>Catégorie</th>
+            <th>Ville</th>
+            <th>Note</th>
+            <th>Statut</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="user-cell">
+              <div class="avatar">👨‍🔧</div>
+              <div><strong>Jean Dupont</strong><br><small>jean.dupont@example.com</small></div>
+            </td>
+            <td>Plomberie</td>
+            <td>Paris</td>
+            <td>4.8 <span class="text-light">(124)</span></td>
+            <td><span class="badge badge-success">Approuvé</span></td>
+            <td><button class="btn-details">Détails</button></td>
+          </tr>
+          <tr>
+            <td class="user-cell">
+              <div class="avatar">👩‍💻</div>
+              <div><strong>Lucas Petit</strong><br><small>lucas.petit@example.com</small></div>
+            </td>
+            <td>Menuiserie</td>
+            <td>Bordeaux</td>
+            <td>4.9 <span class="text-light">(78)</span></td>
+            <td><span class="badge badge-warning">En attente</span></td>
+            <td class="action-cell">
+              <button class="btn-approve">Approuver</button>
+              <button class="btn-reject">Rejeter</button>
+              <button class="btn-details">Détails</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+    <div class="bottom-grid">
+      <div class="card">
+        <h3>Activité récente</h3>
+        <ul class="activity-list">
+          <li><span class="dot green"></span> Nouveau prestataire inscrit <br><small>Il y a 2 heures</small>
+          </li>
+          <li><span class="dot blue"></span> Prestataire approuvé <br><small>Il y a 5 heures</small></li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Catégories populaires</h3>
+        <div class="cat-item"><span>Plomberie</span> <span class="count">5</span></div>
+        <div class="cat-item"><span>Électricité</span> <span class="count">3</span></div>
+      </div>
+      <div class="card warning-card">
+        <h3>⚠️ Attention</h3>
+        <p>1 prestataire en attente de validation</p>
+      </div>
+    </div>
+  </div>
+  <%- include("/footer") %>
+</body>
+</html>

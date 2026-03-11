@@ -216,7 +216,7 @@ export class Http1Context implements Context {
     });
   }
 
-  respondWithDynamicFile(
+  async respondWithDynamicFile(
     path: string,
     method: string,
     {
@@ -227,7 +227,7 @@ export class Http1Context implements Context {
       // eslint-disable-next-line no-unused-vars
       onError?: ((code: number) => void) | undefined;
     },
-  ): void {
+  ): Promise<void> {
     try {
       const defaultExport: unknown = require(path)?.default;
 
@@ -238,25 +238,34 @@ export class Http1Context implements Context {
       } else {
         const page = defaultExport(this, ...pageParams);
 
-        if (typeof page !== "string") {
-          error(`La fonction du fichier ${path} ne renvoi pas une string.`);
+        if (typeof page !== "string" && !(page instanceof Promise)) {
+          error(
+            `La fonction du fichier ${path} ne renvoi ni une string ni une promise avec une string.`,
+          );
 
           this.respond(500, {end: true});
         } else {
-          page;
+          const data: unknown = typeof page === "string" ? page : await page;
 
-          if (method !== "GET" && method !== "HEAD")
-            this.fail(405, {allow: "GET, HEAD"}, onError);
-          else {
-            this.respond(200, {
-              headers: {
-                "content-type": MIME_TYPES[".html"],
-                "content-length": page.length,
-              },
-              end: method === "HEAD",
-            });
+          if (typeof data === "string") {
+            if (method !== "GET" && method !== "HEAD")
+              this.fail(405, {allow: "GET, HEAD"}, onError);
+            else {
+              this.respond(200, {
+                headers: {
+                  "content-type": MIME_TYPES[".html"],
+                  "content-length": data.length,
+                },
+                end: method === "HEAD",
+              });
 
-            if (method === "GET") this.end(page);
+              if (method === "GET") this.end(data);
+            }
+          } else {
+            error(
+              `La fonction du fichier ${path} ne renvoi ni une string ni une promise avec une string.`,
+            );
+            this.respond(500, {end: true});
           }
         }
       }
@@ -438,7 +447,7 @@ export class Http2Context implements Context {
     );
   }
 
-  respondWithDynamicFile(
+  async respondWithDynamicFile(
     path: string,
     method: string,
     {
@@ -449,7 +458,7 @@ export class Http2Context implements Context {
       // eslint-disable-next-line no-unused-vars
       onError?: ((code: number) => void) | undefined;
     },
-  ): void {
+  ): Promise<void> {
     try {
       const defaultExport: unknown = require(path)?.default;
 
@@ -460,25 +469,34 @@ export class Http2Context implements Context {
       } else {
         const page = defaultExport(this, ...pageParams);
 
-        if (typeof page !== "string") {
-          error(`La fonction du fichier ${path} ne renvoi pas une string.`);
+        if (typeof page !== "string" && !(page instanceof Promise)) {
+          error(
+            `La fonction du fichier ${path} ne renvoi ni une string ni une promise avec une string.`,
+          );
 
           this.respond(500, {end: true});
         } else {
-          page;
+          const data: unknown = typeof page === "string" ? page : await page;
 
-          if (method !== "GET" && method !== "HEAD")
-            this.fail(405, {allow: "GET, HEAD"}, onError);
-          else {
-            this.respond(200, {
-              headers: {
-                "content-type": MIME_TYPES[".html"],
-                "content-length": page.length,
-              },
-              end: method === "HEAD",
-            });
+          if (typeof data === "string") {
+            if (method !== "GET" && method !== "HEAD")
+              this.fail(405, {allow: "GET, HEAD"}, onError);
+            else {
+              this.respond(200, {
+                headers: {
+                  "content-type": MIME_TYPES[".html"],
+                  "content-length": data.length,
+                },
+                end: method === "HEAD",
+              });
 
-            if (method === "GET") this.end(page);
+              if (method === "GET") this.end(data);
+            }
+          } else {
+            error(
+              `La fonction du fichier ${path} ne renvoi ni une string ni une promise avec une string.`,
+            );
+            this.respond(500, {end: true});
           }
         }
       }

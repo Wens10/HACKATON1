@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/css/header.css">
+  <link rel="stylesheet" href="/css/footer.css">
+  <title>Tableau de Bord</title>
+  <style>
+    :root {
+      --bg-color: #f8fafc;
+      --card-bg: #ffffff;
+      --primary: #2563eb;
+      --text-main: #334155;
+      --text-light: #64748b;
+      --border: #e2e8f0;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      margin: 0;
+    }
+
+    .container {
+      padding: 1rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    .title {
+      margin-bottom: 30px;
+    }
+
+    .title h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+
+    .title p {
+      color: var(--text-light);
+      margin-top: 5px;
+    }
+
+    /* Stats Cards */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .stat-card {
+      background: var(--card-bg);
+      padding: 20px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* Main Layout */
+    .main-content {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 25px;
+    }
+
+    .section-card {
+      background: var(--card-bg);
+      padding: 25px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      margin-bottom: 25px;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    /* Reservations */
+    .reservation-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+
+    .res-info strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .res-info small {
+      color: var(--text-light);
+      display: block;
+      margin-top: 5px;
+    }
+
+    /* Status Badges */
+    .status {
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .warning {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .success {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    /* Buttons */
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--primary);
+      color: var(--primary);
+      width: 100%;
+      padding: 8px;
+      border-radius: 6px;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+
+    /* Sidebar Profile */
+    .profile-card {
+      text-align: center;
+    }
+
+    .profile-img {
+      width: 60px;
+      height: 60px;
+      background: #e2e8f0;
+      border-radius: 50%;
+      margin: 0 auto 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+
+    .quick-links {
+      list-style: none;
+      padding: 0;
+    }
+
+    .quick-links li {
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-main);
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <%- include("/header") %>
+  <div class="container">
+    <div class="title">
+      <h1>Bonjour, <%= user.name %> !</h1>
+      <p>Gérez vos réservations et vos favoris</p>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div><span>Réservations</span>
+          <h2>3</h2>
+        </div>
+        <div class="icon blue">📅</div>
+      </div>
+      <div class="stat-card">
+        <div><span>Favoris</span>
+          <h2>8</h2>
+        </div>
+        <div class="icon red">❤️</div>
+      </div>
+      <div class="stat-card">
+        <div><span>Messages</span>
+          <h2>5</h2>
+        </div>
+        <div class="icon green">💬</div>
+      </div>
+      <div class="stat-card">
+        <div><span>Notifications</span>
+          <h2>2</h2>
+        </div>
+        <div class="icon yellow">🔔</div>
+      </div>
+    </div>
+    <div class="main-content">
+      <div class="left-col">
+        <section class="section-card">
+          <div class="section-header">
+            <h2>Mes réservations</h2>
+            <button class="btn-primary">Nouvelle réservation</button>
+          </div>
+          <div class="reservation-item">
+            <div class="res-info">
+              <strong>Dépannage plomberie</strong>
+              <span>Jean Dupont</span>
+              <small>📅 16/12/2025 ⏰ 14:00</small>
+            </div>
+            <span class="status warning">En attente</span>
+          </div>
+          <div class="reservation-item">
+            <div class="res-info">
+              <strong>Dépannage plomberie</strong>
+              <span>Jean Dupont</span>
+              <small>📅 17/12/2025 ⏰ 14:00</small>
+            </div>
+            <span class="status success">Confirmé</span>
+          </div>
+        </section>
+        <section class="section-card">
+          <h2>Prestataires favoris</h2>
+          <div class="fav-grid">
+            <div class="fav-item">
+              <div class="avatar"></div> Prestataire 1 <span class="heart">❤️</span>
+            </div>
+            <div class="fav-item">
+              <div class="avatar"></div> Prestataire 2 <span class="heart">❤️</span>
+            </div>
+          </div>
+        </section>
+      </div>
+      <aside class="sidebar">
+        <div class="section-card profile-card">
+          <div class="profile-img">👤</div>
+          <h3>judebouity19</h3>
+          <p>judebouity19@gmail.com</p>
+          <button class="btn-outline">Modifier le profil</button>
+        </div>
+        <div class="section-card">
+          <h3>Actions rapides</h3>
+          <ul class="quick-links">
+            <li>Trouver un prestataire</li>
+            <li>Mes messages</li>
+            <li>Historique</li>
+          </ul>
+        </div>
+      </aside>
+    </div>
+  </div>
+  <%- include("/footer") %>
+</body>
+</html>

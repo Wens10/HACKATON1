@@ -2,6 +2,7 @@ import {DatabaseSync} from "node:sqlite";
 import {join} from "path";
 import {workingDirPath} from "../core";
 import "dotenv/config";
+import {renderStaticEJSFiles} from "../utils/functions";
 
 export default (() => {
   if (!process.env["ADMIN_DEFAULT_PASSWORD"])
@@ -78,4 +79,6 @@ export default (() => {
       );
     `,
   );
+
+  renderStaticEJSFiles();
 }) satisfies () => any;
