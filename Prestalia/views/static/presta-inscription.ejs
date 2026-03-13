@@ -317,17 +317,7 @@
   </style>
 </head>
 <body>
-    <header>
-    <a href=""><img src="/photos/Gemini_Generated_Image_3be0lc3be0lc3be0-removebg-preview.png" alt="Logo Prestalia" width="70" height="70" ></a>
-    <nav class="desktop-view">
-      <a href="/">Accueil</a>
-      <a href="/recherche">Rechercher</a>
-    </nav>
-    <div class="auth_desk_view">
-      <a href="/connexion"  class="btn-bg1">Connexion</a>
-      <a href="" class="btn-bg">Inscription</a>
-    </div>
-  </header>
+  <%- include("/default-header") %>
   <div class="container">
     <div class="header">
       <h1>Devenir prestataire</h1>
@@ -459,39 +449,7 @@
       </form>
     </div>
   </div>
-    <footer>
-    <div id="links">
-      <div>
-        <a href="/" id="home"><img src="/photos/Gemini_Generated_Image.png" alt="" width="50" height="50"></a>
-        <p class="descr">La plateforme de confiance pour trouver les meilleurs prestataires de services en France</p>
-      </div>
-      <div>
-        <p class="title">Services</p>
-        <a href="">Trouver un prestataire</a>
-        <a href="">Devenir prestataire</a>
-        <a href="">Comment ça marche</a>
-      </div>
-      <div class="link">
-        <p class="title">Entreprise</p>
-        <a href="">À propos</a>
-        <a href="">Conditions d'utilisation</a>
-        <a href="">Politique de confidentialité</a>
-        <a href="">Cookies</a>
-      </div>
-      <div>
-        <p class="title">Nous suivre</p>
-        <div id="logos">
-          <a href=""><img class="svg" src="/svg/instagram-1-svgrepo-com.svg" alt=""></a>
-          <a href=""><img class="svg" src="/svg/tiktok-svgrepo-com.svg" alt=""></a>
-          <a href=""><img class="svg" src="/svg/linkedin-color-svgrepo-com.svg" alt=""></a>
-          <a href=""><img class="svg" src="/svg/facebook-color-svgrepo-com.svg" alt=""></a>
-        </div>
-        <a href="mailto:contact@prestalia.fr">contact@prestalia.fr</a>
-      </div>
-    </div>
-    <div class="sep"></div>
-    <p>© 2026 Prestalia. Tous droits réservés.</p>
-  </footer>
+  <%- include("/footer") %>
   <script>
     let currentStep = 0;
 
