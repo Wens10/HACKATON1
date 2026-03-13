@@ -345,13 +345,14 @@ export class Http2Context implements Context {
     // eslint-disable-next-line no-unused-vars
     onError?: (code: number) => void,
   ): false {
-    try {
-      onError?.(code);
+    if (onError)
+      try {
+        onError?.(code);
 
-      return false;
-    } catch (err) {
-      error("Erreur lors de l'envoi d'une réponse avec onError:", err);
-    }
+        return false;
+      } catch (err) {
+        error("Erreur lors de l'envoi d'une réponse avec onError:", err);
+      }
 
     if (!this.stream.headersSent) {
       try {
