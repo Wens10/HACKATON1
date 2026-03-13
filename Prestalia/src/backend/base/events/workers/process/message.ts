@@ -1,6 +1,6 @@
 import {MessageTypes} from "../../../utils/common/enums";
 import {hasProps, log, warn} from "../../../../core";
-import config from "../../../config";
+import config from "../../../../config";
 import {Http2SecureServer} from "http2";
 
 let ready = false;

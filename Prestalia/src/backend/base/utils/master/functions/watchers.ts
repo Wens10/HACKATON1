@@ -10,7 +10,7 @@ import {
 import {getCert, setCert} from "../../common/functions";
 import cluster from "cluster";
 import {MessageTypes} from "../../common/enums";
-import config from "../../../config";
+import config from "../../../../config";
 import {Stats} from "fs";
 
 const validDomain = config.domain,

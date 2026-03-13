@@ -8,7 +8,7 @@ import {Worker} from "cluster";
 import {MessageTypes} from "../../common/enums";
 import {execSync} from "child_process";
 import {sendMessageToWorkers} from "./others";
-import config from "../../../config";
+import config from "../../../../config";
 import {join} from "path";
 import {setCert} from "../../common/functions";
 

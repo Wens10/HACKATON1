@@ -5,7 +5,7 @@ import {
   SUPPORTED_METHODS,
   workingDirPath,
 } from "../../../core";
-import config from "../../config";
+import config from "../../../config";
 import {join} from "path";
 
 export async function handleRequest(

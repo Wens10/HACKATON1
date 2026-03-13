@@ -10,7 +10,7 @@ import {
   log,
   workingDirPath,
 } from "../../core";
-import config from "../config";
+import config from "../../config";
 import {handleRequest} from "../utils/workers/functions";
 import {join} from "path";
 import {isAdminExists} from "../../utils/functions";
