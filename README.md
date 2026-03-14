@@ -1,4 +1,4 @@
-1. Dans le dossier **Prestalia**, créez les dossiers cert et cert-challenges
+1. Dans le dossier **Prestalia**, créez les dossiers errors, cert et cert-challenges
 2. À la racine du dossier **Prestalia**, créez un fichier `.env` avec le contenu suivant :
 
 ```env
