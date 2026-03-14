@@ -35,7 +35,7 @@ export default ((context, headers, db) => {
         return context.respond(303, {
           end: true,
           headers: {
-            "location": "/connexion",
+            "location": "/auth#login",
             "set-cookie":
               "token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; Secure; HttpOnly; SameSite=Strict;",
           },

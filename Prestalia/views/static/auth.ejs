@@ -8,17 +8,15 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <link rel="stylesheet" href="/css/header.css">
   <link rel="stylesheet" href="/css/footer.css">
-  <link rel="stylesheet" href="/css/connexion.css">
+  <link rel="stylesheet" href="/css/auth.css">
 </head>
 <body>
   <%- include("/default-header") %>
   <main>
     <div class="auth-container">
-      <div class="tabs">
-        <div class="tab active" onclick="switchTab('login')">Connexion</div>
-        <div class="tab" onclick="switchTab('register')">Inscription</div>
-      </div>
-      <div id="login-form" class="form-content active">
+      <div id="login"></div>
+      <div id="signup"></div>
+      <div id="login-form" class="form-content">
         <form action="/api/login" method="post">
           <div class="form-group">
             <label for="email">Email</label>
@@ -38,8 +36,8 @@
           <button type="submit" class="btn-submit">Se connecter</button>
         </form>
       </div>
-      <div id="register-form" class="form-content">
-        <form action="/api/register" method="post">
+      <div id="signup-form" class="form-content">
+        <form action="/api/signup" method="post">
           <div class="form-group">
             <label for="name">Nom complet</label>
             <div class="input-wrapper">
@@ -65,27 +63,12 @@
           <p class="terms">En vous inscrivant, vous acceptez nos conditions d'utilisation.</p>
         </form>
       </div>
+      <div id="tabs">
+        <a href="#login" class="tab">Connexion</a>
+        <a href="#signup" class="tab">Inscription</a>
+      </div>
     </div>
   </main>
   <%- include("/footer") %>
-  <script>
-    function switchTab(type) {
-      // Gestion des onglets
-      const tabs = document.querySelectorAll('.tab');
-      tabs.forEach(tab => tab.classList.remove('active'));
-
-      // Gestion du contenu
-      const forms = document.querySelectorAll('.form-content');
-      forms.forEach(form => form.classList.remove('active'));
-
-      if (type === 'login') {
-        tabs[0].classList.add('active');
-        document.getElementById('login-form').classList.add('active');
-      } else {
-        tabs[1].classList.add('active');
-        document.getElementById('register-form').classList.add('active');
-      }
-    }
-  </script>
 </body>
 </html>

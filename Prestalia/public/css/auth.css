@@ -23,6 +23,8 @@ main {
 }
 
 .auth-container {
+  display: flex;
+  flex-direction: column-reverse;
   background: white;
   width: 100%;
   max-width: 400px;
@@ -33,13 +35,19 @@ main {
 }
 
 /* --- Onglets --- */
-.tabs {
+
+#login, #signup {
+  display: none;
+}
+
+#tabs {
   display: flex;
   margin-bottom: 30px;
   border-bottom: 2px solid var(--border);
 }
 
 .tab {
+  text-decoration: none;
   flex: 1;
   text-align: center;
   padding: 12px;
@@ -49,15 +57,30 @@ main {
   transition: 0.3s;
 }
 
-.tab.active {
+/* --- Formulaires --- */
+.form-content {
+  display: none;
+}
+
+#signup-form, #login:target ~ #login-form {
+  display: block;
+}
+
+#login:target ~ #signup-form {
+  display: none;
+}
+
+#signup ~ #tabs a[href="#signup"],
+#login:target ~ #tabs a[href="#login"] {
   color: var(--primary);
   border-bottom: 2px solid var(--primary);
   margin-bottom: -2px;
 }
 
-/* --- Formulaires --- */
-.form-content {
-  display: none;
+#login:target ~ #tabs a[href="#signup"] {
+  color: #64748b;
+  margin-bottom: 0;
+  border-bottom: 0;
 }
 
 .form-content.active {
