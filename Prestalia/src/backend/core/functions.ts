@@ -289,16 +289,24 @@ export function chooseEncoding(
   return encoding === "*" ? SUPPORTED_ENCODING[0] : encoding;
 }
 
-export function createHTTPServer(port: number) {
+export function createHTTPServer(httpPort: number, httpsPort: number) {
   createServer((req, res) => {
-    const host = req.headers.host;
+    const hostHeader = req.headers.host;
 
-    if (!host)
+    if (!hostHeader)
       return res
         .writeHead(400, {"content-type": "text/plain"})
         .end("Bad Request");
 
-    const {href, pathname} = new URL(`https://${host}${req.url ?? "/"}`);
+    const delimiterIndex = hostHeader?.lastIndexOf(":"),
+      host =
+        delimiterIndex === -1
+          ? hostHeader
+          : hostHeader.slice(0, delimiterIndex);
+
+    const {href, pathname} = new URL(
+      `https://${host}${delimiterIndex === -1 ? "" : `:${httpsPort}`}${req.url ?? "/"}`,
+    );
 
     if (pathname.startsWith("/.well-known/acme-challenge/")) {
       const acmeFile = join(certChallengesDirPath, pathname);
@@ -322,7 +330,7 @@ export function createHTTPServer(port: number) {
     return res
       .writeHead(301, {"location": href, "content-type": "text/plain"})
       .end(`Redirecting to ${href}`);
-  }).listen(port, () => log("Serveur HTTP lancé !"));
+  }).listen(httpPort, () => log("Serveur HTTP lancé !"));
 }
 
 export async function resolveAPIRequest(

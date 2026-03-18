@@ -47,7 +47,7 @@ export default (() => {
         handleRequest(context, pageParams, apiParams);
     });
 
-  createHTTPServer(config.httpPort);
+  createHTTPServer(config.httpPort, config.httpsPort);
 
   process
     .on("message", messageProcessEvent.bind(null, secureServer))
