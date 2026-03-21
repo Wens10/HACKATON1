@@ -45,25 +45,25 @@
       </div>
     </div>
     <div class="card">
-      <form id="regForm">
+      <form id="regForm" method="post" action="/api/signup/provider" enctype="multipart/form-data">
         <div class="form-section active">
           <h2>Informations personnelles</h2>
           <div class="grid">
             <div class="form-group full-width">
-              <label>Nom complet *</label>
-              <input type="text" id="nom" placeholder="Ex: Jean Dupont">
+              <label for="name">Nom complet *</label>
+              <input type="text" name="name" placeholder="Ex: Jean Dupont">
             </div>
             <div class="form-group">
-              <label>Email *</label>
-              <input type="email" id="email" placeholder="email@exemple.com">
+              <label for="email">Email *</label>
+              <input type="email" name="email" placeholder="email@exemple.com">
             </div>
             <div class="form-group">
-              <label>Téléphone *</label>
-              <input type="tel" id="tel" placeholder="06 00 00 00 00">
+              <label for="tel">Téléphone *</label>
+              <input type="tel" name="tel" placeholder="06 00 00 00 00">
             </div>
             <div class="form-group full-width">
-              <label>Ville *</label>
-              <input type="text" id="ville" placeholder="Ex: Paris (75)">
+              <label for="city">Ville *</label>
+              <input type="text" name="city" placeholder="Ex: Paris (75)">
             </div>
           </div>
         </div>
@@ -71,25 +71,25 @@
           <h2>Activité professionnelle</h2>
           <div class="form-group">
             <label>Catégorie principale *</label>
-            <select id="cat">
+            <select id="cat" name="category">
               <option value="">Choisir...</option>
-              <option>Électricité</option>
-              <option>Plomberie</option>
-              <option>Peinture</option>
+              <option value="Électricité">Électricité</option>
+              <option value="Plomberie">Plomberie</option>
+              <option value="Peinture">Peinture</option>
             </select>
           </div>
           <div class="form-group">
-            <label>Description *</label>
-            <textarea id="desc" rows="4" placeholder="Décrivez votre expérience..."></textarea>
+            <label for="descr">Description *</label>
+            <textarea name="descr" rows="4" placeholder="Décrivez votre expérience..."></textarea>
           </div>
           <div class="grid">
             <div class="form-group">
-              <label>Expérience (ans) *</label>
-              <input type="number" id="exp">
+              <label for="exp">Expérience (ans) *</label>
+              <input type="number" name="exp">
             </div>
             <div class="form-group">
-              <label>Tarif horaire (€) *</label>
-              <input type="number" id="tarif">
+              <label for="price">Tarif horaire (€) *</label>
+              <input type="number" name="price" min="0" step="0.01">
             </div>
           </div>
         </div>
@@ -130,10 +130,10 @@
         <div class="form-section">
           <h2>Validation et documents</h2>
           <div class="form-group">
-            <label>Uploader vos diplômes/certificats</label>
-            <div class="upload-zone" id="dropzone">
+            <label for="files">Uploader vos diplômes/certificats</label>
+            <div class="upload-zone" id="dropzone" style="position: relative ;">
               <p>Glissez vos fichiers ou <strong>cliquez ici</strong></p>
-              <input type="file" id="fileInput" multiple style="display:none">
+              <input type="file" name="files" id="fileInput" multiple style="opacity: 0; position: absolute; top: 0; left: 0; width: 100%; height: 100% ;">
               <div class="file-list" id="fileList"></div>
             </div>
           </div>
@@ -191,7 +191,8 @@
     const sections = document.querySelectorAll(".form-section"),
       steps = document.querySelectorAll(".step"),
       btnNext = document.getElementById("btnNext"),
-      btnPrev = document.getElementById("btnPrev");
+      btnPrev = document.getElementById("btnPrev"),
+      form = document.getElementById("regForm");
 
     function showStep(n) {
       sections.forEach((s, i) => s.classList.toggle("active", i === n));
@@ -202,14 +203,17 @@
       });
 
       btnPrev.classList.toggle("hidden", n === 0);
-      btnNext.innerHTML = (n === sections.length - 1) ? "Finaliser" : "Suivant";
 
-      if (n === 3) updateSummary();
+      if (n === sections.length - 1) {
+        btnNext.innerHTML = "Finaliser";
+
+        updateSummary();
+      } else btnNext.innerHTML = "Suivant";
     }
 
     btnNext.addEventListener("click", () => {
       if (currentStep < sections.length - 1) showStep(++currentStep);
-      else alert("Formulaire envoyé !");
+      else form.submit();
     });
 
     btnPrev.addEventListener("click", () => {
