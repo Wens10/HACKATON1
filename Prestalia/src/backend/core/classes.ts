@@ -238,14 +238,20 @@ export class Http1Context implements Context {
       } else {
         const page = defaultExport(this, ...pageParams);
 
-        if (typeof page !== "string" && !(page instanceof Promise)) {
+        if (
+          page !== null &&
+          typeof page !== "string" &&
+          !(page instanceof Promise)
+        ) {
           error(
-            `La fonction du fichier ${path} ne renvoi ni une string ni une promise avec une string.`,
+            `La fonction du fichier ${path} doit renvoyer une string, null, ou une promise retournant une de ces valeurs.`,
           );
 
           this.respond(500, {end: true});
         } else {
-          const data: unknown = typeof page === "string" ? page : await page;
+          const data: unknown = page instanceof Promise ? await page : page;
+
+          if (data === null) return;
 
           if (typeof data === "string") {
             if (method !== "GET" && method !== "HEAD")
@@ -263,7 +269,7 @@ export class Http1Context implements Context {
             }
           } else {
             error(
-              `La fonction du fichier ${path} ne renvoi ni une string ni une promise avec une string.`,
+              `La fonction du fichier ${path} doit renvoyer une string, null, ou une promise retournant une de ces valeurs.`,
             );
             this.respond(500, {end: true});
           }
@@ -470,14 +476,20 @@ export class Http2Context implements Context {
       } else {
         const page = defaultExport(this, ...pageParams);
 
-        if (typeof page !== "string" && !(page instanceof Promise)) {
+        if (
+          page !== null &&
+          typeof page !== "string" &&
+          !(page instanceof Promise)
+        ) {
           error(
-            `La fonction du fichier ${path} ne renvoi ni une string ni une promise avec une string.`,
+            `La fonction du fichier ${path} doit renvoyer une string, null, ou une promise retournant une de ces valeurs.`,
           );
 
           this.respond(500, {end: true});
         } else {
-          const data: unknown = typeof page === "string" ? page : await page;
+          const data: unknown = page instanceof Promise ? await page : page;
+
+          if (data === null) return;
 
           if (typeof data === "string") {
             if (method !== "GET" && method !== "HEAD")
@@ -495,7 +507,7 @@ export class Http2Context implements Context {
             }
           } else {
             error(
-              `La fonction du fichier ${path} ne renvoi ni une string ni une promise avec une string.`,
+              `La fonction du fichier ${path} doit renvoyer une string, null, ou une promise retournant une de ces valeurs.`,
             );
             this.respond(500, {end: true});
           }

@@ -1,12 +1,13 @@
 import {Context, error, hasProps, Http2Context} from "../../core";
 import {DatabaseSync} from "node:sqlite";
 import {availableParallelism, totalmem} from "os";
-import {sign, verify} from "jsonwebtoken";
+import {sign} from "jsonwebtoken";
 import {
   cookieToJSON,
   hashPassword,
   isValidEmail,
   isValidPassword,
+  verfyJWT,
 } from "../../utils/functions";
 
 const jwtSecret = process.env["JWT_SECRET"];
@@ -19,36 +20,32 @@ export default ((context, headers, db) => {
   const cookies = cookieToJSON(headers.cookie);
 
   if (hasProps(cookies, {token: "string"})) {
+    const payload = verfyJWT(cookies.token);
+
     try {
-      const token = verify(cookies.token, jwtSecret, {algorithms: ["HS512"]});
-
-      try {
-        if (
-          hasProps(token, {userId: "number"}) &&
-          db.prepare("SELECT * FROM users WHERE id = ?").get(token.userId)
-        )
-          return context.respond(303, {
-            end: true,
-            headers: {
-              "location": "/",
-              "set-cookie":
-                "token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; Secure; HttpOnly; SameSite=Strict;",
-            },
-          });
-      } catch (err) {
-        error("Erreur lors de la récupération d'un utilisateur grâce à un id");
-
+      if (
+        hasProps(payload, {userId: "number"}) &&
+        db.prepare("SELECT * FROM users WHERE id = ?").get(payload.userId)
+      )
         return context.respond(303, {
           end: true,
           headers: {
-            "location": "/auth#signup",
+            "location": "/",
             "set-cookie":
               "token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; Secure; HttpOnly; SameSite=Strict;",
           },
         });
-      }
-    } catch (error) {
-      null;
+    } catch (err) {
+      error("Erreur lors de la récupération d'un utilisateur grâce à un id");
+
+      return context.respond(303, {
+        end: true,
+        headers: {
+          "location": "/auth#signup",
+          "set-cookie":
+            "token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; Secure; HttpOnly; SameSite=Strict;",
+        },
+      });
     }
   }
 
@@ -100,14 +97,15 @@ export default ((context, headers, db) => {
 
             try {
               const token = sign({userId}, jwtSecret, {
-                expiresIn: "1h",
-                algorithm: "HS512",
-              });
+                  expiresIn: "1h",
+                  algorithm: "HS512",
+                }),
+                to = context.url?.searchParams.get("to");
 
               return context.respond(303, {
                 end: true,
                 headers: {
-                  "location": "/",
+                  "location": to ?? "/",
                   "set-cookie": `token=${token}; Path=/; Secure; HttpOnly; SameSite=Strict;`,
                 },
               });

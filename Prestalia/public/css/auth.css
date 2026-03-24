@@ -70,14 +70,14 @@ main {
   display: none;
 }
 
-#signup ~ #tabs a[href="#signup"],
-#login:target ~ #tabs a[href="#login"] {
+#signup ~ #tabs a[href$="#signup"],
+#login:target ~ #tabs a[href$="#login"] {
   color: var(--primary);
   border-bottom: 2px solid var(--primary);
   margin-bottom: -2px;
 }
 
-#login:target ~ #tabs a[href="#signup"] {
+#login:target ~ #tabs a[href$="#signup"] {
   color: #64748b;
   margin-bottom: 0;
   border-bottom: 0;

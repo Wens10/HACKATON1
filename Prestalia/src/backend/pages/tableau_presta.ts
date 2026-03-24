@@ -4,9 +4,9 @@ import {
   DEFAULT_EJS_DYNAMIC_PAGE_DIR,
 } from "../utils/constants";
 import {join} from "path";
-import {Context, hasProps} from "../core";
+import {hasProps} from "../core";
 import {cookieToJSON, verfyJWT} from "../utils/functions";
-import {DatabaseSync} from "node:sqlite";
+import {PageHandler} from "../utils/types";
 
 export default (async (context, db) => {
   const cookies = cookieToJSON(context.headers.cookie);
@@ -29,6 +29,4 @@ export default (async (context, db) => {
     {user},
     {root: DEFAULT_EJS_COMPONENT_DIR},
   );
-
-  // eslint-disable-next-line no-unused-vars
-}) satisfies (context: Context, db: DatabaseSync) => string | Promise<string>;
+}) satisfies PageHandler;

@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="/css/presta-inscription.css">
 </head>
 <body>
-  <%- include("/default-header") %>
+  <%- include("/header") %>
   <div class="container">
     <div class="header">
       <h1>Devenir prestataire</h1>
@@ -41,11 +41,11 @@
           <div class="grid">
             <div class="form-group full-width">
               <label for="name">Nom complet *</label>
-              <input type="text" name="name" placeholder="Ex: Jean Dupont">
+              <input type="text" name="name" placeholder="Ex: Jean Dupont" value="<%= user.name %>">
             </div>
             <div class="form-group">
               <label for="email">Email *</label>
-              <input type="email" name="email" placeholder="email@exemple.com">
+              <input type="email" name="email" placeholder="email@exemple.com" value="<%= user.email %>">
             </div>
             <div class="form-group">
               <label for="tel">Téléphone *</label>
@@ -63,9 +63,9 @@
             <label>Catégorie principale *</label>
             <select id="cat" name="category">
               <option value="">Choisir...</option>
-              <option value="Électricité">Électricité</option>
-              <option value="Plomberie">Plomberie</option>
-              <option value="Peinture">Peinture</option>
+              <option value="1">Électricité</option>
+              <option value="2">Plomberie</option>
+              <option value="3">Peinture</option>
             </select>
           </div>
           <div class="form-group">
@@ -88,32 +88,32 @@
           <label>Jours de disponibilité *</label>
           <div class="days-grid">
             <div class="day-btn">
-              <label for="lundi">Lundi</label>
-              <input type="checkbox" name="lundi" id="lundi">
+              <label for="monday">Lundi</label>
+              <input type="checkbox" name="monday" id="monday">
             </div>
             <div class="day-btn">
-              <label for="mardi">Mardi</label>
-              <input type="checkbox" name="mardi" id="mardi">
+              <label for="tuesday">Mardi</label>
+              <input type="checkbox" name="tuesday" id="tuesday">
             </div>
             <div class="day-btn">
-              <label for="mercredi">Mercredi</label>
-              <input type="checkbox" name="mercredi" id="mercredi">
+              <label for="wednesday">Mercredi</label>
+              <input type="checkbox" name="wednesday" id="wednesday">
             </div>
             <div class="day-btn">
-              <label for="jeudi">Jeudi</label>
-              <input type="checkbox" name="jeudi" id="jeudi">
+              <label for="thursday">Jeudi</label>
+              <input type="checkbox" name="thursday" id="thursday">
             </div>
             <div class="day-btn">
-              <label for="vendredi">Vendredi</label>
-              <input type="checkbox" name="vendredi" id="vendredi">
+              <label for="friday">Vendredi</label>
+              <input type="checkbox" name="friday" id="friday">
             </div>
             <div class="day-btn">
-              <label for="samedi">Samedi</label>
-              <input type="checkbox" name="samedi" id="samedi">
+              <label for="saturday">Samedi</label>
+              <input type="checkbox" name="saturday" id="saturday">
             </div>
             <div class="day-btn">
-              <label for="dimanche">Dimanche</label>
-              <input type="checkbox" name="dimanche" id="dimanche">
+              <label for="sunday">Dimanche</label>
+              <input type="checkbox" name="sunday" id="sunday">
             </div>
           </div>
         </div>

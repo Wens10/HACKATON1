@@ -11,23 +11,17 @@
   <link rel="stylesheet" href="/css/auth.css">
 </head>
 <body>
-    <header>
-    <a href="/"><img src="/photos/Gemini_Generated_Image_3be0lc3be0lc3be0-removebg-preview.png" alt="Logo Prestalia" width="70" height="70" ></a>
-    <nav class="desktop-view">
-      <a href="/">Accueil</a>
-      <a href="/recherche">Rechercher</a>
-    </nav>
-    <div class="auth_desk_view">
-      <a href="/auth#login" class="btn-bg1">Connexion</a>
-      <a href="/auth#signup" class="btn-bg">Inscription</a>
-    </div>
-  </header>
+  <% if (user) { %>
+    <%- include("/header") %>
+  <% } else { %>
+    <%- include("/default-header") %>
+  <% } %>
   <main>
     <div class="auth-container">
       <div id="login"></div>
       <div id="signup"></div>
       <div id="login-form" class="form-content">
-        <form action="/api/login" method="post">
+        <form action="/api/login<%= to ? '?to=' + to : '' %>" method="post">
           <div class="form-group">
             <label for="email">Email</label>
             <div class="input-wrapper">
@@ -47,7 +41,7 @@
         </form>
       </div>
       <div id="signup-form" class="form-content">
-        <form action="/api/signup" method="post">
+        <form action="/api/signup<%= to ? '?to=' + to : '' %>" method="post">
           <div class="form-group">
             <label for="name">Nom complet</label>
             <div class="input-wrapper">
@@ -74,43 +68,11 @@
         </form>
       </div>
       <div id="tabs">
-        <a href="#login" class="tab">Connexion</a>
-        <a href="#signup" class="tab">Inscription</a>
+        <a href="<%= to ? '?to=' + to : '' %>#login" class="tab">Connexion</a>
+        <a href="<%= to ? '?to=' + to : '' %>#signup" class="tab">Inscription</a>
       </div>
     </div>
   </main>
-    <footer>
-    <div id="links">
-      <div>
-        <a href="/" id="home"><img src="/photos/Gemini_Generated_Image.png" alt="" width="50" height="50"></a>
-        <p class="descr">La plateforme de confiance pour trouver les meilleurs prestataires de services en France</p>
-      </div>
-      <div>
-        <p class="title">Services</p>
-        <a href="">Trouver un prestataire</a>
-        <a href="">Devenir prestataire</a>
-        <a href="">Comment ça marche</a>
-      </div>
-      <div class="link">
-        <p class="title">Entreprise</p>
-        <a href="">À propos</a>
-        <a href="">Conditions d'utilisation</a>
-        <a href="">Politique de confidentialité</a>
-        <a href="">Cookies</a>
-      </div>
-      <div>
-        <p class="title">Nous suivre</p>
-        <div id="logos">
-          <a href=""><img class="svg" src="/svg/instagram-1-svgrepo-com.svg" alt=""></a>
-          <a href=""><img class="svg" src="/svg/tiktok-svgrepo-com.svg" alt=""></a>
-          <a href=""><img class="svg" src="/svg/linkedin-color-svgrepo-com.svg" alt=""></a>
-          <a href=""><img class="svg" src="/svg/facebook-color-svgrepo-com.svg" alt=""></a>
-        </div>
-        <a href="mailto:contact@prestalia.fr">contact@prestalia.fr</a>
-      </div>
-    </div>
-    <div class="sep"></div>
-    <p>© 2026 Prestalia. Tous droits réservés.</p>
-  </footer>
+  <%- include("/footer") %>
 </body>
 </html>

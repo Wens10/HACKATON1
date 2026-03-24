@@ -49,6 +49,7 @@ export default (() => {
         created_at DATETIME NOT NULL DEFAULT (DATETIME('now', 'subsec', 'utc')),
         valided BOOLEAN,
         tel VARCHAR(20),
+        city VARCHAR(100),
         category INTEGER,
         descr VARCHAR(1000),
         exp INTEGER,

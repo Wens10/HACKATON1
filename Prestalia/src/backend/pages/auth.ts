@@ -9,16 +9,24 @@ import {cookieToJSON, verfyJWT} from "../utils/functions";
 import {PageHandler} from "../utils/types";
 
 export default (async (context, db) => {
-  const cookies = cookieToJSON(context.headers.cookie);
+  const cookies = cookieToJSON(context.headers.cookie),
+    to = context.url?.searchParams.get("to");
 
-  if (!hasProps(cookies, {token: "string"})) throw null;
+  if (!hasProps(cookies, {token: "string"}))
+    return renderFile(
+      join(DEFAULT_EJS_DYNAMIC_PAGE_DIR, "auth.ejs"),
+      {user: undefined, to},
+      {
+        root: DEFAULT_EJS_COMPONENT_DIR,
+      },
+    );
 
   const payload = verfyJWT(cookies.token);
 
-  if (!hasProps(payload, {userId: "number"})) {
+  if (payload === false || !hasProps(payload, {userId: "number"})) {
     context.respond(307, {
       headers: {
-        "location": "/",
+        "location": context.url?.href ?? "/auth",
         "set-cookie":
           "token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; Secure; HttpOnly; SameSite=Strict;",
       },
@@ -32,22 +40,11 @@ export default (async (context, db) => {
     .prepare("SELECT name, role FROM users WHERE id = ?")
     .get(payload.userId);
 
-  if (!user) {
-    context.respond(307, {
-      headers: {
-        "location": "/",
-        "set-cookie":
-          "token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; Secure; HttpOnly; SameSite=Strict;",
-      },
-      end: true,
-    });
-
-    return null;
-  }
-
   return renderFile(
-    join(DEFAULT_EJS_DYNAMIC_PAGE_DIR, "index.ejs"),
-    {user},
-    {root: DEFAULT_EJS_COMPONENT_DIR},
+    join(DEFAULT_EJS_DYNAMIC_PAGE_DIR, "auth.ejs"),
+    {user, to},
+    {
+      root: DEFAULT_EJS_COMPONENT_DIR,
+    },
   );
 }) satisfies PageHandler;
