@@ -50,3 +50,4 @@ npm run dev
   * De l'inscription d'un compte
   * De la création d'un compte prestataire
 - Faire une une page/composant (dans par exemple page admin) pour créer/gérer les catégories
+- Mettre tous le CSS des fichiers HTML dans des fichiers CSS 
