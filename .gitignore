@@ -9,27 +9,27 @@ data
 *.db*
 .tsbuildinfo
 
-# prestalia_mobile
+# prestalia_desktop
 
 # Miscellaneous
-prestalia_mobile/*.class
-prestalia_mobile/*.log
-prestalia_mobile/*.pyc
-prestalia_mobile/*.swp
-prestalia_mobile/.DS_Store
-prestalia_mobile/.atom/
-prestalia_mobile/.build/
-prestalia_mobile/.buildlog/
-prestalia_mobile/.history
-prestalia_mobile/.svn/
-prestalia_mobile/.swiftpm/
-prestalia_mobile/migrate_working_dir/
+prestalia_desktop/*.class
+prestalia_desktop/*.log
+prestalia_desktop/*.pyc
+prestalia_desktop/*.swp
+prestalia_desktop/.DS_Store
+prestalia_desktop/.atom/
+prestalia_desktop/.build/
+prestalia_desktop/.buildlog/
+prestalia_desktop/.history
+prestalia_desktop/.svn/
+prestalia_desktop/.swiftpm/
+prestalia_desktop/migrate_working_dir/
 
 # IntelliJ related
-prestalia_mobile/*.iml
-prestalia_mobile/*.ipr
-prestalia_mobile/*.iws
-prestalia_mobile/.idea/
+prestalia_desktop/*.iml
+prestalia_desktop/*.ipr
+prestalia_desktop/*.iws
+prestalia_desktop/.idea/
 
 # The .vscode folder contains launch configuration and tasks you configure in
 # VS Code which you may wish to be included in version control, so this line
@@ -37,22 +37,22 @@ prestalia_mobile/.idea/
 #.vscode/
 
 # Flutter/Dart/Pub related
-prestalia_mobile/**/doc/api/
-prestalia_mobile/**/ios/Flutter/.last_build_id
-prestalia_mobile/.dart_tool/
-prestalia_mobile/.flutter-plugins-dependencies
-prestalia_mobile/.pub-cache/
-prestalia_mobile/.pub/
-prestalia_mobile/build/
-prestalia_mobile/coverage/
+prestalia_desktop/**/doc/api/
+prestalia_desktop/**/ios/Flutter/.last_build_id
+prestalia_desktop/.dart_tool/
+prestalia_desktop/.flutter-plugins-dependencies
+prestalia_desktop/.pub-cache/
+prestalia_desktop/.pub/
+prestalia_desktop/build/
+prestalia_desktop/coverage/
 
 # Symbolication related
-prestalia_mobile/app.*.symbols
+prestalia_desktop/app.*.symbols
 
 # Obfuscation related
-prestalia_mobile/app.*.map.json
+prestalia_desktop/app.*.map.json
 
 # Android Studio will place build artifacts here
-prestalia_mobile/android/app/debug
-prestalia_mobile/android/app/profile
-prestalia_mobile/android/app/release
+prestalia_desktop/android/app/debug
+prestalia_desktop/android/app/profile
+prestalia_desktop/android/app/release
