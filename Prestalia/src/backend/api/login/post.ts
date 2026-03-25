@@ -46,73 +46,207 @@ export default ((context, headers, db) => {
     .on("error", (err) => error(err))
     .on("data", (chunk) => (data += chunk))
     .on("end", () => {
-      const params = new URLSearchParams(data),
-        email = params.get("email")?.trim().normalize("NFKC").toLowerCase(),
-        password = params.get("password")?.normalize("NFKC");
+      const contentTypeHeader = context.headers["content-type"];
 
-      if (!email || email === "") return context.respond(400, {end: true});
-      if (!password || password === "")
-        return context.respond(400, {end: true});
+      if (!contentTypeHeader)
+        return context.respond(415, {
+          end: true,
+          headers: {
+            "accept-post":
+              "application/x-www-form-urlencoded, application/json",
+          },
+        });
 
-      try {
-        const userExist = Boolean(
-          db.prepare("SELECT * FROM users WHERE email = ?").get(email),
-        );
+      const [mediaType, ...params] = contentTypeHeader.split(/; */),
+        charset = params
+          .find((param) => param.includes("charset="))
+          ?.slice(8)
+          .toLowerCase();
 
-        if (!userExist) return context.respond(400, {end: true});
-      } catch (err) {
-        error(err);
+      if (charset && charset !== "utf8" && charset !== "utf-8")
+        return context.respond(415, {
+          end: true,
+          headers: {
+            "accept-post":
+              "application/x-www-form-urlencoded, application/json",
+          },
+        });
 
-        return context.respond(500, {end: true});
-      }
+      if (
+        mediaType !== "application/x-www-form-urlencoded" &&
+        mediaType !== "application/json"
+      )
+        return context.respond(415, {
+          end: true,
+          headers: {
+            "accept-post":
+              "application/x-www-form-urlencoded, application/json",
+          },
+        });
 
-      try {
-        const user = db
-          .prepare("SELECT id, password FROM users WHERE email = ?")
-          .get(email);
+      const urlSearchParams = new URLSearchParams(data),
+        email = urlSearchParams
+          .get("email")
+          ?.trim()
+          .normalize("NFKC")
+          .toLowerCase(),
+        password = urlSearchParams.get("password")?.normalize("NFKC");
 
-        if (!user) return context.respond(400, {end: true});
+      switch (mediaType) {
+        case "application/x-www-form-urlencoded":
+          if (!email || email === "") return context.respond(400, {end: true});
+          if (!password || password === "")
+            return context.respond(400, {end: true});
 
-        if (!hasProps(user, {password: "string", id: "number"}))
-          return context.respond(500, {end: true});
+          try {
+            const userExist = Boolean(
+              db.prepare("SELECT * FROM users WHERE email = ?").get(email),
+            );
 
-        return verifyPassword(
-          user.password,
-          password,
-          process.env["ARGON2_SECRET"],
-        )
-          .then((isEqual) => {
-            if (!isEqual) return context.respond(400, {end: true});
+            if (!userExist) return context.respond(400, {end: true});
+          } catch (err) {
+            error(err);
+
+            return context.respond(500, {end: true});
+          }
+
+          try {
+            const user = db
+              .prepare("SELECT id, password FROM users WHERE email = ?")
+              .get(email);
+
+            if (!user) return context.respond(400, {end: true});
+
+            if (!hasProps(user, {password: "string", id: "number"}))
+              return context.respond(500, {end: true});
+
+            return verifyPassword(
+              user.password,
+              password,
+              process.env["ARGON2_SECRET"],
+            )
+              .then((isEqual) => {
+                if (!isEqual) return context.respond(400, {end: true});
+
+                try {
+                  const token = sign({userId: user.id}, jwtSecret, {
+                      expiresIn: "1h",
+                      algorithm: "HS512",
+                    }),
+                    to = context.url?.searchParams.get("to");
+
+                  return context.respond(303, {
+                    end: true,
+                    headers: {
+                      "location": to ?? "/",
+                      "set-cookie": `token=${token}; Path=/; Secure; HttpOnly; SameSite=Strict;`,
+                    },
+                  });
+                } catch (err) {
+                  error(err);
+
+                  return context.respond(500, {end: true});
+                }
+              })
+              .catch((reason) => {
+                error(reason);
+
+                return context.respond(500, {end: true});
+              });
+          } catch (err) {
+            error(err);
+
+            return context.respond(500, {end: true});
+          }
+        case "application/json":
+          try {
+            const json = JSON.parse(data);
+
+            if (!hasProps(json, {email: "string", password: "string"}))
+              return context.respond(400, {end: true});
+
+            const email = json.email.trim().normalize("NFKC").toLowerCase(),
+              password = json.password.normalize("NFKC");
+
+            if (!email || email === "")
+              return context.respond(400, {end: true});
+            if (!password || password === "")
+              return context.respond(400, {end: true});
 
             try {
-              const token = sign({userId: user.id}, jwtSecret, {
-                  expiresIn: "1h",
-                  algorithm: "HS512",
-                }),
-                to = context.url?.searchParams.get("to");
+              const userExist = Boolean(
+                db.prepare("SELECT * FROM users WHERE email = ?").get(email),
+              );
 
-              return context.respond(303, {
-                end: true,
-                headers: {
-                  "location": to ?? "/",
-                  "set-cookie": `token=${token}; Path=/; Secure; HttpOnly; SameSite=Strict;`,
-                },
-              });
+              if (!userExist) return context.respond(400, {end: true});
             } catch (err) {
               error(err);
 
               return context.respond(500, {end: true});
             }
-          })
-          .catch((reason) => {
-            error(reason);
+
+            try {
+              const user = db
+                .prepare("SELECT id, password FROM users WHERE email = ?")
+                .get(email);
+
+              if (!user) return context.respond(400, {end: true});
+
+              if (!hasProps(user, {password: "string", id: "number"}))
+                return context.respond(500, {end: true});
+
+              return verifyPassword(
+                user.password,
+                password,
+                process.env["ARGON2_SECRET"],
+              )
+                .then((isEqual) => {
+                  if (!isEqual) return context.respond(400, {end: true});
+
+                  try {
+                    const token = sign({userId: user.id}, jwtSecret, {
+                        expiresIn: "1h",
+                        algorithm: "HS512",
+                      }),
+                      data = JSON.stringify({token});
+
+                    return context
+                      .respond(200, {
+                        headers: {
+                          "content-type": "application/json",
+                          "content-length": data.length,
+                        },
+                      })
+                      .end(data);
+                  } catch (err) {
+                    error(err);
+
+                    return context.respond(500, {end: true});
+                  }
+                })
+                .catch((reason) => {
+                  error(reason);
+
+                  return context.respond(500, {end: true});
+                });
+            } catch (err) {
+              error(err);
+
+              return context.respond(500, {end: true});
+            }
+          } catch (err) {
+            error("Erreur lors de la transformation des données en JSON", err);
 
             return context.respond(500, {end: true});
+          }
+        default:
+          return context.respond(415, {
+            end: true,
+            headers: {
+              "accept-post":
+                "application/x-www-form-urlencoded, application/json",
+            },
           });
-      } catch (err) {
-        error(err);
-
-        return context.respond(500, {end: true});
       }
     });
 }) satisfies (

@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Prestalia Desktop (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "Prestalia Desktop (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
