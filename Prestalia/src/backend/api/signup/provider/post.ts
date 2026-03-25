@@ -1,4 +1,4 @@
-import {Context, error, hasProps, log, workingDirPath} from "../../../core";
+import {Context, error, hasProps, workingDirPath} from "../../../core";
 import {DatabaseSync} from "node:sqlite";
 import busboy from "busboy";
 import {cookieToJSON, isValidEmail, verfyJWT} from "../../../utils/functions";
@@ -82,7 +82,7 @@ export default ((context, headers, db) => {
         if (body["sunday"] === "on") body["days"] |= Days.Sunday;
 
         if (
-          hasProps(body, {
+          !hasProps(body, {
             name: "string",
             email: "string",
             tel: "string",
@@ -93,108 +93,110 @@ export default ((context, headers, db) => {
             price: "number",
             days: "number",
           })
-        ) {
-          if (!body.name || body.name === "")
-            return context.respond(400, {end: true});
-          if (!body.city || body.city === "")
-            return context.respond(400, {end: true});
-          if (!body.descr || body.descr === "")
-            return context.respond(400, {end: true});
-          if (!body.tel || body.tel === "")
-            return context.respond(400, {end: true});
-          if (!body.email || body.email === "")
-            return context.respond(400, {end: true});
-          if (!isValidEmail(body.email))
-            return context.respond(400, {end: true});
+        )
+          return context.respond(400, {end: true});
 
-          if ("files" in body) {
-            if (
-              Array.isArray(body.files) &&
-              !body.files.find(
-                (file) => !hasProps(file, {filename: "string", data: "buffer"}),
-              )
-            ) {
-              const files = body.files as {
-                filename: string;
-                data: Buffer<ArrayBuffer>;
-              }[];
+        if (!body.name || body.name === "")
+          return context.respond(400, {end: true});
+        if (!body.city || body.city === "")
+          return context.respond(400, {end: true});
+        if (!body.descr || body.descr === "")
+          return context.respond(400, {end: true});
+        if (!body.tel || body.tel === "")
+          return context.respond(400, {end: true});
+        if (!body.email || body.email === "")
+          return context.respond(400, {end: true});
+        if (!isValidEmail(body.email)) return context.respond(400, {end: true});
 
-              const results = await Promise.all(
-                files.map(async (file) => {
-                  const fileType = await fileTypeFromBuffer(file.data);
+        if ("files" in body) {
+          if (
+            Array.isArray(body.files) &&
+            !body.files.find(
+              (file) => !hasProps(file, {filename: "string", data: "buffer"}),
+            )
+          ) {
+            const files = body.files as {
+              filename: string;
+              data: Buffer<ArrayBuffer>;
+            }[];
 
-                  return (
-                    fileType && supportedExtForFiles.includes(fileType?.ext)
-                  );
-                }),
-              );
+            const results = await Promise.all(
+              files.map(async (file) => {
+                const fileType = await fileTypeFromBuffer(file.data);
 
-              if (results.includes(false) || results.includes(undefined))
+                return fileType && supportedExtForFiles.includes(fileType?.ext);
+              }),
+            );
+
+            if (results.includes(false) || results.includes(undefined)) return;
+
+            files.forEach(async (file) => {
+              try {
+                await mkdir(join(workingDirPath, `/data/${userId}`), {
+                  recursive: true,
+                });
+
+                writeFile(
+                  join(workingDirPath, `/data/${userId}`, file.filename),
+                  file.data,
+                );
+              } catch (err) {
+                error(err);
+
                 return;
+              }
+            });
+          } else return;
+        }
 
-              files.forEach(async (file) => {
-                try {
-                  await mkdir(join(workingDirPath, `/data/${userId}`), {
-                    recursive: true,
-                  });
+        try {
+          const categoryId = db
+            .prepare("SELECT id FROM categories WHERE id = ?")
+            .get(body.category);
 
-                  writeFile(
-                    join(workingDirPath, `/data/${userId}`, file.filename),
-                    file.data,
-                  );
-                } catch (err) {
-                  error(err);
+          if (!categoryId) return context.respond(400, {end: true});
+        } catch (err) {
+          error("Erreur lors de la récupération d'une catégorie", err);
 
-                  return;
-                }
-              });
-            } else return;
-          }
+          return context.respond(500, {end: true});
+        }
 
-          try {
-            const categoryId = db
-              .prepare("SELECT id FROM categories WHERE id = ?")
-              .get(body.category);
+        try {
+          db.prepare(
+            "UPDATE users SET role = 'provider', name = ?, email = ? WHERE id = ?",
+          ).run(body.name, body.email, userId);
+        } catch (err) {
+          error("Erreur lors du changement du rôle d'un utilisateur", err);
 
-            if (!categoryId) return context.respond(400, {end: true});
-          } catch (err) {
-            error("Erreur lors de la récupération d'une catégorie", err);
+          return context.respond(500, {end: true});
+        }
 
-            return context.respond(500, {end: true});
-          }
+        try {
+          db.prepare(
+            "INSERT INTO providers (tel, city, category, descr, exp, price, days) VALUES (?, ?, ?, ?, ?, ?)",
+          ).run(
+            body.tel,
+            body.city,
+            body.category,
+            body.descr,
+            body.exp,
+            body.price,
+            body.days,
+          );
 
-          try {
-            db.prepare(
-              "UPDATE users SET role = 'provider', name = ?, email = ? WHERE id = ?",
-            ).run(body.name, body.email, userId);
-          } catch (err) {
-            error("Erreur lors du changement du rôle d'un utilisateur", err);
+          return context.respond(303, {
+            end: true,
+            headers: {
+              location: "/tableau_presta",
+            },
+          });
+        } catch (err) {
+          error(
+            "Erreur lors de la création du compte provider d'un utilisateur",
+            err,
+          );
 
-            return context.respond(500, {end: true});
-          }
-
-          try {
-            db.prepare(
-              "INSERT INTO providers (tel, city, category, descr, exp, price, days) VALUES (?, ?, ?, ?, ?, ?)",
-            ).run(
-              body.tel,
-              body.city,
-              body.category,
-              body.descr,
-              body.exp,
-              body.price,
-              body.days,
-            );
-
-            return log("close", body);
-          } catch (err) {
-            error(
-              "Erreur lors de la création du compte provider d'un utilisateur",
-              err,
-            );
-
-            return context.respond(500, {end: true});
-          }
+          return context.respond(500, {end: true});
         }
       });
 
