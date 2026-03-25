@@ -9,7 +9,6 @@
 
 body {
   font-family: "Inter", sans-serif;
-  background-color: var(--bg);
   color: var(--text);
   margin: 0;
   padding: 25px;
@@ -18,17 +17,6 @@ body {
 .container {
   max-width: 1200px;
   margin: 0 auto;
-}
-
-.header h1 {
-  font-size: 22px;
-  margin-bottom: 5px;
-}
-
-.header p {
-  color: var(--text-light);
-  margin-top: 0;
-  margin-bottom: 25px;
 }
 
 /* Grille de stats */
