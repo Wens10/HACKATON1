@@ -40,3 +40,13 @@ npm run start
 ```bash
 npm run dev
 ```
+
+# Todolist
+
+- Faire le responsive
+- Faire une page de profil pour l'utilisateur connecté
+- Faire une page d'erreur ou insérer un message d'erreur pour lors :
+  * De la création d'un compte
+  * De l'inscription d'un compte
+  * De la création d'un compte prestataire
+- Faire une une page/composant (dans par exemple page admin) pour créer/gérer les catégories
