@@ -1,10 +1,24 @@
-node_modules
-dist
-data
+# Node / web
+node_modules/
+dist/
+data/
 *.br
 *.gz
 *.pem
 *.env
-*.*_dev_secret
 *.db*
 .tsbuildinfo
+
+# Visual Studio / .NET (GLOBAL)
+.vs/
+bin/
+obj/
+
+# User-specific
+*.user
+*.rsuser
+*.suo
+*.sln.docstates
+
+# NuGet
+*.nupkg
