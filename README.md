@@ -1,3 +1,5 @@
+# Prestalia
+
 1. Dans le dossier **Prestalia**, créez les dossiers data, errors, cert et cert-challenges
 2. À la racine du dossier **Prestalia**, créez un fichier `.env` avec le contenu suivant :
 
@@ -41,7 +43,37 @@ npm run start
 npm run dev
 ```
 
+# Prestalia Desktop
+
+1. Ouvrir un terminal et aller dans le dossier Prestalia_Desktop
+2. Installer les dépendances desktop (WinUI) :
+
+```bash
+dotnet restore
+```
+
+3. Build l'application desktop
+
+```bash
+dotnet build
+```
+
+4. Lancer l'application desktop
+
+```bash
+dotnet run
+```
+
+# Prérequis
+
+- Node.js
+- .NET SDK
+- Windows 10/11
+- OpenSSL
+
 # Todolist
+
+## Prestalia
 
 - Faire le responsive
 - Faire une page de profil pour l'utilisateur connecté
