@@ -8,3 +8,11 @@ data
 *.*_dev_secret
 *.db*
 .tsbuildinfo
+
+# Prestalia_Desktop
+
+Prestalia_Desktop/.vs/
+Prestalia_Desktop/bin/
+Prestalia_Desktop/obj/
+Prestalia_Desktop/packages/
+Prestalia_Desktop/*.nupkg
