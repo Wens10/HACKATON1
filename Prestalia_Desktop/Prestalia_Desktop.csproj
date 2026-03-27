@@ -13,6 +13,11 @@
     <EnableMsixTooling>true</EnableMsixTooling>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+  <ItemGroup>
+    <None Remove="Assets\Écran démarrage .scale-400.png" />
+    <None Remove="Assets\Grande vignette .scale-400.png" />
+    <None Remove="Assets\Petite vignette .scale-200.png" />
+  </ItemGroup>
 
   <ItemGroup>
     <Content Include="Assets\SplashScreen.scale-200.png" />
