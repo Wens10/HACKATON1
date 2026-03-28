@@ -45,47 +45,46 @@ export default ((context, headers, db) => {
   }
 
   const acceptPostHeader =
-    "application/x-www-form-urlencoded, application/json";
+      "application/x-www-form-urlencoded, application/json",
+    contentTypeHeader = context.headers["content-type"];
+
+  if (!contentTypeHeader)
+    return context.respond(415, {
+      end: true,
+      headers: {
+        "accept-post": acceptPostHeader,
+      },
+    });
+
+  const [mediaType, ...params] = contentTypeHeader.split(/; */),
+    charset = params
+      .find((param) => param.includes("charset="))
+      ?.slice(8)
+      .toLowerCase();
+
+  if (charset && charset !== "utf8" && charset !== "utf-8")
+    return context.respond(415, {
+      end: true,
+      headers: {
+        "accept-post": acceptPostHeader,
+      },
+    });
+
+  if (
+    mediaType !== "application/x-www-form-urlencoded" &&
+    mediaType !== "application/json"
+  )
+    return context.respond(415, {
+      end: true,
+      headers: {
+        "accept-post": acceptPostHeader,
+      },
+    });
 
   return (context instanceof Http2Context ? context.stream : context.req)
     .on("error", (err) => error(err))
     .on("data", (chunk) => (data += chunk))
     .on("end", () => {
-      const contentTypeHeader = context.headers["content-type"];
-
-      if (!contentTypeHeader)
-        return context.respond(415, {
-          end: true,
-          headers: {
-            "accept-post": acceptPostHeader,
-          },
-        });
-
-      const [mediaType, ...params] = contentTypeHeader.split(/; */),
-        charset = params
-          .find((param) => param.includes("charset="))
-          ?.slice(8)
-          .toLowerCase();
-
-      if (charset && charset !== "utf8" && charset !== "utf-8")
-        return context.respond(415, {
-          end: true,
-          headers: {
-            "accept-post": acceptPostHeader,
-          },
-        });
-
-      if (
-        mediaType !== "application/x-www-form-urlencoded" &&
-        mediaType !== "application/json"
-      )
-        return context.respond(415, {
-          end: true,
-          headers: {
-            "accept-post": acceptPostHeader,
-          },
-        });
-
       switch (mediaType) {
         case "application/x-www-form-urlencoded": {
           const urlSearchParams = new URLSearchParams(data),

@@ -28,14 +28,22 @@ export default ((context, headers, db) => {
 
   try {
     const userId = payload.userId,
-      user = db.prepare("SELECT id FROM users WHERE id = ?").get(userId);
+      user = db.prepare("SELECT id, role FROM users WHERE id = ?").get(userId);
 
-    if (!user)
+    if (!user || !hasProps(user, {role: "string"}))
       return context.respond(401, {
         end: true,
         headers: {
           "set-cookie":
             "token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; Secure; HttpOnly; SameSite=Strict;",
+        },
+      });
+
+    if (user.role.toLowerCase() === "provider")
+      return context.respond(303, {
+        end: true,
+        headers: {
+          location: "/tableau_presta",
         },
       });
 
@@ -128,25 +136,29 @@ export default ((context, headers, db) => {
               }),
             );
 
-            if (results.includes(false) || results.includes(undefined)) return;
+            if (results.includes(false) || results.includes(undefined))
+              return context.respond(400, {end: true});
 
-            files.forEach(async (file) => {
+            for (const file of files) {
               try {
                 await mkdir(join(workingDirPath, `/data/${userId}`), {
                   recursive: true,
                 });
 
-                writeFile(
+                await writeFile(
                   join(workingDirPath, `/data/${userId}`, file.filename),
                   file.data,
                 );
               } catch (err) {
-                error(err);
+                error(
+                  "Erreur lors de la sauvegarde des fichiers d'un prestataire",
+                  err,
+                );
 
-                return;
+                return context.respond(500, {end: true});
               }
-            });
-          } else return;
+            }
+          } else return context.respond(400, {end: true});
         }
 
         try {
@@ -173,7 +185,7 @@ export default ((context, headers, db) => {
 
         try {
           db.prepare(
-            "INSERT INTO providers (tel, city, category, descr, exp, price, days) VALUES (?, ?, ?, ?, ?, ?)",
+            "INSERT INTO providers (tel, city, category, descr, exp, price, days) VALUES (?, ?, ?, ?, ?, ?, ?)",
           ).run(
             body.tel,
             body.city,
