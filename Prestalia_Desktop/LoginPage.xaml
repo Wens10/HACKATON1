@@ -64,7 +64,7 @@
                     <PasswordBox
                         x:Name="PasswordBox"
                         Header="Mot de passe"
-                        PlaceholderText="myP@ssword"/>
+                        PlaceholderText="Entrez votre mot de passe"/>
 
                     <Button
                         Content="Se connecter"
