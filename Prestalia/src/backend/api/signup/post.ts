@@ -7,7 +7,7 @@ import {
   hashPassword,
   isValidEmail,
   isValidPassword,
-  verfyJWT,
+  verifyJWT,
 } from "../../utils/functions";
 
 const jwtSecret = process.env["JWT_SECRET"];
@@ -20,7 +20,7 @@ export default ((context, headers, db) => {
   const cookies = cookieToJSON(headers.cookie);
 
   if (hasProps(cookies, {token: "string"})) {
-    const payload = verfyJWT(cookies.token);
+    const payload = verifyJWT(cookies.token);
 
     try {
       if (

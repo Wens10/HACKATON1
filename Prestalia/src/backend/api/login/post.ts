@@ -1,7 +1,7 @@
 import {Context, error, hasProps, Http2Context} from "../../core";
 import {DatabaseSync} from "node:sqlite";
 import {sign} from "jsonwebtoken";
-import {cookieToJSON, verfyJWT, verifyPassword} from "../../utils/functions";
+import {cookieToJSON, verifyJWT, verifyPassword} from "../../utils/functions";
 
 const jwtSecret = process.env["JWT_SECRET"];
 
@@ -10,37 +10,42 @@ if (!jwtSecret) throw new Error("Le secret JWT est manquant");
 export default ((context, headers, db) => {
   let data = "";
 
-  const cookies = cookieToJSON(headers.cookie);
+  const cookies = cookieToJSON(headers.cookie),
+    to = context.url?.searchParams.get("to");
 
   if (hasProps(cookies, {token: "string"})) {
-    const payload = verfyJWT(cookies.token);
+    const payload = verifyJWT(cookies.token);
 
     try {
       if (
         hasProps(payload, {userId: "number"}) &&
-        db.prepare("SELECT * FROM users WHERE id = ?").get(payload.userId)
+        db.prepare("SELECT id FROM users WHERE id = ?").get(payload.userId)
       )
         return context.respond(303, {
           end: true,
           headers: {
-            "location": "/",
-            "set-cookie":
-              "token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; Secure; HttpOnly; SameSite=Strict;",
+            location: "/",
           },
         });
     } catch (err) {
-      error("Erreur lors de la récupération d'un utilisateur grâce à un id");
+      error(
+        "Erreur lors de la récupération d'un utilisateur grâce à un id",
+        err,
+      );
 
       return context.respond(303, {
         end: true,
         headers: {
-          "location": "/auth#login",
+          "location": to ?? "/auth#login",
           "set-cookie":
             "token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; Secure; HttpOnly; SameSite=Strict;",
         },
       });
     }
   }
+
+  const acceptPostHeader =
+    "application/x-www-form-urlencoded, application/json";
 
   return (context instanceof Http2Context ? context.stream : context.req)
     .on("error", (err) => error(err))
@@ -52,8 +57,7 @@ export default ((context, headers, db) => {
         return context.respond(415, {
           end: true,
           headers: {
-            "accept-post":
-              "application/x-www-form-urlencoded, application/json",
+            "accept-post": acceptPostHeader,
           },
         });
 
@@ -67,8 +71,7 @@ export default ((context, headers, db) => {
         return context.respond(415, {
           end: true,
           headers: {
-            "accept-post":
-              "application/x-www-form-urlencoded, application/json",
+            "accept-post": acceptPostHeader,
           },
         });
 
@@ -79,43 +82,30 @@ export default ((context, headers, db) => {
         return context.respond(415, {
           end: true,
           headers: {
-            "accept-post":
-              "application/x-www-form-urlencoded, application/json",
+            "accept-post": acceptPostHeader,
           },
         });
 
-      const urlSearchParams = new URLSearchParams(data),
-        email = urlSearchParams
-          .get("email")
-          ?.trim()
-          .normalize("NFKC")
-          .toLowerCase(),
-        password = urlSearchParams.get("password")?.normalize("NFKC");
-
       switch (mediaType) {
-        case "application/x-www-form-urlencoded":
+        case "application/x-www-form-urlencoded": {
+          const urlSearchParams = new URLSearchParams(data),
+            email = urlSearchParams
+              .get("email")
+              ?.trim()
+              .normalize("NFKC")
+              .toLowerCase(),
+            password = urlSearchParams.get("password")?.normalize("NFKC");
+
           if (!email || email === "") return context.respond(400, {end: true});
           if (!password || password === "")
             return context.respond(400, {end: true});
-
-          try {
-            const userExist = Boolean(
-              db.prepare("SELECT * FROM users WHERE email = ?").get(email),
-            );
-
-            if (!userExist) return context.respond(400, {end: true});
-          } catch (err) {
-            error(err);
-
-            return context.respond(500, {end: true});
-          }
 
           try {
             const user = db
               .prepare("SELECT id, password FROM users WHERE email = ?")
               .get(email);
 
-            if (!user) return context.respond(400, {end: true});
+            if (!user) return context.respond(401, {end: true});
 
             if (!hasProps(user, {password: "string", id: "number"}))
               return context.respond(500, {end: true});
@@ -126,14 +116,13 @@ export default ((context, headers, db) => {
               process.env["ARGON2_SECRET"],
             )
               .then((isEqual) => {
-                if (!isEqual) return context.respond(400, {end: true});
+                if (!isEqual) return context.respond(401, {end: true});
 
                 try {
                   const token = sign({userId: user.id}, jwtSecret, {
-                      expiresIn: "1h",
-                      algorithm: "HS512",
-                    }),
-                    to = context.url?.searchParams.get("to");
+                    expiresIn: "1h",
+                    algorithm: "HS512",
+                  });
 
                   return context.respond(303, {
                     end: true,
@@ -158,7 +147,8 @@ export default ((context, headers, db) => {
 
             return context.respond(500, {end: true});
           }
-        case "application/json":
+        }
+        case "application/json": {
           try {
             const json = JSON.parse(data);
 
@@ -174,23 +164,11 @@ export default ((context, headers, db) => {
               return context.respond(400, {end: true});
 
             try {
-              const userExist = Boolean(
-                db.prepare("SELECT * FROM users WHERE email = ?").get(email),
-              );
-
-              if (!userExist) return context.respond(400, {end: true});
-            } catch (err) {
-              error(err);
-
-              return context.respond(500, {end: true});
-            }
-
-            try {
               const user = db
                 .prepare("SELECT id, password FROM users WHERE email = ?")
                 .get(email);
 
-              if (!user) return context.respond(400, {end: true});
+              if (!user) return context.respond(401, {end: true});
 
               if (!hasProps(user, {password: "string", id: "number"}))
                 return context.respond(500, {end: true});
@@ -201,7 +179,7 @@ export default ((context, headers, db) => {
                 process.env["ARGON2_SECRET"],
               )
                 .then((isEqual) => {
-                  if (!isEqual) return context.respond(400, {end: true});
+                  if (!isEqual) return context.respond(401, {end: true});
 
                   try {
                     const token = sign({userId: user.id}, jwtSecret, {
@@ -214,7 +192,7 @@ export default ((context, headers, db) => {
                       .respond(200, {
                         headers: {
                           "content-type": "application/json",
-                          "content-length": data.length,
+                          "content-length": Buffer.byteLength(data),
                         },
                       })
                       .end(data);
@@ -237,14 +215,14 @@ export default ((context, headers, db) => {
           } catch (err) {
             error("Erreur lors de la transformation des données en JSON", err);
 
-            return context.respond(500, {end: true});
+            return context.respond(400, {end: true});
           }
+        }
         default:
           return context.respond(415, {
             end: true,
             headers: {
-              "accept-post":
-                "application/x-www-form-urlencoded, application/json",
+              "accept-post": acceptPostHeader,
             },
           });
       }

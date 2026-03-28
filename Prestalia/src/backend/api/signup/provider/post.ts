@@ -1,7 +1,7 @@
 import {Context, error, hasProps, workingDirPath} from "../../../core";
 import {DatabaseSync} from "node:sqlite";
 import busboy from "busboy";
-import {cookieToJSON, isValidEmail, verfyJWT} from "../../../utils/functions";
+import {cookieToJSON, isValidEmail, verifyJWT} from "../../../utils/functions";
 import {fileTypeFromBuffer} from "file-type";
 import {mkdir, writeFile} from "fs/promises";
 import {join} from "path";
@@ -15,7 +15,7 @@ export default ((context, headers, db) => {
   if (!hasProps(cookies, {token: "string"}))
     return context.respond(401, {end: true});
 
-  const payload = verfyJWT(cookies.token);
+  const payload = verifyJWT(cookies.token);
 
   if (!hasProps(payload, {userId: "number"}))
     return context.respond(401, {

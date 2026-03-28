@@ -5,7 +5,7 @@ import {
 } from "../utils/constants";
 import {join} from "path";
 import {hasProps} from "../core";
-import {cookieToJSON, verfyJWT} from "../utils/functions";
+import {cookieToJSON, verifyJWT} from "../utils/functions";
 import {PageHandler} from "../utils/types";
 
 export default (async (context, db) => {
@@ -13,7 +13,7 @@ export default (async (context, db) => {
 
   if (!hasProps(cookies, {token: "string"})) throw null;
 
-  const payload = verfyJWT(cookies.token);
+  const payload = verifyJWT(cookies.token);
 
   if (payload === false || !hasProps(payload, {userId: "number"})) throw null;
 
