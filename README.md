@@ -64,6 +64,8 @@ dotnet build
 dotnet run
 ```
 
+Si la commande ne lance pas l'application ou échoue, démarrez l'application avec Visual Studio (Le mode développeur doit être activé dans les paramètres) 
+
 # Prérequis
 
 - Node.js
