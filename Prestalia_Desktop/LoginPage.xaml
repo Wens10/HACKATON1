@@ -19,47 +19,48 @@
             <InfoBar
                 Width="360"
                 x:Name="ErrorInfoBar"
-                IsOpen="True"
-                Severity="Error"
-                Visibility="Collapsed"/>
+                IsOpen="False"
+                Title="Connexion impossible"
+                Severity="Error"/>
 
             <Border
                 x:Name="ShadowRect"
                 Translation="0,0,32"
                 Loaded="ShadowRect_Loaded"
                 Width="360"
-                Padding="30"
-                CornerRadius="{ThemeResource OverlayCornerRadius}"
+                Padding="24"
+                CornerRadius="{StaticResource OverlayCornerRadius}"
                 Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
 
                 <Border.Shadow>
                     <ThemeShadow x:Name="shadow"/>
                 </Border.Shadow>
 
-                <StackPanel Spacing="12">
-                    <Image
-                        Source="Assets/Gemini_Generated_Image.png"
-                        Width="100"
-                        Height="100"
-                        HorizontalAlignment="Center"
-                        Margin="0,0,0,10"/>
+                <StackPanel Spacing="16">
+                    <StackPanel Spacing="12">
+                        <Image
+                            Source="Assets/Gemini_Generated_Image.png"
+                            Width="96"
+                            Height="96"
+                            HorizontalAlignment="Center"/>
 
-                    <TextBlock
-                        Text="Bienvenue"
-                        Style="{StaticResource TitleLargeTextBlockStyle}"
-                        FontWeight="SemiBold"
-                        HorizontalAlignment="Center"/>
+                        <TextBlock
+                            Text="Bienvenue"
+                            Style="{StaticResource TitleTextBlockStyle}"
+                            HorizontalAlignment="Center"/>
 
-                    <TextBlock
-                        Text="Connectez-vous à votre compte"
-                        Style="{StaticResource BodyTextBlockStyle}"
-                        HorizontalAlignment="Center"
-                        Margin="0,0,0,10"/>
+                        <TextBlock
+                            Text="Connectez-vous à votre compte"
+                            Style="{StaticResource BodyTextBlockStyle}"
+                            HorizontalAlignment="Center"/>
+                    </StackPanel>
 
                     <TextBox
                         x:Name="EmailTextBox"
                         Header="Email"
-                        PlaceholderText="test@example.com"/>
+                        PlaceholderText="test@example.com"
+                        IsSpellCheckEnabled="False"
+                        />
 
                     <PasswordBox
                         x:Name="PasswordBox"
@@ -69,8 +70,7 @@
                     <Button
                         Content="Se connecter"
                         Click="LoginButton_Click"
-                        Style="{StaticResource SubtleButtonStyle}"
-                        HorizontalAlignment="Center"/>
+                        HorizontalAlignment="Stretch"/>
 
                     <ProgressBar
                         x:Name="ProgressBar"

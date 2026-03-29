@@ -61,8 +61,7 @@ namespace Prestalia_Desktop
                     }
                     else
                     {
-                        ErrorInfoBar.Visibility = Visibility.Visible;
-                        ErrorInfoBar.Title = "Connexion impossible";
+                        ErrorInfoBar.IsOpen = true;
                         ErrorInfoBar.Message = "Vos identifiants sont invalides";
                     }
                 }
@@ -70,8 +69,7 @@ namespace Prestalia_Desktop
                 {
                     string content = await response.Content.ReadAsStringAsync();
 
-                    ErrorInfoBar.Visibility = Visibility.Visible;
-                    ErrorInfoBar.Title = "Connexion impossible";
+                    ErrorInfoBar.IsOpen = true;
                     ErrorInfoBar.Message = "Erreur lors de la demande de connexion au serveur";
 
                     System.Diagnostics.Debug.WriteLine($"Erreur HTTP: {(int)response.StatusCode}\n{content}");
@@ -79,8 +77,7 @@ namespace Prestalia_Desktop
             }
             catch (Exception ex)
             {
-                ErrorInfoBar.Visibility = Visibility.Visible;
-                ErrorInfoBar.Title = "Connexion impossible";
+                ErrorInfoBar.IsOpen = true;
                 ErrorInfoBar.Message = "Erreur lors de la tentative de connexion, veuillez réessayer";
 
                 System.Diagnostics.Debug.WriteLine(ex.Message);
