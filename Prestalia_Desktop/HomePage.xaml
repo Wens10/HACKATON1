@@ -179,8 +179,17 @@
                     CornerRadius="{StaticResource OverlayCornerRadius}"
                     Padding="16"
                     Background="{ThemeResource CardBackgroundFillColorDefault}">
-                    <StackPanel Spacing="16">
-                        <Grid>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <Grid
+                            Grid.Row="0"
+                            Margin="0, 0, 0, 16">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="Auto"/>
@@ -223,61 +232,69 @@
                             </StackPanel>
                         </Grid>
 
+                        <Grid
+                            Grid.Row="1"
+                            ColumnSpacing="12"
+                            Padding="0, 0, 12, 0"
+                            Margin="0, 0, 0, 8">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="112"/>
+                                <ColumnDefinition Width="64"/>
+                                <ColumnDefinition Width="240"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock
+                                Grid.Column="0"
+                                Text="Prestataire"
+                                Style="{StaticResource BodyStrongTextBlockStyle}"/>
+
+                            <TextBlock
+                                Grid.Column="1"
+                                Text="Catégorie"
+                                Style="{StaticResource BodyStrongTextBlockStyle}"/>
+
+                            <TextBlock
+                                Grid.Column="2"
+                                Text="Ville"
+                                Style="{StaticResource BodyStrongTextBlockStyle}"/>
+
+                            <TextBlock
+                                Grid.Column="3"
+                                Text="Note"
+                                Style="{StaticResource BodyStrongTextBlockStyle}"/>
+
+                            <TextBlock
+                                Grid.Column="4"
+                                Text="Statut"
+                                Style="{StaticResource BodyStrongTextBlockStyle}"/>
+
+                            <TextBlock
+                                Grid.Column="5"
+                                Text="Actions"
+                                Style="{StaticResource BodyStrongTextBlockStyle}"/>
+                        </Grid>
+
+                        <Rectangle
+                            Grid.Row="2"
+                            Height="1"
+                            Fill="{ThemeResource DividerStrokeColorDefaultBrush}"/>
+
                         <ListView
+                            Grid.Row="3"
+                            Height="280"
+                            Margin="0, 8, 0, 0"
                             SelectionMode="None"
                             x:Name="ProvidersList">
                             <ListView.ItemContainerStyle>
                                 <Style TargetType="ListViewItem">
-                                    <Setter Property="Padding" Value="0"/>
+                                    <Setter Property="Padding" Value="0, 0, 12, 0"/>
                                     <Setter Property="Margin" Value="0"/>
                                     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                                 </Style>
                             </ListView.ItemContainerStyle>
-                            <ListView.Header>
-                                <StackPanel Spacing="8">
-                                    <Grid ColumnSpacing="12">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="2*"/>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="112"/>
-                                            <ColumnDefinition Width="64"/>
-                                            <ColumnDefinition Width="240"/>
-                                        </Grid.ColumnDefinitions>
-
-                                        <TextBlock
-                                            Grid.Column="0"
-                                            Text="Prestataire"
-                                            Style="{StaticResource BodyStrongTextBlockStyle}"/>
-
-                                        <TextBlock
-                                            Grid.Column="1"
-                                            Text="Catégorie"
-                                            Style="{StaticResource BodyStrongTextBlockStyle}"/>
-
-                                        <TextBlock
-                                            Grid.Column="2"
-                                            Text="Ville"
-                                            Style="{StaticResource BodyStrongTextBlockStyle}"/>
-
-                                        <TextBlock
-                                            Grid.Column="3"
-                                            Text="Note"
-                                            Style="{StaticResource BodyStrongTextBlockStyle}"/>
-
-                                        <TextBlock
-                                            Grid.Column="4"
-                                            Text="Statut"
-                                            Style="{StaticResource BodyStrongTextBlockStyle}"/>
-
-                                        <TextBlock
-                                            Grid.Column="5"
-                                            Text="Actions"
-                                            Style="{StaticResource BodyStrongTextBlockStyle}"/>
-                                    </Grid>
-                                    <Rectangle HorizontalAlignment="Stretch" Height="1" Fill="{ThemeResource DividerStrokeColorDefaultBrush}" />
-                                </StackPanel>
-                            </ListView.Header>
                             <ListView.ItemTemplate>
                                 <DataTemplate x:DataType="local:Provider">
                                     <Grid ColumnSpacing="12" Padding="0, 8">
@@ -356,7 +373,7 @@
                                 </DataTemplate>
                             </ListView.ItemTemplate>
                         </ListView>
-                    </StackPanel>
+                    </Grid>
                 </Border>
             </StackPanel>
         </StackPanel>
