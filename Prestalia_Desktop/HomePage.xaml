@@ -191,6 +191,7 @@
                             Grid.Row="0"
                             Margin="0, 0, 0, 16">
                             <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
@@ -200,34 +201,63 @@
                                 Text="Gestion des prestataires"
                                 HorizontalAlignment="Left"
                                 Style="{StaticResource BodyLargeStrongTextBlockStyle}"/>
-
+                            
                             <StackPanel
-                                Grid.Column="1"
+                                Grid.Column="2"
                                 Orientation="Horizontal"
                                 Spacing="8">
+                                <StackPanel
+                                    Orientation="Horizontal"
+                                    Spacing="8">
+                                    <ComboBox
+                                        PlaceholderText="Trier par"
+                                        Width="114">
+                                        <x:String>Nom</x:String>
+                                        <x:String>Catégorie</x:String>
+                                        <x:String>Ville</x:String>
+                                        <x:String>Note</x:String>
+                                        <x:String>Statut</x:String>
+                                    </ComboBox>
+
+                                    <ComboBox
+                                        PlaceholderText="Ordre"
+                                        Width="128">
+                                        <x:String>Croissant</x:String>
+                                        <x:String>Décroissant</x:String>
+                                    </ComboBox>
+                                </StackPanel>
+
+                                <Rectangle
+                                    Width="1"
+                                    Fill="{ThemeResource DividerStrokeColorDefaultBrush}"/>
+
                                 <RadioButton
+                                    x:Name="AllProvidersButton"
                                     Content="Tous"
                                     GroupName="StatusFilter"
                                     MinWidth="0"
-                                    IsChecked="True"
+                                    Checked="AllProvidersButton_Checked"
                                     Style="{StaticResource DefaultToggleButtonStyle}"/>
 
                                 <RadioButton
                                     Content="En attente (1)"
                                     GroupName="StatusFilter"
                                     MinWidth="0"
+                                    Checked="PendingProvidersButton_Checked"
                                     Style="{StaticResource DefaultToggleButtonStyle}"/>
 
                                 <RadioButton
                                     Content="Approuvés"
                                     GroupName="StatusFilter"
                                     MinWidth="0"
+                                    Checked="ApprovedProvidersButton_Checked"
                                     Style="{StaticResource DefaultToggleButtonStyle}"/>
 
                                 <RadioButton
                                     Content="Rejetés"
                                     GroupName="StatusFilter"
                                     MinWidth="0"
+                                    Checked="RejectedProvidersButton_Checked"
                                     Style="{StaticResource DefaultToggleButtonStyle}"/>
                             </StackPanel>
                         </Grid>
@@ -290,14 +320,24 @@
                             x:Name="ProvidersList">
                             <ListView.ItemContainerStyle>
                                 <Style TargetType="ListViewItem">
-                                    <Setter Property="Padding" Value="0, 0, 12, 0"/>
-                                    <Setter Property="Margin" Value="0"/>
-                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                    <Setter
+                                        Property="Padding"
+                                        Value="0, 0, 12, 0"/>
+
+                                    <Setter
+                                        Property="Margin"
+                                        Value="0"/>
+
+                                    <Setter
+                                        Property="HorizontalContentAlignment"
+                                        Value="Stretch"/>
                                 </Style>
                             </ListView.ItemContainerStyle>
                             <ListView.ItemTemplate>
                                 <DataTemplate x:DataType="local:Provider">
-                                    <Grid ColumnSpacing="12" Padding="0, 8">
+                                    <Grid
+                                        ColumnSpacing="12"
+                                        Padding="0, 8">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="2*"/>
                                             <ColumnDefinition Width="*"/>
@@ -322,7 +362,9 @@
                                                 Height="40"
                                                 DisplayName="{x:Bind Name}"/>
 
-                                            <StackPanel Grid.Column="1" Spacing="4">
+                                            <StackPanel
+                                                Grid.Column="1"
+                                                Spacing="4">
                                                 <TextBlock
                                                     VerticalAlignment="Center"
                                                     Style="{StaticResource BodyStrongTextBlockStyle}"

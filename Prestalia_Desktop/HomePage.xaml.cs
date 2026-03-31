@@ -1,4 +1,5 @@
 using Microsoft.UI.Xaml.Controls;
+using System.Linq;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -10,11 +11,13 @@ namespace Prestalia_Desktop
     /// </summary>
     public sealed partial class HomePage : Page
     {
+        private Provider[] providers;
+
         public HomePage()
         {
             InitializeComponent();
 
-            Provider[] providers =
+            providers =
             [
                 new("Jean Dupont", "jean.dupont@artisanmail.fr", "Plomberie", "Paris", 4.8f, "Approuvé"),
                 new("Sophie Martin", "sophie.martin.pro@gmail.com", "Électricité", "Lyon", 4.6f, "Approuvé"),
@@ -49,6 +52,28 @@ namespace Prestalia_Desktop
             ];
 
             ProvidersList.ItemsSource = providers;
+
+            AllProvidersButton.IsChecked = true;
+        }
+
+        private void AllProvidersButton_Checked(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+        {
+            ProvidersList.ItemsSource = providers;
+        }
+
+        private void PendingProvidersButton_Checked(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+        {
+            ProvidersList.ItemsSource = providers.Where(provider => provider.Statut == "En attente");
+        }
+
+        private void ApprovedProvidersButton_Checked(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+        {
+            ProvidersList.ItemsSource = providers.Where(provider => provider.Statut == "Approuvé");
+        }
+
+        private void RejectedProvidersButton_Checked(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+        {
+            ProvidersList.ItemsSource = providers.Where(provider => provider.Statut == "Rejeté");
         }
     }
 }
