@@ -59,6 +59,21 @@ namespace Prestalia_Desktop
             ProvidersList.ItemsSource = providers;
 
             AllProvidersButton.IsChecked = true;
+
+            int pendingCount = providers.Count(provider => provider.Statut == "En attente");
+
+            InfoBadgePendingCount.Value = Math.Min(pendingCount, 99);
+
+            setTextCount(TextPendingCount, pendingCount);
+            setTextCount(TextRejectedCount, providers.Count(provider => provider.Statut == "Rejeté"));
+            setTextCount(TextApprovedCount, providers.Count(provider => provider.Statut == "Approuvé"));
+            setTextCount(TextProviderCount, providers.Length);
+        }
+
+        private void setTextCount(TextBlock textBlock, int count)
+        {
+            if (count > 999_999_999) textBlock.Text = (count / 1e9).ToString("F2") + "M";
+            else textBlock.Text = count.ToString(); 
         }
 
         private void AllProvidersButton_Checked(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)

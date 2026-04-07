@@ -59,9 +59,10 @@
                                     </Grid.ColumnDefinitions>
 
                                     <TextBlock
+                                        x:Name="TextProviderCount"
                                         VerticalAlignment="Center"
                                         Grid.Column="0"
-                                        Text="6"
+                                        Text="999999999"
                                         Style="{StaticResource SubtitleTextBlockStyle}"/>
 
                                     <SymbolIcon
@@ -96,9 +97,10 @@
                                     </Grid.ColumnDefinitions>
 
                                     <TextBlock
+                                        x:Name="TextPendingCount"
                                         VerticalAlignment="Center"
                                         Grid.Column="0"
-                                        Text="1"
+                                        Text="0"
                                         Style="{StaticResource SubtitleTextBlockStyle}"/>
 
                                     <SymbolIcon
@@ -133,9 +135,10 @@
                                     </Grid.ColumnDefinitions>
 
                                     <TextBlock
+                                        x:Name="TextApprovedCount"
                                         VerticalAlignment="Center"
                                         Grid.Column="0"
-                                        Text="5"
+                                        Text="0"
                                         Style="{StaticResource SubtitleTextBlockStyle}"/>
 
                                     <SymbolIcon
@@ -170,6 +173,7 @@
                                     </Grid.ColumnDefinitions>
 
                                     <TextBlock
+                                        x:Name="TextRejectedCount"
                                         VerticalAlignment="Center"
                                         Grid.Column="0"
                                         Text="0"
@@ -264,11 +268,29 @@
                                         Style="{StaticResource DefaultToggleButtonStyle}"/>
 
                                     <RadioButton
-                                        Content="En attente (1)"
                                         GroupName="StatusFilter"
                                         MinWidth="0"
                                         Checked="PendingProvidersButton_Checked"
-                                        Style="{StaticResource DefaultToggleButtonStyle}"/>
+                                        Style="{StaticResource DefaultToggleButtonStyle}">
+                                        <Grid ColumnSpacing="8">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <TextBlock
+                                                Text="En attente"
+                                                VerticalAlignment="Center"
+                                                Grid.Column="0"/>
+
+                                            <InfoBadge
+                                                x:Name="InfoBadgePendingCount"
+                                                Value="0"
+                                                VerticalAlignment="Center"
+                                                Style="{StaticResource CautionIconInfoBadgeStyle}"
+                                                Grid.Column="1"/>
+                                        </Grid>
+                                    </RadioButton>
 
                                     <RadioButton
                                         Content="Approuvés"
