@@ -233,7 +233,8 @@
                                         Spacing="8">
                                         <ComboBox
                                             PlaceholderText="Trier par"
-                                            Width="114">
+                                            Width="114"
+                                            SelectionChanged="FilterComboBox_SelectionChanged">
                                             <x:String>Nom</x:String>
                                             <x:String>Catégorie</x:String>
                                             <x:String>Ville</x:String>
@@ -243,7 +244,8 @@
 
                                         <ComboBox
                                             PlaceholderText="Ordre"
-                                            Width="128">
+                                            Width="128"
+                                            SelectionChanged="OrderComboBox_SelectionChanged">
                                             <x:String>Croissant</x:String>
                                             <x:String>Décroissant</x:String>
                                         </ComboBox>

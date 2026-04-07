@@ -1,5 +1,6 @@
 using Microsoft.UI.Xaml.Controls;
 using System;
+using System.Diagnostics;
 using System.Linq;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -13,6 +14,9 @@ namespace Prestalia_Desktop
     public sealed partial class HomePage : Page
     {
         private Provider[] providers;
+        private string filter = "all";
+        private string order = "asc";
+        private string orderBy = "default";
 
         public HomePage()
         {
@@ -59,27 +63,143 @@ namespace Prestalia_Desktop
 
         private void AllProvidersButton_Checked(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
-            ProvidersList.ItemsSource = providers;
+            filter = "all";
+
+            OrderAndFilter();
         }
 
         private void PendingProvidersButton_Checked(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
-            ProvidersList.ItemsSource = providers.Where(provider => provider.Statut == "En attente");
+            filter = "pending";
+
+            OrderAndFilter();
         }
 
         private void ApprovedProvidersButton_Checked(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
-            ProvidersList.ItemsSource = providers.Where(provider => provider.Statut == "Approuvé");
+            filter = "approved";
+
+            OrderAndFilter();
         }
 
         private void RejectedProvidersButton_Checked(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
-            ProvidersList.ItemsSource = providers.Where(provider => provider.Statut == "Rejeté");
+            filter = "rejected";
+
+            OrderAndFilter();
         }
 
         private void CardsScrollViewer_SizeChanged(object sender, Microsoft.UI.Xaml.SizeChangedEventArgs e)
         {
             CardsGrid.Width = Math.Max(e.NewSize.Width, 728);
+        }
+
+        private void FilterComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var combobox = sender as ComboBox;
+            var value = combobox?.SelectedItem.ToString();
+
+            orderBy = value switch
+            {
+                "Nom" => "Name",
+                "Catégorie" => "Category",
+                "Ville" => "City",
+                "Note" => "Rating",
+                "Statut" => "Statut",
+                _ => "default",
+            };
+
+            OrderAndFilter();
+        }
+
+        private void OrderComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var combobox = sender as ComboBox;
+            var value = combobox?.SelectedItem.ToString();
+
+            order = value switch
+            {
+                "Croissant" => "asc",
+                "Décroissant" => "desc",
+                _ => "asc",
+            };
+
+            OrderAndFilter();
+        }
+
+        private void OrderAndFilter()
+        {
+            string orderFunction = order == "asc" ? "OrderBy" : "OrderByDescending";
+            string convertedFilter = filter switch
+            {
+                "pending" => "En attente",
+                "approved" => "Approuvé",
+                "rejected" => "Rejeté",
+                _ => "all",
+            };
+
+            var filteredProviders = providers.Where(provider => convertedFilter == "all" || provider.Statut == convertedFilter);
+
+            switch (order)
+            {
+                case "asc":
+                    switch (orderBy)
+                    {
+                        case "Name":
+                            ProvidersList.ItemsSource = filteredProviders.OrderBy(provider => provider.Name);
+                            break;
+
+                        case "Category":
+                            ProvidersList.ItemsSource = filteredProviders.OrderBy(provider => provider.Category);
+                            break;
+
+                        case "City":
+                            ProvidersList.ItemsSource = filteredProviders.OrderBy(provider => provider.City);
+                            break;
+
+                        case "Rating":
+                            ProvidersList.ItemsSource = filteredProviders.OrderBy(provider => provider.Rating);
+                            break;
+
+                        case "Statut":
+                            ProvidersList.ItemsSource = filteredProviders.OrderBy(provider => provider.Statut);
+                            break;
+
+                        case "default":
+                            ProvidersList.ItemsSource = filteredProviders;
+                            break;
+                    }
+                    break;
+
+                case "desc":
+                    switch (orderBy)
+                    {
+                        case "Name":
+                            ProvidersList.ItemsSource = filteredProviders.OrderByDescending(provider => provider.Name);
+                            break;
+
+                        case "Category":
+                            ProvidersList.ItemsSource = filteredProviders.OrderByDescending(provider => provider.Category);
+                            break;
+
+                        case "City":
+                            ProvidersList.ItemsSource = filteredProviders.OrderByDescending(provider => provider.City);
+                            break;
+
+                        case "Rating":
+                            ProvidersList.ItemsSource = filteredProviders.OrderByDescending(provider => provider.Rating);
+                            break;
+
+                        case "Statut":
+                            ProvidersList.ItemsSource = filteredProviders.OrderByDescending(provider => provider.Statut);
+                            break;
+
+                        case "default":
+                            ProvidersList.ItemsSource = filteredProviders.Reverse();
+                            break;
+                    }
+                    break;
+            }
         }
     }
 }
