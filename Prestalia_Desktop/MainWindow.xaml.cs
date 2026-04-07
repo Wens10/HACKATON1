@@ -45,10 +45,16 @@ namespace Prestalia_Desktop
 
         private void CenterWindow()
         {
-            var area = DisplayArea.GetFromWindowId(AppWindow.Id, DisplayAreaFallback.Nearest)?.WorkArea;
+            RectInt32? area = DisplayArea.GetFromWindowId(AppWindow.Id, DisplayAreaFallback.Nearest)?.WorkArea;
+
             if (area == null) return;
+
             AppWindow.Move(new PointInt32((area.Value.Width - AppWindow.Size.Width) / 2, (area.Value.Height - AppWindow.Size.Height) / 2));
         }
-
+        
+        private void RootFrame_Navigated(object sender, Microsoft.UI.Xaml.Navigation.NavigationEventArgs e)
+        {
+            AppTitleBar.Visibility = e.SourcePageType == typeof(LoginPage) ? Visibility.Collapsed : Visibility.Visible;
+        }
     }
 }

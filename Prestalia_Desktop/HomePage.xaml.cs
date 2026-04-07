@@ -1,4 +1,5 @@
 using Microsoft.UI.Xaml.Controls;
+using System;
 using System.Linq;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -74,6 +75,11 @@ namespace Prestalia_Desktop
         private void RejectedProvidersButton_Checked(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
             ProvidersList.ItemsSource = providers.Where(provider => provider.Statut == "Rejeté");
+        }
+
+        private void CardsScrollViewer_SizeChanged(object sender, Microsoft.UI.Xaml.SizeChangedEventArgs e)
+        {
+            CardsGrid.Width = Math.Max(e.NewSize.Width, 728);
         }
     }
 }

@@ -12,5 +12,31 @@
         <MicaBackdrop />
     </Window.SystemBackdrop>
 
-    <Frame x:Name="RootFrame"/>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <TitleBar
+            x:Name="AppTitleBar"
+            Grid.Row="0"
+            Visibility="Collapsed"
+            Title="Prestalia"
+            Subtitle="Tableau de bord"
+            IsBackButtonVisible="True"
+            IsPaneToggleButtonVisible="True">
+            <TitleBar.RightHeader>
+                <PersonPicture
+                    Width="30"
+                    Height="30"
+                    Initials="JD" />
+            </TitleBar.RightHeader>
+        </TitleBar>
+
+        <Frame
+            x:Name="RootFrame"
+            Navigated="RootFrame_Navigated"
+            Grid.Row="1"/>
+    </Grid>
 </Window>
