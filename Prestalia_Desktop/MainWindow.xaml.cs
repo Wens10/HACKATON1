@@ -1,6 +1,7 @@
 using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using Windows.Graphics;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -17,14 +18,8 @@ namespace Prestalia_Desktop
         {
             InitializeComponent();
 
-            AppWindow.TitleBar.ExtendsContentIntoTitleBar = true;
-            AppWindow.TitleBar.ButtonBackgroundColor = ColorHelper.FromArgb(0, 0, 0, 0);
-
-            if (AppWindow.TitleBar.ExtendsContentIntoTitleBar)
-            {
-                AppWindow.TitleBar.PreferredHeightOption = TitleBarHeightOption.Standard;
-                AppWindow.TitleBar.PreferredTheme = TitleBarTheme.UseDefaultAppMode;
-            }
+            this.ExtendsContentIntoTitleBar = true;
+            this.SetTitleBar(AppTitleBar);
 
             CenterWindow();
 
@@ -54,7 +49,21 @@ namespace Prestalia_Desktop
         
         private void RootFrame_Navigated(object sender, Microsoft.UI.Xaml.Navigation.NavigationEventArgs e)
         {
-            AppTitleBar.Visibility = e.SourcePageType == typeof(LoginPage) ? Visibility.Collapsed : Visibility.Visible;
+            bool isLoginPage = e.SourcePageType == typeof(LoginPage);
+
+            AppTitleBar.IsBackButtonEnabled = RootFrame.CanGoBack;
+            AppTitleBar.Visibility = isLoginPage ? Visibility.Collapsed : Visibility.Visible;
+            NavView.IsPaneVisible = !isLoginPage;
+        }
+
+        private void AppTitleBar_BackRequested(TitleBar sender, object args)
+        {
+            if (RootFrame.CanGoBack) RootFrame.GoBack();
+        }
+
+        private void AppTitleBar_PaneToggleRequested(TitleBar sender, object args)
+        {
+            NavView.IsPaneOpen = !NavView.IsPaneOpen;
         }
     }
 }

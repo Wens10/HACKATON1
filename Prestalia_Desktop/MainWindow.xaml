@@ -24,19 +24,39 @@
             Visibility="Collapsed"
             Title="Prestalia"
             Subtitle="Tableau de bord"
-            IsBackButtonVisible="True"
-            IsPaneToggleButtonVisible="True">
-            <TitleBar.RightHeader>
-                <PersonPicture
-                    Width="30"
-                    Height="30"
-                    Initials="JD" />
-            </TitleBar.RightHeader>
+            IsBackButtonVisible="False"
+            IsPaneToggleButtonVisible="True"
+            BackRequested="AppTitleBar_BackRequested"
+            PaneToggleRequested="AppTitleBar_PaneToggleRequested">
         </TitleBar>
 
-        <Frame
-            x:Name="RootFrame"
-            Navigated="RootFrame_Navigated"
-            Grid.Row="1"/>
+        <NavigationView 
+            x:Name="NavView"
+            Grid.Row="1"
+            IsBackButtonVisible="Collapsed"
+            IsPaneToggleButtonVisible="False"
+            IsPaneOpen="False"
+            IsPaneVisible="False">
+            <NavigationView.MenuItems>
+                <NavigationViewItem
+                    Icon="Home"
+                    Content="Accueil"
+                    Tag="Home"/>
+
+                <NavigationViewItem
+                    Icon="Folder"
+                    Content="Catégories"
+                    Tag="Categories"/>
+
+                <NavigationViewItem
+                    Icon="Bullets"
+                    Content="Activités"
+                    Tag="Activities"/>
+            </NavigationView.MenuItems>
+
+            <Frame
+                x:Name="RootFrame"
+                Navigated="RootFrame_Navigated"/>
+        </NavigationView>
     </Grid>
 </Window>
