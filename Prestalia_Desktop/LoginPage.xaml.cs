@@ -58,6 +58,8 @@ namespace Prestalia_Desktop
 
                         Frame.Navigate(typeof(HomePage), null, new SuppressNavigationTransitionInfo());
                         Frame.BackStack.Clear();
+
+                        App.MainWindow?.UpdateNavigationState();
                     }
                     else
                     {
