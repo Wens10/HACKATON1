@@ -36,7 +36,8 @@
             IsBackButtonVisible="Collapsed"
             IsPaneToggleButtonVisible="False"
             IsPaneOpen="False"
-            IsPaneVisible="False">
+            IsPaneVisible="False"
+            SelectionChanged="NavView_SelectionChanged">
             <NavigationView.MenuItems>
                 <NavigationViewItem
                     Icon="Home"

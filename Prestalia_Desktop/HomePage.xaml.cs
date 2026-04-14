@@ -1,6 +1,5 @@
 using Microsoft.UI.Xaml.Controls;
 using System;
-using System.Diagnostics;
 using System.Linq;
 
 // To learn more about WinUI, the WinUI project structure,

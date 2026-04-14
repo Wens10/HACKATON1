@@ -14,9 +14,11 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="ActivitiesPage.xaml" />
     <None Remove="Assets\Écran démarrage .scale-400.png" />
     <None Remove="Assets\Grande vignette .scale-400.png" />
     <None Remove="Assets\Petite vignette .scale-200.png" />
+    <None Remove="CategoriesPage.xaml" />
     <None Remove="HomePage.xaml" />
     <None Remove="LoginPage.xaml" />
   </ItemGroup>
@@ -47,6 +49,16 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.7705" />
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.260317003" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="ActivitiesPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="CategoriesPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="HomePage.xaml">
