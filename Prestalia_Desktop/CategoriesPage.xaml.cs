@@ -1,17 +1,5 @@
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
-using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -23,9 +11,122 @@ namespace Prestalia_Desktop
     /// </summary>
     public sealed partial class CategoriesPage : Page
     {
+        private Category[] categories;
+        private string order = "asc";
+        private string orderBy = "default";
+
         public CategoriesPage()
         {
             InitializeComponent();
+
+            categories =
+            [
+                new("Plomberie", 2, 40, "2024-01-10"),
+                new("Électricité", 2, 45, "2024-01-12"),
+                new("Peinture", 2, 35, "2024-01-15"),
+                new("Menuiserie", 2, 30, "2024-01-18"),
+                new("Carrelage", 2, 28, "2024-01-22"),
+                new("Plâtrerie", 2, 26, "2024-01-25"),
+                new("Décoration intérieure", 2, 22, "2024-01-28"),
+                new("Chauffage", 2, 33, "2024-02-01"),
+                new("Vitrerie", 2, 20, "2024-02-03"),
+                new("Couverture", 2, 27, "2024-02-05"),
+                new("Isolation", 2, 24, "2024-02-08"),
+                new("Climatisation", 2, 29, "2024-02-10"),
+                new("Serrurerie", 2, 31, "2024-02-12"),
+                new("Terrassement", 1, 18, "2024-02-15"),
+                new("Nettoyage chantier", 1, 15, "2024-02-18"),
+            ];
+
+            CategoriesList.ItemsSource = categories;
+        }
+
+        private void FilterComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var combobox = sender as ComboBox;
+            var value = combobox?.SelectedItem.ToString();
+
+            orderBy = value switch
+            {
+                "Nom" => "Name",
+                "Nombre de prestataires" => "ProviderCount",
+                "Nombre de prestations" => "ServiceCount",
+                "Date de création" => "CreationDate",
+                _ => "default",
+            };
+
+            OrderAndFilter();
+        }
+
+        private void OrderComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var combobox = sender as ComboBox;
+            var value = combobox?.SelectedItem.ToString();
+
+            order = value switch
+            {
+                "Croissant" => "asc",
+                "Décroissant" => "desc",
+                _ => "asc",
+            };
+
+            OrderAndFilter();
+        }
+
+        private void OrderAndFilter()
+        {
+            switch (order)
+            {
+                case "asc":
+                    switch (orderBy)
+                    {
+                        case "Name":
+                            CategoriesList.ItemsSource = categories.OrderBy(category => category.Name);
+                            break;
+
+                        case "ProviderCount":
+                            CategoriesList.ItemsSource = categories.OrderBy(category => category.ProviderCount);
+                            break;
+
+                        case "ServiceCount":
+                            CategoriesList.ItemsSource = categories.OrderBy(category => category.ServiceCount);
+                            break;
+
+                        case "CreationDate":
+                            CategoriesList.ItemsSource = categories.OrderBy(category => category.CreationDate);
+                            break;
+
+                        case "default":
+                            CategoriesList.ItemsSource = categories;
+                            break;
+                    }
+                    break;
+
+                case "desc":
+                    switch (orderBy)
+                    {
+                        case "Name":
+                            CategoriesList.ItemsSource = categories.OrderByDescending(category => category.Name);
+                            break;
+
+                        case "ProviderCount":
+                            CategoriesList.ItemsSource = categories.OrderByDescending(category => category.ProviderCount);
+                            break;
+
+                        case "ServiceCount":
+                            CategoriesList.ItemsSource = categories.OrderByDescending(category => category.ServiceCount);
+                            break;
+
+                        case "CreationDate":
+                            CategoriesList.ItemsSource = categories.OrderByDescending(category => category.CreationDate);
+                            break;
+
+                        case "default":
+                            CategoriesList.ItemsSource = categories.Reverse();
+                            break;
+                    }
+                    break;
+            }
         }
     }
 }

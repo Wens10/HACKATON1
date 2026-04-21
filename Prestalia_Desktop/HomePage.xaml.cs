@@ -143,7 +143,6 @@ namespace Prestalia_Desktop
 
         private void OrderAndFilter()
         {
-            string orderFunction = order == "asc" ? "OrderBy" : "OrderByDescending";
             string convertedFilter = filter switch
             {
                 "pending" => "En attente",
