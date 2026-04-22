@@ -88,7 +88,31 @@
                                 <Button
                                     x:Name="AddCategory"
                                     Content="Ajouter"
-                                    Style="{StaticResource AccentButtonStyle}"/>
+                                    Style="{StaticResource AccentButtonStyle}"
+                                    Click="AddCategory_Click"/>
+
+                                <ContentDialog
+                                    x:Name="AddCategoryDialog"
+                                    Title="Création d'une catégorie"
+                                    DefaultButton="Primary"
+                                    PrimaryButtonText="Créer"
+                                    CloseButtonText="Annuler"
+                                    PrimaryButtonClick="AddCategoryDialog_PrimaryButtonClick">
+                                    <StackPanel Spacing="8">
+                                        <InfoBar
+                                            x:Name="AddCategoryInfoBar"
+                                            IsOpen="False"
+                                            Severity="Error"
+                                            Title="Erreur"
+                                            Message="Erreur lors de la création de la catégorie"/>
+
+                                        <TextBox
+                                            x:Name="NewCategoryName"
+                                            Header="Entrez le nom de la nouvelle catégorie :"
+                                            PlaceholderText="Nom de la catégorie"
+                                            MaxLength="100"/>
+                                    </StackPanel>
+                                </ContentDialog>
                             </StackPanel>
                         </Grid>
 

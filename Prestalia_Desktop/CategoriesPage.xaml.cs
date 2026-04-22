@@ -1,4 +1,6 @@
 using Microsoft.UI.Xaml.Controls;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -11,7 +13,7 @@ namespace Prestalia_Desktop
     /// </summary>
     public sealed partial class CategoriesPage : Page
     {
-        private Category[] categories;
+        private List<Category> categories = [];
         private string order = "asc";
         private string orderBy = "default";
 
@@ -19,8 +21,7 @@ namespace Prestalia_Desktop
         {
             InitializeComponent();
 
-            categories =
-            [
+            categories.AddRange([
                 new("Plomberie", 2, 40, "2024-01-10"),
                 new("Électricité", 2, 45, "2024-01-12"),
                 new("Peinture", 2, 35, "2024-01-15"),
@@ -36,7 +37,7 @@ namespace Prestalia_Desktop
                 new("Serrurerie", 2, 31, "2024-02-12"),
                 new("Terrassement", 1, 18, "2024-02-15"),
                 new("Nettoyage chantier", 1, 15, "2024-02-18"),
-            ];
+            ]);
 
             CategoriesList.ItemsSource = categories;
         }
@@ -122,10 +123,50 @@ namespace Prestalia_Desktop
                             break;
 
                         case "default":
-                            CategoriesList.ItemsSource = categories.Reverse();
+                            CategoriesList.ItemsSource = categories.Reverse<Category>();
                             break;
                     }
                     break;
+            }
+        }
+
+        private async void AddCategory_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+        {
+            AddCategoryDialog.XamlRoot = this.XamlRoot;
+
+            ContentDialogResult result = await AddCategoryDialog.ShowAsync();
+
+            if (result == ContentDialogResult.Primary)
+            {
+                DateTime currentDateTime = DateTime.Now;
+                string formatted = currentDateTime.ToString("yyyy-MM-dd");
+
+                string newCategoryName = NewCategoryName.Text.Trim();
+
+                categories.Add(new(newCategoryName, 0, 0, formatted));
+
+                OrderAndFilter();
+            }
+        }
+
+        private void AddCategoryDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        {
+            string newCategoryName = NewCategoryName.Text.Trim();
+
+            if (string.IsNullOrEmpty(newCategoryName))
+            {
+                AddCategoryInfoBar.Message = "Le nom de la catégorie ne peut pas être vide.";
+                AddCategoryInfoBar.IsOpen = true;
+
+                args.Cancel = true;
+
+            }
+            else if (categories.Find(category => category.Name.ToLower() == newCategoryName.ToLower()) != null)
+            {
+                AddCategoryInfoBar.Message = "Une catégorie avec ce nom existe déjà.";
+                AddCategoryInfoBar.IsOpen = true;
+
+                args.Cancel = true;
             }
         }
     }
