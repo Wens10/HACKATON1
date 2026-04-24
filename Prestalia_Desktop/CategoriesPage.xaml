@@ -193,11 +193,26 @@
                                             <ColumnDefinition Width="66"/>
                                         </Grid.ColumnDefinitions>
 
-
-                                        <TextBlock
-                                            Grid.Column="0"
+                                        <Grid
                                             VerticalAlignment="Center"
-                                            Text="{x:Bind Name}"/>
+                                            ColumnSpacing="8"
+                                            Grid.Column="0">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <PersonPicture
+                                                Grid.Column="0"
+                                                Width="40"
+                                                Height="40"
+                                                DisplayName="{x:Bind Name}"/>
+
+                                            <TextBlock
+                                                Grid.Column="1"
+                                                VerticalAlignment="Center"
+                                                Text="{x:Bind Name}"/>
+                                        </Grid>
 
                                         <TextBlock
                                             Grid.Column="1"
