@@ -111,6 +111,19 @@
                                             Header="Entrez le nom de la nouvelle catégorie :"
                                             PlaceholderText="Nom de la catégorie"
                                             MaxLength="100"/>
+
+                                        <TextBlock
+                                            x:Name="Choisir une icône pour la catégorie (optionel)"
+                                            Text="Aucune"/>
+
+                                        <Button
+                                            x:Name="PickCategoryIconButton"
+                                            Content="Icône de la catégorie"
+                                            Click="PickCategoryIconButton_Click"/>
+
+                                        <TextBlock
+                                            x:Name="PickCategoryIconTextBlock"
+                                            Text="Aucune"/>
                                     </StackPanel>
                                 </ContentDialog>
                             </StackPanel>

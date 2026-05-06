@@ -1,4 +1,5 @@
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.Windows.Storage.Pickers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -168,6 +169,35 @@ namespace Prestalia_Desktop
 
                 args.Cancel = true;
             }
+        }
+
+        private async void PickCategoryIconButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+        {
+            if (sender is Button button)
+            {
+                //disable the button to avoid double-clicking
+                button.IsEnabled = false;
+
+                var picker = new FileOpenPicker(button.XamlRoot.ContentIslandEnvironment.AppWindowId);
+
+                picker.FileTypeFilter.Add(".jpg");
+                picker.FileTypeFilter.Add(".png");
+                picker.FileTypeFilter.Add(".webp");
+
+                picker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
+
+                picker.ViewMode = PickerViewMode.List;
+
+                // Show the picker dialog window
+                var file = await picker.PickSingleFileAsync();
+                PickCategoryIconTextBlock.Text = file != null
+                    ? "Icône: " + file.Path
+                    : "Aucune";
+
+                //re-enable the button
+                button.IsEnabled = true;
+            }
+
         }
     }
 }
