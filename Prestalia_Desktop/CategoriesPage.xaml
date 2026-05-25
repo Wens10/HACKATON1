@@ -8,7 +8,254 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid>
+    <ScrollViewer>
+        <StackPanel
+            Padding="36">
+            <TextBlock
+                Text="Catégories"
+                Style="{StaticResource TitleTextBlockStyle}"
+                Margin="0, 0, 0, 12"/>
 
-    </Grid>
+            <TextBlock
+                Text="Gestion des catégories des prestations"
+                Style="{StaticResource BodyTextBlockStyle}"
+                Margin="0, 0, 0, 24"/>
+
+            <ScrollViewer
+                HorizontalScrollMode="Auto"
+                HorizontalScrollBarVisibility="Auto"
+                VerticalScrollMode="Disabled"
+                VerticalScrollBarVisibility="Disabled">
+                <Border
+                    CornerRadius="{StaticResource OverlayCornerRadius}"
+                    Padding="16"
+                    MinWidth="850"
+                    Height="526"
+                    Background="{ThemeResource CardBackgroundFillColorDefault}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <Grid
+                            Grid.Row="0"
+                            Margin="0, 0, 0, 16">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock
+                                Grid.Column="0"
+                                Text="Gestion des prestataires"
+                                HorizontalAlignment="Left"
+                                Style="{StaticResource BodyLargeStrongTextBlockStyle}"/>
+
+                            <StackPanel
+                                Grid.Column="2"
+                                Orientation="Horizontal"
+                                Spacing="8">
+                                <StackPanel
+                                    Orientation="Horizontal"
+                                    Spacing="8">
+                                    <ComboBox
+                                        PlaceholderText="Trier par"
+                                        Width="114"
+                                        SelectionChanged="FilterComboBox_SelectionChanged">
+                                        <x:String>Nom</x:String>
+                                        <x:String>Nombre de prestataires</x:String>
+                                        <x:String>Nombre de prestations</x:String>
+                                        <x:String>Date de création</x:String>
+                                    </ComboBox>
+
+                                    <ComboBox
+                                        PlaceholderText="Ordre"
+                                        Width="128"
+                                        SelectionChanged="OrderComboBox_SelectionChanged">
+                                        <x:String>Croissant</x:String>
+                                        <x:String>Décroissant</x:String>
+                                    </ComboBox>
+                                </StackPanel>
+
+                                <Rectangle
+                                    Width="1"
+                                    Fill="{ThemeResource DividerStrokeColorDefaultBrush}"/>
+
+                                <Button
+                                    x:Name="AddCategory"
+                                    Content="Ajouter"
+                                    Style="{StaticResource AccentButtonStyle}"
+                                    Click="AddCategory_Click"/>
+
+                                <ContentDialog
+                                    x:Name="AddCategoryDialog"
+                                    Title="Création d'une catégorie"
+                                    DefaultButton="Primary"
+                                    PrimaryButtonText="Créer"
+                                    CloseButtonText="Annuler"
+                                    PrimaryButtonClick="AddCategoryDialog_PrimaryButtonClick">
+                                    <StackPanel Spacing="8">
+                                        <InfoBar
+                                            x:Name="AddCategoryInfoBar"
+                                            IsOpen="False"
+                                            Severity="Error"
+                                            Title="Erreur"
+                                            Message="Erreur lors de la création de la catégorie"/>
+
+                                        <TextBox
+                                            x:Name="NewCategoryName"
+                                            Header="Entrez le nom de la nouvelle catégorie :"
+                                            PlaceholderText="Nom de la catégorie"
+                                            MaxLength="100"/>
+
+                                        <TextBlock
+                                            x:Name="Choisir une icône pour la catégorie (optionel)"
+                                            Text="Aucune"/>
+
+                                        <Button
+                                            x:Name="PickCategoryIconButton"
+                                            Content="Icône de la catégorie"
+                                            Click="PickCategoryIconButton_Click"/>
+
+                                        <TextBlock
+                                            x:Name="PickCategoryIconTextBlock"
+                                            Text="Aucune"/>
+                                    </StackPanel>
+                                </ContentDialog>
+                            </StackPanel>
+                        </Grid>
+
+                        <Grid
+                            Grid.Row="1"
+                            ColumnSpacing="12"
+                            Padding="0, 0, 12, 0"
+                            Margin="0, 0, 0, 8">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1.5*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="106"/>
+                                <ColumnDefinition Width="66"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock
+                                Grid.Column="0"
+                                Text="Nom"
+                                Style="{StaticResource BodyStrongTextBlockStyle}"/>
+
+                            <TextBlock
+                                Grid.Column="1"
+                                Text="Nombre de prestataires"
+                                Style="{StaticResource BodyStrongTextBlockStyle}"/>
+
+                            <TextBlock
+                                Grid.Column="2"
+                                Text="Nombre de prestations"
+                                Style="{StaticResource BodyStrongTextBlockStyle}"/>
+
+                            <TextBlock
+                                Grid.Column="3"
+                                Text="Date de création"
+                                Style="{StaticResource BodyStrongTextBlockStyle}"/>
+
+                            <TextBlock
+                                Grid.Column="4"
+                                Text="Actions"
+                                Style="{StaticResource BodyStrongTextBlockStyle}"/>
+                        </Grid>
+
+                        <Rectangle
+                            Grid.Row="2"
+                            Height="1"
+                            Fill="{ThemeResource DividerStrokeColorDefaultBrush}"/>
+
+                        <ListView
+                            Grid.Row="3"
+                            Margin="0, 8, 0, 0"
+                            SelectionMode="None"
+                            x:Name="CategoriesList">
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem">
+                                    <Setter
+                                        Property="Padding"
+                                        Value="0, 0, 12, 0"/>
+
+                                    <Setter
+                                        Property="Margin"
+                                        Value="0"/>
+
+                                    <Setter
+                                        Property="HorizontalContentAlignment"
+                                        Value="Stretch"/>
+                                </Style>
+                            </ListView.ItemContainerStyle>
+                            <ListView.ItemTemplate>
+                                <DataTemplate x:DataType="local:Category">
+                                    <Grid
+                                        ColumnSpacing="12"
+                                        Padding="0, 8">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="1.5*"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="106"/>
+                                            <ColumnDefinition Width="66"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <Grid
+                                            VerticalAlignment="Center"
+                                            ColumnSpacing="8"
+                                            Grid.Column="0">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <PersonPicture
+                                                Grid.Column="0"
+                                                Width="40"
+                                                Height="40"
+                                                DisplayName="{x:Bind Name}"/>
+
+                                            <TextBlock
+                                                Grid.Column="1"
+                                                VerticalAlignment="Center"
+                                                Text="{x:Bind Name}"/>
+                                        </Grid>
+
+                                        <TextBlock
+                                            Grid.Column="1"
+                                            VerticalAlignment="Center"
+                                            Text="{x:Bind ProviderCount}"/>
+
+                                        <TextBlock
+                                            Grid.Column="2"
+                                            VerticalAlignment="Center"
+                                            Text="{x:Bind ServiceCount}"/>
+
+                                        <TextBlock
+                                            Grid.Column="3"
+                                            VerticalAlignment="Center"
+                                            Text="{x:Bind CreationDate}"/>
+
+                                        <StackPanel
+                                            Grid.Column="4"
+                                            Spacing="8"
+                                            Orientation="Horizontal"
+                                            VerticalAlignment="Center">
+                                            <Button Content="Détails"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </Grid>
+                </Border>
+            </ScrollViewer>
+        </StackPanel>
+    </ScrollViewer>
 </Page>

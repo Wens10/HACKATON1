@@ -203,6 +203,7 @@
                     <Border
                         CornerRadius="{StaticResource OverlayCornerRadius}"
                         Padding="16"
+                        Height="400"
                         MinWidth="850"
                         Background="{ThemeResource CardBackgroundFillColorDefault}">
                         <Grid>
@@ -360,7 +361,6 @@
 
                             <ListView
                                 Grid.Row="3"
-                                Height="280"
                                 Margin="0, 8, 0, 0"
                                 SelectionMode="None"
                                 x:Name="ProvidersList">

@@ -1,5 +1,6 @@
 using Microsoft.UI.Xaml.Controls;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -12,7 +13,7 @@ namespace Prestalia_Desktop
     /// </summary>
     public sealed partial class HomePage : Page
     {
-        private Provider[] providers;
+        private List<Provider> providers = [];
         private string filter = "all";
         private string order = "asc";
         private string orderBy = "default";
@@ -21,8 +22,7 @@ namespace Prestalia_Desktop
         {
             InitializeComponent();
 
-            providers =
-            [
+            providers.AddRange([
                 new("Jean Dupont", "jean.dupont@artisanmail.fr", "Plomberie", "Paris", 4.8f, "Approuvé"),
                 new("Sophie Martin", "sophie.martin.pro@gmail.com", "Électricité", "Lyon", 4.6f, "Approuvé"),
                 new("Karim Benali", "karim.benali@outlook.fr", "Peinture", "Marseille", 4.3f, "En attente"),
@@ -53,7 +53,7 @@ namespace Prestalia_Desktop
                 new("Chloé Roy", "chloe.roy.serrurerie@orange.fr", "Serrurerie", "Annecy", 4.6f, "Approuvé"),
                 new("Guillaume Barbier", "guillaume.barbier.toiture@gmail.com", "Couverture", "Perpignan", 4.0f, "En attente"),
                 new("Leïla Haddad", "leila.haddad.travaux@icloud.com", "Plâtrerie", "Besançon", 4.3f, "Approuvé")
-            ];
+            ]);
 
             ProvidersList.ItemsSource = providers;
 
@@ -66,7 +66,7 @@ namespace Prestalia_Desktop
             setTextCount(TextPendingCount, pendingCount);
             setTextCount(TextRejectedCount, providers.Count(provider => provider.Statut == "Rejeté"));
             setTextCount(TextApprovedCount, providers.Count(provider => provider.Statut == "Approuvé"));
-            setTextCount(TextProviderCount, providers.Length);
+            setTextCount(TextProviderCount, providers.Count);
         }
 
         private void setTextCount(TextBlock textBlock, int count)
@@ -143,7 +143,6 @@ namespace Prestalia_Desktop
 
         private void OrderAndFilter()
         {
-            string orderFunction = order == "asc" ? "OrderBy" : "OrderByDescending";
             string convertedFilter = filter switch
             {
                 "pending" => "En attente",
