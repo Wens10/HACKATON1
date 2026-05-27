@@ -1,7 +1,7 @@
 import {Context, error, hasProps, Http2Context} from "../../core";
 import {DatabaseSync} from "node:sqlite";
-import {sign} from "jsonwebtoken";
-import {cookieToJSON, verifyJWT, verifyPassword} from "../../utils/functions";
+import {cookieToJSON, verifyJWT} from "../../utils/functions";
+import login from "../../controllers/login/post";
 
 const jwtSecret = process.env["JWT_SECRET"];
 
@@ -88,64 +88,24 @@ export default ((context, headers, db) => {
       switch (mediaType) {
         case "application/x-www-form-urlencoded": {
           const urlSearchParams = new URLSearchParams(data),
-            email = urlSearchParams
-              .get("email")
-              ?.trim()
-              .normalize("NFKC")
-              .toLowerCase(),
-            password = urlSearchParams.get("password")?.normalize("NFKC");
+            email = urlSearchParams.get("email") ?? "",
+            password = urlSearchParams.get("password") ?? "";
 
-          if (!email || email === "") return context.respond(400, {end: true});
-          if (!password || password === "")
-            return context.respond(400, {end: true});
-
-          try {
-            const user = db
-              .prepare("SELECT id, password FROM users WHERE email = ?")
-              .get(email);
-
-            if (!user) return context.respond(401, {end: true});
-
-            if (!hasProps(user, {password: "string", id: "number"}))
-              return context.respond(500, {end: true});
-
-            return verifyPassword(
-              user.password,
-              password,
-              process.env["ARGON2_SECRET"],
-            )
-              .then((isEqual) => {
-                if (!isEqual) return context.respond(401, {end: true});
-
-                try {
-                  const token = sign({userId: user.id}, jwtSecret, {
-                    expiresIn: "1h",
-                    algorithm: "HS512",
-                  });
-
-                  return context.respond(303, {
-                    end: true,
-                    headers: {
-                      "location": to ?? "/",
-                      "set-cookie": `token=${token}; Path=/; Secure; HttpOnly; SameSite=Strict;`,
-                    },
-                  });
-                } catch (err) {
-                  error(err);
-
-                  return context.respond(500, {end: true});
-                }
-              })
-              .catch((reason) => {
-                error(reason);
-
-                return context.respond(500, {end: true});
+          login(email, password, db).then((result) => {
+            if (result.ok && result.token)
+              return context.respond(303, {
+                end: true,
+                headers: {
+                  "location": to ?? "/",
+                  "set-cookie": `token=${result.token}; Path=/; Secure; HttpOnly; SameSite=Strict;`,
+                },
               });
-          } catch (err) {
-            error(err);
+            else if (!result.ok && result.status)
+              return context.respond(result.status, {end: true});
+            else return context.respond(500, {end: true});
+          });
 
-            return context.respond(500, {end: true});
-          }
+          return;
         }
         case "application/json": {
           try {
@@ -154,63 +114,27 @@ export default ((context, headers, db) => {
             if (!hasProps(json, {email: "string", password: "string"}))
               return context.respond(400, {end: true});
 
-            const email = json.email.trim().normalize("NFKC").toLowerCase(),
-              password = json.password.normalize("NFKC");
+            const email = json.email,
+              password = json.password;
 
-            if (!email || email === "")
-              return context.respond(400, {end: true});
-            if (!password || password === "")
-              return context.respond(400, {end: true});
+            login(email, password, db).then((result) => {
+              if (result.ok && result.token) {
+                const data = JSON.stringify({token: result.token});
 
-            try {
-              const user = db
-                .prepare("SELECT id, password FROM users WHERE email = ?")
-                .get(email);
+                return context
+                  .respond(200, {
+                    headers: {
+                      "content-type": "application/json",
+                      "content-length": Buffer.byteLength(data),
+                    },
+                  })
+                  .end(data);
+              } else if (!result.ok && result.status)
+                return context.respond(result.status, {end: true});
+              else return context.respond(500, {end: true});
+            });
 
-              if (!user) return context.respond(401, {end: true});
-
-              if (!hasProps(user, {password: "string", id: "number"}))
-                return context.respond(500, {end: true});
-
-              return verifyPassword(
-                user.password,
-                password,
-                process.env["ARGON2_SECRET"],
-              )
-                .then((isEqual) => {
-                  if (!isEqual) return context.respond(401, {end: true});
-
-                  try {
-                    const token = sign({userId: user.id}, jwtSecret, {
-                        expiresIn: "1h",
-                        algorithm: "HS512",
-                      }),
-                      data = JSON.stringify({token});
-
-                    return context
-                      .respond(200, {
-                        headers: {
-                          "content-type": "application/json",
-                          "content-length": Buffer.byteLength(data),
-                        },
-                      })
-                      .end(data);
-                  } catch (err) {
-                    error(err);
-
-                    return context.respond(500, {end: true});
-                  }
-                })
-                .catch((reason) => {
-                  error(reason);
-
-                  return context.respond(500, {end: true});
-                });
-            } catch (err) {
-              error(err);
-
-              return context.respond(500, {end: true});
-            }
+            return;
           } catch (err) {
             error("Erreur lors de la transformation des données en JSON", err);
 
