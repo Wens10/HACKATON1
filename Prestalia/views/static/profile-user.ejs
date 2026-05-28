@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="/photos/Gemini_Generated_Image.png" type="image/png">
+  <title>Profil Utilisateur</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/header.css">
+  <link rel="stylesheet" href="/css/footer.css">
+  <link rel="stylesheet" href="/css/profil.user.css">
+</head>
+<body>
+  <%- include("/default-header") %>
+  <main>
+    <div class="container">
+      <div class="profile-header">
+        <div class="header-info">
+          <h1><%= "user.firstName" %> <%= "user.lastName" %></h1>
+          <p class="username">@<%= "user.username" %></p>
+          <div class="user-details">
+            <p><strong>Email:</strong> <%= "user.email" %></p>
+            <p><strong>Date d'inscription:</strong> <%= new Date("user.createdAt").toLocaleDateString('fr-FR') %></p>
+          </div>
+          <div class="header-actions">
+            <button class="btn btn-primary"><i class="fa-solid fa-edit"></i> Modifier le profil</button>
+            <button class="btn btn-outline"><i class="fa-solid fa-sign-out-alt"></i> Déconnexion</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+  <%- include("/footer") %>
+</body>
+</html>

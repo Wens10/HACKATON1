@@ -488,7 +488,7 @@ export function renderStaticEJSFiles(options?: {
   });
 }
 
-export function verfyJWT(token: string) {
+export function verifyJWT(token: string) {
   const jwtSecret = process.env["JWT_SECRET"];
 
   if (!jwtSecret) throw new Error("Le secret JWT est manquant");
@@ -497,7 +497,9 @@ export function verfyJWT(token: string) {
     const payload = verify(token, jwtSecret, {algorithms: ["HS512"]});
 
     return payload;
-  } catch (error) {
+  } catch (err) {
+    error("Erreur lors de la vérification d'un token JWT", err);
+
     return false;
   }
 }

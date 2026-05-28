@@ -1,0 +1,470 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="Prestalia_Desktop.HomePage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Prestalia_Desktop"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <ScrollViewer>
+        <StackPanel
+            Padding="36">
+            <TextBlock
+                Text="Tableau de bord administrateur"
+                Style="{StaticResource TitleTextBlockStyle}"
+                Margin="0, 0, 0, 12"/>
+
+            <TextBlock
+                Text="Gestion de la plateforme Prestalia"
+                Style="{StaticResource BodyTextBlockStyle}"
+                Margin="0, 0, 0, 24"/>
+
+            <StackPanel Spacing="16">
+                <ScrollViewer
+                    x:Name="CardsScrollViewer"
+                    HorizontalScrollMode="Auto"
+                    HorizontalScrollBarVisibility="Auto"
+                    VerticalScrollMode="Disabled"
+                    VerticalScrollBarVisibility="Disabled"
+                    SizeChanged="CardsScrollViewer_SizeChanged">
+                    <Grid
+                        x:Name="CardsGrid"
+                        Width="{Binding ElementName=CardsScrollViewer, Path=ActualWidth}"
+                        MinWidth="728"
+                        ColumnSpacing="16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Border
+                            Grid.Column="0"
+                            CornerRadius="{StaticResource OverlayCornerRadius}"
+                            Padding="16"
+                            MinWidth="170"
+                            Background="{ThemeResource CardBackgroundFillColorDefault}">
+                            <StackPanel Spacing="8">
+                                <TextBlock
+                                    Text="Total des prestataires"
+                                    Style="{StaticResource BodyTextBlockStyle}"/>
+
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock
+                                        x:Name="TextProviderCount"
+                                        VerticalAlignment="Center"
+                                        Grid.Column="0"
+                                        Text="999999999"
+                                        Style="{StaticResource SubtitleTextBlockStyle}"/>
+
+                                    <SymbolIcon
+                                        Width="20"
+                                        Height="20"
+                                        VerticalAlignment="Center"
+                                        Symbol="People"
+                                        Grid.Column="1"/>
+                                </Grid>
+
+                                <TextBlock
+                                    Text="Tous statuts"
+                                    Style="{StaticResource CaptionTextBlockStyle}"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Border
+                            Grid.Column="1"
+                            CornerRadius="{StaticResource OverlayCornerRadius}"
+                            Padding="16"
+                            MinWidth="170"
+                            Background="{ThemeResource CardBackgroundFillColorDefault}">
+                            <StackPanel Spacing="8">
+                                <TextBlock
+                                    Text="En attente"
+                                    Style="{StaticResource BodyTextBlockStyle}"/>
+
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock
+                                        x:Name="TextPendingCount"
+                                        VerticalAlignment="Center"
+                                        Grid.Column="0"
+                                        Text="0"
+                                        Style="{StaticResource SubtitleTextBlockStyle}"/>
+
+                                    <SymbolIcon
+                                        Width="20"
+                                        Height="20"
+                                        VerticalAlignment="Center"
+                                        Symbol="Clock"
+                                        Grid.Column="1"/>
+                                </Grid>
+
+                                <TextBlock
+                                    Text="Action requise"
+                                    Style="{StaticResource CaptionTextBlockStyle}"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Border
+                            Grid.Column="2"
+                            CornerRadius="{StaticResource OverlayCornerRadius}"
+                            Padding="16"
+                            MinWidth="170"
+                            Background="{ThemeResource CardBackgroundFillColorDefault}">
+                            <StackPanel Spacing="8">
+                                <TextBlock
+                                    Text="Approuvés"
+                                    Style="{StaticResource BodyTextBlockStyle}"/>
+
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock
+                                        x:Name="TextApprovedCount"
+                                        VerticalAlignment="Center"
+                                        Grid.Column="0"
+                                        Text="0"
+                                        Style="{StaticResource SubtitleTextBlockStyle}"/>
+
+                                    <SymbolIcon
+                                        Width="20"
+                                        Height="20"
+                                        VerticalAlignment="Center"
+                                        Symbol="Accept"
+                                        Grid.Column="1"/>
+                                </Grid>
+
+                                <TextBlock
+                                    Text="Actifs"
+                                    Style="{StaticResource CaptionTextBlockStyle}"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Border
+                            Grid.Column="3"
+                            CornerRadius="{StaticResource OverlayCornerRadius}"
+                            Padding="16"
+                            MinWidth="170"
+                            Background="{ThemeResource CardBackgroundFillColorDefault}">
+                            <StackPanel Spacing="8">
+                                <TextBlock
+                                    Text="Rejetés"
+                                    Style="{StaticResource BodyTextBlockStyle}"/>
+
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock
+                                        x:Name="TextRejectedCount"
+                                        VerticalAlignment="Center"
+                                        Grid.Column="0"
+                                        Text="0"
+                                        Style="{StaticResource SubtitleTextBlockStyle}"/>
+
+                                    <SymbolIcon
+                                        Width="20"
+                                        Height="20"
+                                        VerticalAlignment="Center"
+                                        Symbol="Cancel"
+                                        Grid.Column="1"/>
+                                </Grid>
+
+                                <TextBlock
+                                    Text="Refusés"
+                                    Style="{StaticResource CaptionTextBlockStyle}"/>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </ScrollViewer>
+
+                <ScrollViewer
+                    HorizontalScrollMode="Auto"
+                    HorizontalScrollBarVisibility="Auto"
+                    VerticalScrollMode="Disabled"
+                    VerticalScrollBarVisibility="Disabled">
+                    <Border
+                        CornerRadius="{StaticResource OverlayCornerRadius}"
+                        Padding="16"
+                        Height="400"
+                        MinWidth="850"
+                        Background="{ThemeResource CardBackgroundFillColorDefault}">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <Grid
+                                Grid.Row="0"
+                                Margin="0, 0, 0, 16">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock
+                                    Grid.Column="0"
+                                    Text="Gestion des prestataires"
+                                    HorizontalAlignment="Left"
+                                    Style="{StaticResource BodyLargeStrongTextBlockStyle}"/>
+
+                                <StackPanel
+                                    Grid.Column="2"
+                                    Orientation="Horizontal"
+                                    Spacing="8">
+                                    <StackPanel
+                                        Orientation="Horizontal"
+                                        Spacing="8">
+                                        <ComboBox
+                                            PlaceholderText="Trier par"
+                                            Width="114"
+                                            SelectionChanged="FilterComboBox_SelectionChanged">
+                                            <x:String>Nom</x:String>
+                                            <x:String>Catégorie</x:String>
+                                            <x:String>Ville</x:String>
+                                            <x:String>Note</x:String>
+                                            <x:String>Statut</x:String>
+                                        </ComboBox>
+
+                                        <ComboBox
+                                            PlaceholderText="Ordre"
+                                            Width="128"
+                                            SelectionChanged="OrderComboBox_SelectionChanged">
+                                            <x:String>Croissant</x:String>
+                                            <x:String>Décroissant</x:String>
+                                        </ComboBox>
+                                    </StackPanel>
+
+                                    <Rectangle
+                                        Width="1"
+                                        Fill="{ThemeResource DividerStrokeColorDefaultBrush}"/>
+
+                                    <RadioButton
+                                        x:Name="AllProvidersButton"
+                                        Content="Tous"
+                                        GroupName="StatusFilter"
+                                        MinWidth="0"
+                                        Checked="AllProvidersButton_Checked"
+                                        Style="{StaticResource DefaultToggleButtonStyle}"/>
+
+                                    <RadioButton
+                                        GroupName="StatusFilter"
+                                        MinWidth="0"
+                                        Checked="PendingProvidersButton_Checked"
+                                        Style="{StaticResource DefaultToggleButtonStyle}">
+                                        <Grid ColumnSpacing="8">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <TextBlock
+                                                Text="En attente"
+                                                VerticalAlignment="Center"
+                                                Grid.Column="0"/>
+
+                                            <InfoBadge
+                                                x:Name="InfoBadgePendingCount"
+                                                Value="0"
+                                                VerticalAlignment="Center"
+                                                Style="{StaticResource CautionIconInfoBadgeStyle}"
+                                                Grid.Column="1"/>
+                                        </Grid>
+                                    </RadioButton>
+
+                                    <RadioButton
+                                        Content="Approuvés"
+                                        GroupName="StatusFilter"
+                                        MinWidth="0"
+                                        Checked="ApprovedProvidersButton_Checked"
+                                        Style="{StaticResource DefaultToggleButtonStyle}"/>
+
+                                    <RadioButton
+                                        Content="Rejetés"
+                                        GroupName="StatusFilter"
+                                        MinWidth="0"
+                                        Checked="RejectedProvidersButton_Checked"
+                                        Style="{StaticResource DefaultToggleButtonStyle}"/>
+                                </StackPanel>
+                            </Grid>
+
+                            <Grid
+                                Grid.Row="1"
+                                ColumnSpacing="12"
+                                Padding="0, 0, 12, 0"
+                                Margin="0, 0, 0, 8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="112"/>
+                                    <ColumnDefinition Width="64"/>
+                                    <ColumnDefinition Width="240"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock
+                                    Grid.Column="0"
+                                    Text="Prestataire"
+                                    Style="{StaticResource BodyStrongTextBlockStyle}"/>
+
+                                <TextBlock
+                                    Grid.Column="1"
+                                    Text="Catégorie"
+                                    Style="{StaticResource BodyStrongTextBlockStyle}"/>
+
+                                <TextBlock
+                                    Grid.Column="2"
+                                    Text="Ville"
+                                    Style="{StaticResource BodyStrongTextBlockStyle}"/>
+
+                                <TextBlock
+                                    Grid.Column="3"
+                                    Text="Note"
+                                    Style="{StaticResource BodyStrongTextBlockStyle}"/>
+
+                                <TextBlock
+                                    Grid.Column="4"
+                                    Text="Statut"
+                                    Style="{StaticResource BodyStrongTextBlockStyle}"/>
+
+                                <TextBlock
+                                    Grid.Column="5"
+                                    Text="Actions"
+                                    Style="{StaticResource BodyStrongTextBlockStyle}"/>
+                            </Grid>
+
+                            <Rectangle
+                                Grid.Row="2"
+                                Height="1"
+                                Fill="{ThemeResource DividerStrokeColorDefaultBrush}"/>
+
+                            <ListView
+                                Grid.Row="3"
+                                Margin="0, 8, 0, 0"
+                                SelectionMode="None"
+                                x:Name="ProvidersList">
+                                <ListView.ItemContainerStyle>
+                                    <Style TargetType="ListViewItem">
+                                        <Setter
+                                            Property="Padding"
+                                            Value="0, 0, 12, 0"/>
+
+                                        <Setter
+                                            Property="Margin"
+                                            Value="0"/>
+
+                                        <Setter
+                                            Property="HorizontalContentAlignment"
+                                            Value="Stretch"/>
+                                    </Style>
+                                </ListView.ItemContainerStyle>
+                                <ListView.ItemTemplate>
+                                    <DataTemplate x:DataType="local:Provider">
+                                        <Grid
+                                            ColumnSpacing="12"
+                                            Padding="0, 8">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="2*"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="112"/>
+                                                <ColumnDefinition Width="64"/>
+                                                <ColumnDefinition Width="240"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <Grid
+                                                Grid.Column="0"
+                                                ColumnSpacing="8"
+                                                VerticalAlignment="Center">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+
+                                                <PersonPicture
+                                                    Grid.Column="0"
+                                                    Width="40"
+                                                    Height="40"
+                                                    DisplayName="{x:Bind Name}"/>
+
+                                                <StackPanel
+                                                    Grid.Column="1"
+                                                    Spacing="4">
+                                                    <TextBlock
+                                                        VerticalAlignment="Center"
+                                                        Style="{StaticResource BodyStrongTextBlockStyle}"
+                                                        Text="{x:Bind Name}"/>
+
+                                                    <TextBlock
+                                                        VerticalAlignment="Center"
+                                                        Text="{x:Bind Email}"/>
+                                                </StackPanel>
+                                            </Grid>
+
+                                            <TextBlock
+                                                Grid.Column="1"
+                                                VerticalAlignment="Center"
+                                                Text="{x:Bind Category}"/>
+
+                                            <TextBlock
+                                                Grid.Column="2"
+                                                VerticalAlignment="Center"
+                                                Text="{x:Bind City}"/>
+
+                                            <RatingControl
+                                                Grid.Column="3"
+                                                VerticalAlignment="Center"
+                                                HorizontalAlignment="Left"
+                                                AutomationProperties.Name="Note d'un prestataire"
+                                                IsReadOnly="True"
+                                                Value="{x:Bind Rating}"/>
+
+                                            <TextBlock
+                                                Grid.Column="4"
+                                                VerticalAlignment="Center"
+                                                Text="{x:Bind Statut}"/>
+
+                                            <StackPanel
+                                                Grid.Column="5"
+                                                Spacing="8"
+                                                Orientation="Horizontal"
+                                                VerticalAlignment="Center">
+                                                <Button
+                                                    Content="Approuver"
+                                                    Style="{StaticResource AccentButtonStyle}"/>
+
+                                                <Button Content="Rejeter"/>
+                                                <Button Content="Détails"/>
+                                            </StackPanel>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </Grid>
+                    </Border>
+                </ScrollViewer>
+            </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
+</Page>

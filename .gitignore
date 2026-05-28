@@ -1,58 +1,24 @@
-node_modules
-dist
-data
+# Node / web
+node_modules/
+dist/
+data/
 *.br
 *.gz
 *.pem
 *.env
-*.*_dev_secret
 *.db*
 .tsbuildinfo
 
-# prestalia_desktop
+# Visual Studio / .NET (GLOBAL)
+.vs/
+bin/
+obj/
 
-# Miscellaneous
-prestalia_desktop/*.class
-prestalia_desktop/*.log
-prestalia_desktop/*.pyc
-prestalia_desktop/*.swp
-prestalia_desktop/.DS_Store
-prestalia_desktop/.atom/
-prestalia_desktop/.build/
-prestalia_desktop/.buildlog/
-prestalia_desktop/.history
-prestalia_desktop/.svn/
-prestalia_desktop/.swiftpm/
-prestalia_desktop/migrate_working_dir/
+# User-specific
+*.user
+*.rsuser
+*.suo
+*.sln.docstates
 
-# IntelliJ related
-prestalia_desktop/*.iml
-prestalia_desktop/*.ipr
-prestalia_desktop/*.iws
-prestalia_desktop/.idea/
-
-# The .vscode folder contains launch configuration and tasks you configure in
-# VS Code which you may wish to be included in version control, so this line
-# is commented out by default.
-#.vscode/
-
-# Flutter/Dart/Pub related
-prestalia_desktop/**/doc/api/
-prestalia_desktop/**/ios/Flutter/.last_build_id
-prestalia_desktop/.dart_tool/
-prestalia_desktop/.flutter-plugins-dependencies
-prestalia_desktop/.pub-cache/
-prestalia_desktop/.pub/
-prestalia_desktop/build/
-prestalia_desktop/coverage/
-
-# Symbolication related
-prestalia_desktop/app.*.symbols
-
-# Obfuscation related
-prestalia_desktop/app.*.map.json
-
-# Android Studio will place build artifacts here
-prestalia_desktop/android/app/debug
-prestalia_desktop/android/app/profile
-prestalia_desktop/android/app/release
+# NuGet
+*.nupkg
