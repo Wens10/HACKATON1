@@ -2,6 +2,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.Windows.Storage.Pickers;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -14,15 +15,16 @@ namespace Prestalia_Desktop
     /// </summary>
     public sealed partial class CategoriesPage : Page
     {
-        private List<Category> categories = [];
+        private ObservableCollection<Category> categories = [];
         private string order = "asc";
         private string orderBy = "default";
+        private string? selectedCategoryIconPath;
 
         public CategoriesPage()
         {
             InitializeComponent();
 
-            categories.AddRange([
+            categories = [
                 new("Plomberie", 2, 40, "2024-01-10"),
                 new("Électricité", 2, 45, "2024-01-12"),
                 new("Peinture", 2, 35, "2024-01-15"),
@@ -38,7 +40,7 @@ namespace Prestalia_Desktop
                 new("Serrurerie", 2, 31, "2024-02-12"),
                 new("Terrassement", 1, 18, "2024-02-15"),
                 new("Nettoyage chantier", 1, 15, "2024-02-18"),
-            ]);
+            ];
 
             CategoriesList.ItemsSource = categories;
         }
@@ -77,29 +79,31 @@ namespace Prestalia_Desktop
 
         private void OrderAndFilter()
         {
+            IEnumerable<Category> sorted = categories;
+
             switch (order)
             {
                 case "asc":
                     switch (orderBy)
                     {
                         case "Name":
-                            CategoriesList.ItemsSource = categories.OrderBy(category => category.Name);
+                            sorted = categories.OrderBy(category => category.Name);
                             break;
 
                         case "ProviderCount":
-                            CategoriesList.ItemsSource = categories.OrderBy(category => category.ProviderCount);
+                            sorted = categories.OrderBy(category => category.ProviderCount);
                             break;
 
                         case "ServiceCount":
-                            CategoriesList.ItemsSource = categories.OrderBy(category => category.ServiceCount);
+                            sorted = categories.OrderBy(category => category.ServiceCount);
                             break;
 
                         case "CreationDate":
-                            CategoriesList.ItemsSource = categories.OrderBy(category => category.CreationDate);
+                            sorted = categories.OrderBy(category => category.CreationDate);
                             break;
 
                         case "default":
-                            CategoriesList.ItemsSource = categories;
+                            sorted = categories;
                             break;
                     }
                     break;
@@ -108,27 +112,29 @@ namespace Prestalia_Desktop
                     switch (orderBy)
                     {
                         case "Name":
-                            CategoriesList.ItemsSource = categories.OrderByDescending(category => category.Name);
+                            sorted = categories.OrderByDescending(category => category.Name);
                             break;
 
                         case "ProviderCount":
-                            CategoriesList.ItemsSource = categories.OrderByDescending(category => category.ProviderCount);
+                            sorted = categories.OrderByDescending(category => category.ProviderCount);
                             break;
 
                         case "ServiceCount":
-                            CategoriesList.ItemsSource = categories.OrderByDescending(category => category.ServiceCount);
+                            sorted = categories.OrderByDescending(category => category.ServiceCount);
                             break;
 
                         case "CreationDate":
-                            CategoriesList.ItemsSource = categories.OrderByDescending(category => category.CreationDate);
+                            sorted = categories.OrderByDescending(category => category.CreationDate);
                             break;
 
                         case "default":
-                            CategoriesList.ItemsSource = categories.Reverse<Category>();
+                            sorted = categories.Reverse<Category>();
                             break;
                     }
                     break;
             }
+
+            CategoriesList.ItemsSource = sorted.ToList();
         }
 
         private async void AddCategory_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
@@ -144,7 +150,15 @@ namespace Prestalia_Desktop
 
                 string newCategoryName = NewCategoryName.Text.Trim();
 
-                categories.Add(new(newCategoryName, 0, 0, formatted));
+                categories.Add(new(newCategoryName, 0, 0, formatted, selectedCategoryIconPath));
+
+                selectedCategoryIconPath = null;
+
+                NewCategoryName.Text = "";
+
+                PickCategoryIconTextBlock.Text = "Aucune";
+
+                AddCategoryInfoBar.IsOpen = false;
 
                 OrderAndFilter();
             }
@@ -162,7 +176,7 @@ namespace Prestalia_Desktop
                 args.Cancel = true;
 
             }
-            else if (categories.Find(category => category.Name.ToLower() == newCategoryName.ToLower()) != null)
+            else if (categories.Any(category => category.Name.Equals(newCategoryName, StringComparison.OrdinalIgnoreCase)))
             {
                 AddCategoryInfoBar.Message = "Une catégorie avec ce nom existe déjà.";
                 AddCategoryInfoBar.IsOpen = true;
@@ -190,9 +204,17 @@ namespace Prestalia_Desktop
 
                 // Show the picker dialog window
                 var file = await picker.PickSingleFileAsync();
-                PickCategoryIconTextBlock.Text = file != null
-                    ? "Icône: " + file.Path
-                    : "Aucune";
+
+                if (file != null)
+                {
+                    selectedCategoryIconPath = file.Path;
+                    PickCategoryIconTextBlock.Text = "Icône: " + file.Path;
+                }
+                else
+                {
+                    selectedCategoryIconPath = null;
+                    PickCategoryIconTextBlock.Text = "Aucune";
+                }
 
                 //re-enable the button
                 button.IsEnabled = true;

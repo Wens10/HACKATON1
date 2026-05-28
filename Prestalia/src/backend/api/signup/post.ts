@@ -1,14 +1,7 @@
 import {Context, error, hasProps, Http2Context} from "../../core";
 import {DatabaseSync} from "node:sqlite";
-import {availableParallelism, totalmem} from "os";
-import {sign} from "jsonwebtoken";
-import {
-  cookieToJSON,
-  hashPassword,
-  isValidEmail,
-  isValidPassword,
-  verifyJWT,
-} from "../../utils/functions";
+import {cookieToJSON, verifyJWT} from "../../utils/functions";
+import signup from "../../controllers/signup/post";
 
 const jwtSecret = process.env["JWT_SECRET"];
 
@@ -89,76 +82,23 @@ export default ((context, headers, db) => {
     .on("data", (chunk) => (data += chunk))
     .on("end", () => {
       const params = new URLSearchParams(data),
-        name = params.get("name")?.trim().normalize("NFKC"),
-        email = params.get("email")?.trim().normalize("NFKC").toLowerCase(),
-        password = params.get("password")?.normalize("NFKC");
+        name = params.get("name") ?? "",
+        email = params.get("email") ?? "",
+        password = params.get("password") ?? "";
 
-      if (!name || name === "") return context.respond(400, {end: true});
-      if (!email || email === "") return context.respond(400, {end: true});
-      if (!isValidEmail(email)) return context.respond(400, {end: true});
-      if (!password || password === "")
-        return context.respond(400, {end: true});
-      if (!isValidPassword(password)) return context.respond(400, {end: true});
-
-      try {
-        const userExist = Boolean(
-          db.prepare("SELECT id FROM users WHERE email = ?").get(email),
-        );
-
-        if (userExist) return context.respond(400, {end: true});
-      } catch (err) {
-        error(err);
-
-        return context.respond(500, {end: true});
-      }
-
-      return hashPassword(
-        password,
-        {
-          parallelism: Math.min(availableParallelism(), 8),
-          tagLength: 64,
-          memory: Math.floor(Math.min(totalmem() * 0.05, 1 << 28) / 1024),
-          passes: 3,
-        },
-        {secret: process.env["ARGON2_SECRET"]},
-      )
-        .then((hash) => {
-          try {
-            const userId = db
-              .prepare(
-                "INSERT INTO users (name, email, password) VALUES (?, ?, ?)",
-              )
-              .run(name, email, hash).lastInsertRowid;
-
-            try {
-              const token = sign({userId}, jwtSecret, {
-                expiresIn: "1h",
-                algorithm: "HS512",
-              });
-
-              return context.respond(303, {
-                end: true,
-                headers: {
-                  "location": to ?? "/",
-                  "set-cookie": `token=${token}; Path=/; Secure; HttpOnly; SameSite=Strict;`,
-                },
-              });
-            } catch (err) {
-              error(err);
-
-              return context.respond(500, {end: true});
-            }
-          } catch (err) {
-            error(err);
-
-            return context.respond(500, {end: true});
-          }
-        })
-        .catch((reason) => {
-          error(reason);
-
-          return context.respond(500, {end: true});
-        });
+      signup(name, email, password, db).then((result) => {
+        if (result.ok && result.token)
+          return context.respond(303, {
+            end: true,
+            headers: {
+              "location": to ?? "/",
+              "set-cookie": `token=${result.token}; Path=/; Secure; HttpOnly; SameSite=Strict;`,
+            },
+          });
+        else if (!result.ok && result.status)
+          return context.respond(result.status, {end: true});
+        else return context.respond(500, {end: true});
+      });
     });
 }) satisfies (
   // eslint-disable-next-line no-unused-vars

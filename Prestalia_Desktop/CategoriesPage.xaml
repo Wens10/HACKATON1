@@ -113,8 +113,7 @@
                                             MaxLength="100"/>
 
                                         <TextBlock
-                                            x:Name="Choisir une icône pour la catégorie (optionel)"
-                                            Text="Aucune"/>
+                                            Text="Choisir une icône pour la catégorie (optionel)"/>
 
                                         <Button
                                             x:Name="PickCategoryIconButton"
@@ -219,7 +218,8 @@
                                                 Grid.Column="0"
                                                 Width="40"
                                                 Height="40"
-                                                DisplayName="{x:Bind Name}"/>
+                                                DisplayName="{x:Bind Name}"
+                                                ProfilePicture="{x:Bind IconPath, Converter={StaticResource PathToImageSourceConverter}}"/>
 
                                             <TextBlock
                                                 Grid.Column="1"
