@@ -1,4 +1,4 @@
-import {createSecureServer} from "http2";
+import {createSecureServer, ServerHttp2Stream} from "http2";
 import {MessageTypes} from "../utils/common/enums";
 import messageProcessEvent from "../events/workers/process/message";
 import {
@@ -44,7 +44,7 @@ export default (() => {
       }
     })
     .on("stream", (stream, headers) => {
-      const context = new Http2Context(stream, headers);
+      const context = new Http2Context(stream as ServerHttp2Stream, headers);
 
       if (
         isAdminExists(context, apiParams) &&
