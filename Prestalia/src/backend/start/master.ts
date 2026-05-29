@@ -32,7 +32,7 @@ export default (() => {
         id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
         created_at DATETIME NOT NULL DEFAULT (DATETIME('now', 'subsec', 'utc')),
         name VARCHAR(100) NOT NULL,
-        logo VARCHAR(300)
+        icon VARCHAR(300)
       );
 
       CREATE TABLE IF NOT EXISTS users (

@@ -53,6 +53,7 @@ namespace Prestalia_Desktop
                     if (result != null && result.Token != null)
                     {
                         SessionManager.Token = result.Token;
+                        HttpClientProvider.SetToken(SessionManager.Token);
 
                         ProgressBar.Visibility = Visibility.Visible;
 

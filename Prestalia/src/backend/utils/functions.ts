@@ -458,6 +458,40 @@ export function isAdminExists(context: Context, params: any[]) {
   return false;
 }
 
+export function isDataRequest(context: Context, params: any[]) {
+  if (!context.path?.startsWith("/data")) return false;
+
+  const db = params[0];
+
+  if (!(db instanceof DatabaseSync)) {
+    context
+      .respond(500, {
+        headers: {"content-type": "text/plain; charset=utf-8"},
+      })
+      .end(
+        "Erreur interne: le paramètre qui doit être une instance de DatabaseSync ne l'est pas",
+      );
+
+    return false;
+  }
+
+  switch (context.method) {
+    case "GET":
+    case "HEAD":
+      context.respondWithFile(
+        join(workingDirPath, context.path),
+        context.method,
+        {mimeType: MIME_TYPES[".png"]},
+      );
+      break;
+    default:
+      context.respond(405, {end: true, headers: {allow: "GET, HEAD"}});
+      break;
+  }
+
+  return true;
+}
+
 export function renderStaticEJSFiles(options?: {
   staticPageDir?: string;
   distDir?: string;

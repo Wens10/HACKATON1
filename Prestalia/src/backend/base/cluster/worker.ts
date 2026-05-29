@@ -13,7 +13,7 @@ import {
 import config from "../../config";
 import {handleRequest} from "../utils/workers/functions";
 import {join} from "path";
-import {isAdminExists} from "../../utils/functions";
+import {isAdminExists, isDataRequest} from "../../utils/functions";
 
 export default (() => {
   log("Worker lancé");
@@ -36,14 +36,20 @@ export default (() => {
       if (req.httpVersionMajor < 2) {
         const context = new Http1Context(req, res);
 
-        if (isAdminExists(context, apiParams))
+        if (
+          isAdminExists(context, apiParams) &&
+          !isDataRequest(context, apiParams)
+        )
           handleRequest(context, pageParams, apiParams);
       }
     })
     .on("stream", (stream, headers) => {
       const context = new Http2Context(stream, headers);
 
-      if (isAdminExists(context, apiParams))
+      if (
+        isAdminExists(context, apiParams) &&
+        !isDataRequest(context, apiParams)
+      )
         handleRequest(context, pageParams, apiParams);
     });
 

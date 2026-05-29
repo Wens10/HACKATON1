@@ -219,7 +219,7 @@
                                                 Width="40"
                                                 Height="40"
                                                 DisplayName="{x:Bind Name}"
-                                                ProfilePicture="{x:Bind IconPath, Converter={StaticResource PathToImageSourceConverter}}"/>
+                                                ProfilePicture="{x:Bind Icon, Mode=OneWay}"/>
 
                                             <TextBlock
                                                 Grid.Column="1"

@@ -1,7 +1,13 @@
 # Prestalia
 
-1. Dans le dossier **Prestalia**, créez les dossiers data, errors, cert et cert-challenges
-2. À la racine du dossier **Prestalia**, créez un fichier `.env` avec le contenu suivant :
+1. Dans le dossier **Prestalia**, créez les dossiers :
+
+- data
+- errors
+- cert
+- cert-challenges
+
+2. À la racine du dossier **Prestalia**, créez un fichier *.env* avec le contenu suivant :
 
 ```env
 ADMIN_DEFAULT_PASSWORD=mon_mdp_par_defaut

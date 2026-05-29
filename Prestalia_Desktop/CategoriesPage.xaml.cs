@@ -3,7 +3,12 @@ using Microsoft.Windows.Storage.Pickers;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -19,28 +24,39 @@ namespace Prestalia_Desktop
         private string order = "asc";
         private string orderBy = "default";
         private string? selectedCategoryIconPath;
+        
+        public record CategoryResponse(
+            [property: JsonPropertyName("id")] int Id,
+            [property: JsonPropertyName("name")] string Name,
+            [property: JsonPropertyName("icon")] string? Icon,
+            [property: JsonPropertyName("created_at")] string CreatedAt
+        );
 
-        public CategoriesPage()
+    public CategoriesPage()
         {
             InitializeComponent();
 
-            categories = [
-                new("Plomberie", 2, 40, "2024-01-10"),
-                new("Électricité", 2, 45, "2024-01-12"),
-                new("Peinture", 2, 35, "2024-01-15"),
-                new("Menuiserie", 2, 30, "2024-01-18"),
-                new("Carrelage", 2, 28, "2024-01-22"),
-                new("Plâtrerie", 2, 26, "2024-01-25"),
-                new("Décoration intérieure", 2, 22, "2024-01-28"),
-                new("Chauffage", 2, 33, "2024-02-01"),
-                new("Vitrerie", 2, 20, "2024-02-03"),
-                new("Couverture", 2, 27, "2024-02-05"),
-                new("Isolation", 2, 24, "2024-02-08"),
-                new("Climatisation", 2, 29, "2024-02-10"),
-                new("Serrurerie", 2, 31, "2024-02-12"),
-                new("Terrassement", 1, 18, "2024-02-15"),
-                new("Nettoyage chantier", 1, 15, "2024-02-18"),
-            ];
+            Loaded += async (_, _) =>
+            {
+                var response = await HttpClientProvider.Http.GetAsync("/api/categories");
+                var body = await response.Content.ReadAsStringAsync();
+                var data = String.IsNullOrEmpty(body) ? [] : JsonSerializer.Deserialize<List<CategoryResponse>>(body) ?? [];
+
+                foreach (var category in data)
+                {
+                    Category cat = new(
+                        category.Name,
+                        0,
+                        0,
+                        DateTime.Parse(category.CreatedAt).ToString("yyyy-MM-dd"),
+                        category.Icon
+                    );
+
+                    categories.Add(cat);
+
+                    _ = cat.LoadIconAsync();
+                }
+            };
 
             CategoriesList.ItemsSource = categories;
         }
@@ -149,6 +165,27 @@ namespace Prestalia_Desktop
                 string formatted = currentDateTime.ToString("yyyy-MM-dd");
 
                 string newCategoryName = NewCategoryName.Text.Trim();
+
+                MultipartFormDataContent form;
+
+                if (selectedCategoryIconPath != null)
+                {
+                    var iconStream = System.IO.File.OpenRead(selectedCategoryIconPath);
+                    var iconContent = new StreamContent(iconStream);
+
+                    iconContent.Headers.ContentType = new MediaTypeHeaderValue("image/png");
+
+                    form = new MultipartFormDataContent
+                    {
+                        { new StringContent(newCategoryName), "name" },
+                        { iconContent, "icon", Path.GetFileName(selectedCategoryIconPath) }
+                    };
+                } else form = new MultipartFormDataContent
+                {
+                    { new StringContent(newCategoryName), "name" }
+                };
+
+                var response = await HttpClientProvider.Http.PostAsync("/api/categories", form);
 
                 categories.Add(new(newCategoryName, 0, 0, formatted, selectedCategoryIconPath));
 
