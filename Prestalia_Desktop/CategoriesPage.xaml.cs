@@ -31,7 +31,9 @@ namespace Prestalia_Desktop
             [property: JsonPropertyName("id")] int Id,
             [property: JsonPropertyName("name")] string Name,
             [property: JsonPropertyName("icon")] string? Icon,
-            [property: JsonPropertyName("created_at")] string CreatedAt
+            [property: JsonPropertyName("created_at")] string CreatedAt,
+            [property: JsonPropertyName("provider_count")] int ProviderCount,
+            [property: JsonPropertyName("reservation_count")] int ReservationCout
         );
 
     public CategoriesPage()
@@ -53,9 +55,10 @@ namespace Prestalia_Desktop
         public void AddAPICategory(APICategory category)
         {
             Category cat = new(
+                category.Id,
                 category.Name,
-                0,
-                0,
+                category.ProviderCount,
+                category.ReservationCout,
                 DateTime.Parse(category.CreatedAt).ToString("yyyy-MM-dd"),
                 category.Icon
             );

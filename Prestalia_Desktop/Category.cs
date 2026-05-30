@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Prestalia_Desktop
 {
-    internal partial class Category(string name, int providerCount, int serviceCount, string creationDate, string? iconPath = null) : INotifyPropertyChanged
+    internal partial class Category(int id, string name, int providerCount, int serviceCount, string creationDate, string? iconPath = null) : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -32,6 +32,7 @@ namespace Prestalia_Desktop
         }
 
         public bool HasIcon => !string.IsNullOrWhiteSpace(IconPath);
+        public int Id { get; private set; } = id;
         public string Name { get; private set; } = name;
         public int ProviderCount { get; private set; } = providerCount;
         public int ServiceCount { get; private set; } = serviceCount;
