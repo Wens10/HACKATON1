@@ -3,32 +3,36 @@ import {DatabaseSync} from "node:sqlite";
 import busboy from "busboy";
 import {writeFile} from "fs/promises";
 import {join} from "path";
+import {getCategory, verifyJWT} from "../../utils/functions";
+import {randomUUID} from "crypto";
 
 export default ((context, headers, db) => {
-  // const cookies = cookieToJSON(headers.cookie);
+  const authorizationHeader = headers.authorization;
 
-  // if (!hasProps(cookies, {token: "string"}))
-  //   return context.respond(401, {end: true});
+  if (!authorizationHeader) return context.respond(400, {end: true});
 
-  // const payload = verifyJWT(cookies.token);
+  const [authScheme, token] = authorizationHeader.split(" ");
 
-  // if (!hasProps(payload, {userId: "number"}))
-  //   return context.respond(401, {end: true});
+  if (!authScheme) return context.respond(400, {end: true});
+  if (authScheme.toLowerCase() !== "bearer")
+    return context.respond(400, {end: true});
+
+  if (!token) return context.respond(400, {end: true});
+
+  const payload = verifyJWT(token);
+
+  if (!hasProps(payload, {userId: "number"}))
+    return context.respond(401, {end: true});
 
   try {
-    // const userId = payload.userId,
-    //   user = db.prepare("SELECT id, role FROM users WHERE id = ?").get(userId);
+    const userId = payload.userId,
+      user = db.prepare("SELECT id, role FROM users WHERE id = ?").get(userId);
 
-    // if (!user || !hasProps(user, {role: "string"}))
-    //   return context.respond(401, {end: true});
+    if (!user || !hasProps(user, {id: "number", role: "string"}))
+      return context.respond(401, {end: true});
 
-    // if (user.role.toLowerCase() === "provider")
-    //   return context.respond(303, {
-    //     end: true,
-    //     headers: {
-    //       location: "/tableau_presta",
-    //     },
-    //   });
+    if (user.role.toLowerCase() !== "admin")
+      return context.respond(401, {end: true});
 
     const bb = busboy({headers, limits: {files: 1}}),
       body: Record<
@@ -52,6 +56,7 @@ export default ((context, headers, db) => {
           if (Array.isArray(body[name])) body[name].push({filename, data});
         });
     })
+      .on("filesLimit", () => context.respond(413, {end: true}))
       .on("field", (name, value) => (body[name] ??= value))
       .on("close", async () => {
         if (!hasProps(body, {name: "string"}))
@@ -75,10 +80,10 @@ export default ((context, headers, db) => {
         if (icon) {
           const iconPath = join(
             "/data",
-            `c${"userId".padStart(32, "0")}${catId.toString().padStart(32, "0")}.png`,
+            `c${randomUUID().replace(/-/g, "")}.png`,
           );
 
-          writeFile(join(workingDirPath, iconPath), icon).then(() => {
+          await writeFile(join(workingDirPath, iconPath), icon).then(() => {
             db.prepare("UPDATE categories SET icon = ? WHERE id = ?").run(
               iconPath,
               catId,
@@ -86,23 +91,7 @@ export default ((context, headers, db) => {
           });
         }
 
-        const cat = db
-          .prepare(
-            `
-              SELECT
-                id,
-                name,
-                CASE
-                  WHEN icon IS NULL THEN NULL
-                  WHEN icon LIKE 'http%' THEN icon
-                  ELSE 'https://localhost:8443' || REPLACE(icon, '\\', '/')
-                END AS icon,
-                created_at
-              FROM
-                categories WHERE id = ?
-            `,
-          )
-          .get(catId);
+        const cat = getCategory(db, catId);
 
         if (cat) {
           context.respond(201, {

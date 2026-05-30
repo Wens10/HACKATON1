@@ -8,6 +8,11 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
+    <Page.Resources>
+        <local:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
+        <local:NotNullToVisibilityConverter x:Key="NotNullToVisibilityConverter"/>
+    </Page.Resources>
+
     <ScrollViewer>
         <StackPanel
             Padding="36">
@@ -214,12 +219,20 @@
                                                 <ColumnDefinition Width="*"/>
                                             </Grid.ColumnDefinitions>
 
-                                            <PersonPicture
+                                            <Grid
                                                 Grid.Column="0"
                                                 Width="40"
-                                                Height="40"
-                                                DisplayName="{x:Bind Name}"
-                                                ProfilePicture="{x:Bind Icon, Mode=OneWay}"/>
+                                                Height="40">
+                                                <!-- Fallback initiale si pas d'icône -->
+                                                <PersonPicture
+                                                    DisplayName="{x:Bind Name}"
+                                                    Visibility="{x:Bind Icon, Mode=OneWay, Converter={StaticResource NullToVisibilityConverter}}"/>
+
+                                                <!-- Image si icône présente -->
+                                                <Image
+                                                    Source="{x:Bind Icon, Mode=OneWay}"
+                                                    Visibility="{x:Bind Icon, Mode=OneWay, Converter={StaticResource NotNullToVisibilityConverter}}"/>
+                                            </Grid>
 
                                             <TextBlock
                                                 Grid.Column="1"

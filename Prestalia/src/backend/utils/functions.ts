@@ -537,3 +537,56 @@ export function verifyJWT(token: string) {
     return false;
   }
 }
+
+export function getCategories(
+  db: DatabaseSync,
+  {sortBy, limit}: {sortBy?: "most_popular"; limit?: number},
+) {
+  return db
+    .prepare(
+      `
+        SELECT
+          c.id,
+          c.name,
+          CASE
+            WHEN c.icon IS NULL THEN NULL
+            WHEN c.icon LIKE 'http%' THEN c.icon
+            ELSE 'https://localhost:8443' || REPLACE(c.icon, '\\', '/')
+          END AS icon,
+          c.created_at,
+          COUNT(DISTINCT p.id) AS provider_count,
+          COUNT(DISTINCT r.id) AS reservation_count
+        FROM categories c
+        LEFT JOIN providers p ON c.id = p.category
+        LEFT JOIN reservations r ON p.id = r.provider
+        GROUP BY c.id
+        ${sortBy !== undefined ? "ORDER BY reservation_count DESC" : ""}
+        ${limit !== undefined ? `LIMIT ${limit}` : ""}
+      `,
+    )
+    .all();
+}
+
+export function getCategory(db: DatabaseSync, categoryId: number | bigint) {
+  return db
+    .prepare(
+      `
+        SELECT
+          c.id,
+          c.name,
+          CASE
+            WHEN c.icon IS NULL THEN NULL
+            WHEN c.icon LIKE 'http%' THEN c.icon
+            ELSE 'https://localhost:8443' || REPLACE(c.icon, '\\', '/')
+          END AS icon,
+          c.created_at,
+          COUNT(DISTINCT p.id) AS provider_count,
+          COUNT(DISTINCT r.id) AS reservation_count
+        FROM categories c
+        LEFT JOIN providers p ON c.id = p.category
+        LEFT JOIN reservations r ON p.id = r.provider
+        WHERE c.id = ?
+      `,
+    )
+    .get(categoryId);
+}

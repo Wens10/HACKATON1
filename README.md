@@ -1,3 +1,7 @@
+# Dossier *example*
+
+Le dossier *example* contient du contenu permettant de tester les applications.
+
 # Prestalia
 
 1. Dans le dossier **Prestalia**, créez les dossiers :

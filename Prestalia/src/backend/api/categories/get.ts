@@ -1,5 +1,6 @@
 import {Context, MIME_TYPES} from "../../core";
 import {DatabaseSync} from "node:sqlite";
+import {getCategories} from "../../utils/functions";
 
 export default ((context, _headers, db) => {
   context.respond(200, {
@@ -7,27 +8,7 @@ export default ((context, _headers, db) => {
     headers: {"content-type": MIME_TYPES[".json"]},
   });
 
-  return context.end(
-    JSON.stringify(
-      db
-        .prepare(
-          `
-            SELECT
-              id,
-              name,
-              CASE
-                WHEN icon IS NULL THEN NULL
-                WHEN icon LIKE 'http%' THEN icon
-                ELSE 'https://localhost:8443' || REPLACE(icon, '\\', '/')
-              END AS icon,
-              created_at
-            FROM
-              categories
-          `,
-        )
-        .all(),
-    ),
-  );
+  return context.end(JSON.stringify(getCategories(db, {})));
 }) satisfies (
   // eslint-disable-next-line no-unused-vars
   context: Context,

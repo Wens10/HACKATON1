@@ -10,8 +10,6 @@
             <ResourceDictionary.MergedDictionaries>
                 <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
             </ResourceDictionary.MergedDictionaries>
-
-            <local:PathToImageSourceConverter x:Key="PathToImageSourceConverter"/>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

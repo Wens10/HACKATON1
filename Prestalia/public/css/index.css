@@ -256,7 +256,7 @@ section {
   box-shadow: 0 15px 30px -10px rgba(99, 102, 241, 0.2);
 }
 
-.category svg {
+.category img {
   width: 48px;
   height: 48px;
   padding: 10px;
@@ -266,7 +266,7 @@ section {
   transition: all 0.3s ease;
 }
 
-.category:hover svg {
+.category:hover img {
   background: var(--primary-color);
   color: #ffffff;
   transform: scale(1.1);

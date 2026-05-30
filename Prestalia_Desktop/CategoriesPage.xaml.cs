@@ -7,8 +7,10 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using static Prestalia_Desktop.MainWindow;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -25,7 +27,7 @@ namespace Prestalia_Desktop
         private string orderBy = "default";
         private string? selectedCategoryIconPath;
         
-        public record CategoryResponse(
+        public record APICategory(
             [property: JsonPropertyName("id")] int Id,
             [property: JsonPropertyName("name")] string Name,
             [property: JsonPropertyName("icon")] string? Icon,
@@ -40,25 +42,27 @@ namespace Prestalia_Desktop
             {
                 var response = await HttpClientProvider.Http.GetAsync("/api/categories");
                 var body = await response.Content.ReadAsStringAsync();
-                var data = String.IsNullOrEmpty(body) ? [] : JsonSerializer.Deserialize<List<CategoryResponse>>(body) ?? [];
+                var data = String.IsNullOrEmpty(body) ? [] : JsonSerializer.Deserialize<List<APICategory>>(body) ?? [];
 
-                foreach (var category in data)
-                {
-                    Category cat = new(
-                        category.Name,
-                        0,
-                        0,
-                        DateTime.Parse(category.CreatedAt).ToString("yyyy-MM-dd"),
-                        category.Icon
-                    );
-
-                    categories.Add(cat);
-
-                    _ = cat.LoadIconAsync();
-                }
+                foreach (var category in data) AddAPICategory(category);
             };
 
             CategoriesList.ItemsSource = categories;
+        }
+
+        public void AddAPICategory(APICategory category)
+        {
+            Category cat = new(
+                category.Name,
+                0,
+                0,
+                DateTime.Parse(category.CreatedAt).ToString("yyyy-MM-dd"),
+                category.Icon
+            );
+
+            categories.Add(cat);
+
+            _ = cat.LoadIconAsync();
         }
 
         private void FilterComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -161,16 +165,13 @@ namespace Prestalia_Desktop
 
             if (result == ContentDialogResult.Primary)
             {
-                DateTime currentDateTime = DateTime.Now;
-                string formatted = currentDateTime.ToString("yyyy-MM-dd");
-
                 string newCategoryName = NewCategoryName.Text.Trim();
 
                 MultipartFormDataContent form;
 
                 if (selectedCategoryIconPath != null)
                 {
-                    var iconStream = System.IO.File.OpenRead(selectedCategoryIconPath);
+                    var iconStream = File.OpenRead(selectedCategoryIconPath);
                     var iconContent = new StreamContent(iconStream);
 
                     iconContent.Headers.ContentType = new MediaTypeHeaderValue("image/png");
@@ -187,7 +188,12 @@ namespace Prestalia_Desktop
 
                 var response = await HttpClientProvider.Http.PostAsync("/api/categories", form);
 
-                categories.Add(new(newCategoryName, 0, 0, formatted, selectedCategoryIconPath));
+                if (response.IsSuccessStatusCode)
+                {
+                    var category = await response.Content.ReadFromJsonAsync<APICategory?>();
+
+                    if (category != null) AddAPICategory(category);
+                }
 
                 selectedCategoryIconPath = null;
 
