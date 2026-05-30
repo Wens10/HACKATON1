@@ -1,10 +1,8 @@
-import {Context, error, hasProps, MIME_TYPES, workingDirPath} from "../../core";
+import {Context, error, hasProps, MIME_TYPES} from "../../core";
 import {DatabaseSync} from "node:sqlite";
 import busboy from "busboy";
-import {writeFile} from "fs/promises";
-import {join} from "path";
-import {getCategory, verifyJWT} from "../../utils/functions";
-import {randomUUID} from "crypto";
+import {verifyJWT} from "../../utils/functions";
+import createCategory from "../../controllers/categories/post";
 
 export default ((context, headers, db) => {
   const authorizationHeader = headers.authorization;
@@ -59,55 +57,25 @@ export default ((context, headers, db) => {
       .on("filesLimit", () => context.respond(413, {end: true}))
       .on("field", (name, value) => (body[name] ??= value))
       .on("close", async () => {
-        if (!hasProps(body, {name: "string"}))
-          return context.respond(400, {end: true});
+        const result = await createCategory(body, db);
 
-        if (
-          db.prepare("SELECT 1 FROM categories WHERE name = ?").get(body.name)
-        )
-          return context.respond(400, {end: true});
+        if (!result.ok) return context.respond(result.status, {end: true});
 
-        const icon =
-          hasProps(body, {icon: "array"}) &&
-          hasProps(body.icon[0], {filename: "string", data: "buffer"})
-            ? body.icon[0].data
-            : null;
-
-        const catId = db
-          .prepare("INSERT INTO categories (name) VALUES (?)")
-          .run(body.name).lastInsertRowid;
-
-        if (icon) {
-          const iconPath = join(
-            "/data",
-            `c${randomUUID().replace(/-/g, "")}.png`,
-          );
-
-          await writeFile(join(workingDirPath, iconPath), icon).then(() => {
-            db.prepare("UPDATE categories SET icon = ? WHERE id = ?").run(
-              iconPath,
-              catId,
-            );
-          });
-        }
-
-        const cat = getCategory(db, catId);
-
-        if (cat) {
+        if (result.data) {
           context.respond(201, {
             end: false,
             headers: {
               "content-type": MIME_TYPES[".json"],
-              "location": `https://localhost:8443/api/categories/${catId}`,
+              "location": result.location,
             },
           });
 
-          context.end(JSON.stringify(cat));
+          context.end(result.data);
         } else
           context.respond(201, {
             end: true,
             headers: {
-              location: `https://localhost:8443/api/categories/${catId}`,
+              location: result.location,
             },
           });
 
