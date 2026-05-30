@@ -63,9 +63,9 @@
             <label>Catégorie principale *</label>
             <select id="cat" name="category">
               <option value="">Choisir...</option>
-              <option value="1">Électricité</option>
-              <option value="2">Plomberie</option>
-              <option value="3">Peinture</option>
+              <% for (const category of categories) { %>
+                <option value="<%= category.id %>"><%= category.name %></option>
+              <% } %>
             </select>
           </div>
           <div class="form-group">
@@ -75,7 +75,7 @@
           <div class="grid">
             <div class="form-group">
               <label for="exp">Expérience (ans) *</label>
-              <input type="number" name="exp">
+              <input type="number" name="exp" min="0">
             </div>
             <div class="form-group">
               <label for="price">Tarif horaire (€) *</label>
