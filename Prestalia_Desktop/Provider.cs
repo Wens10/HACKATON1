@@ -1,7 +1,8 @@
 ﻿namespace Prestalia_Desktop
 {
-    internal class Provider(string name, string email, string category, string city, float rating, string statut)
+    internal class Provider(int id, string name, string email, string category, string city, float rating, string statut)
     {
+        public int Id { get; private set; } = id;
         public string Name { get; private set; } = name;
         public string Email { get; private set; } = email;
         public string Category { get; private set; } = category;

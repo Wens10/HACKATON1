@@ -320,7 +320,7 @@
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="112"/>
                                     <ColumnDefinition Width="64"/>
-                                    <ColumnDefinition Width="240"/>
+                                    <ColumnDefinition Width="66"/>
                                 </Grid.ColumnDefinitions>
 
                                 <TextBlock
@@ -390,7 +390,7 @@
                                                 <ColumnDefinition Width="*"/>
                                                 <ColumnDefinition Width="112"/>
                                                 <ColumnDefinition Width="64"/>
-                                                <ColumnDefinition Width="240"/>
+                                                <ColumnDefinition Width="66"/>
                                             </Grid.ColumnDefinitions>
 
                                             <Grid
@@ -445,18 +445,9 @@
                                                 VerticalAlignment="Center"
                                                 Text="{x:Bind Statut}"/>
 
-                                            <StackPanel
+                                            <Button
                                                 Grid.Column="5"
-                                                Spacing="8"
-                                                Orientation="Horizontal"
-                                                VerticalAlignment="Center">
-                                                <Button
-                                                    Content="Approuver"
-                                                    Style="{StaticResource AccentButtonStyle}"/>
-
-                                                <Button Content="Rejeter"/>
-                                                <Button Content="Détails"/>
-                                            </StackPanel>
+                                                Content="Détails"/>
                                         </Grid>
                                     </DataTemplate>
                                 </ListView.ItemTemplate>

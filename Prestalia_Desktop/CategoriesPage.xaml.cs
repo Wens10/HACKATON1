@@ -246,6 +246,9 @@ namespace Prestalia_Desktop
                 selectedEditCategoryIconPath = category.IconPath;
 
                 EditCategoryDialog.XamlRoot = this.XamlRoot;
+
+                EditCategoryDialog.IsSecondaryButtonEnabled = category.ProviderCount == 0 && category.ServiceCount == 0;
+
                 var result = await EditCategoryDialog.ShowAsync();
 
                 if (result == ContentDialogResult.Primary)
@@ -289,6 +292,29 @@ namespace Prestalia_Desktop
 
                     selectedEditCategoryIconPath = null;
                     EditCategoryInfoBar.IsOpen = false;
+                } else if (result == ContentDialogResult.Secondary)
+                {
+                    var confirm = new ContentDialog
+                    {
+                        Title = "Confirmer la suppression",
+                        Content = $"Êtes-vous sûr de vouloir supprimer la catégorie \"{category.Name}\" ?",
+                        PrimaryButtonText = "Supprimer",
+                        CloseButtonText = "Annuler",
+                        XamlRoot = this.XamlRoot
+                    };
+
+                    var confirmResult = await confirm.ShowAsync();
+
+                    if (confirmResult == ContentDialogResult.Primary)
+                    {
+                        var response = await HttpClientProvider.Http.DeleteAsync($"/api/categories/{category.Id}");
+
+                        if (response.IsSuccessStatusCode)
+                        {
+                            categories.Remove(category);
+                            OrderAndFilter();
+                        }
+                    }
                 }
             }
         }

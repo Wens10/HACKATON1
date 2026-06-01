@@ -23,36 +23,36 @@ namespace Prestalia_Desktop
             InitializeComponent();
 
             providers.AddRange([
-                new("Jean Dupont", "jean.dupont@artisanmail.fr", "Plomberie", "Paris", 4.8f, "Approuvé"),
-                new("Sophie Martin", "sophie.martin.pro@gmail.com", "Électricité", "Lyon", 4.6f, "Approuvé"),
-                new("Karim Benali", "karim.benali@outlook.fr", "Peinture", "Marseille", 4.3f, "En attente"),
-                new("Camille Petit", "camille.petit.travaux@yahoo.fr", "Menuiserie", "Bordeaux", 4.7f, "Approuvé"),
-                new("Nicolas Moreau", "n.moreau.renov@gmail.com", "Maçonnerie", "Toulouse", 4.1f, "En attente"),
-                new("Laura Garcia", "laura.garcia.pro@orange.fr", "Carrelage", "Nice", 4.5f, "Approuvé"),
-                new("Mehdi Roux", "mehdi.roux.batiment@gmail.com", "Plâtrerie", "Nantes", 3.9f, "En attente"),
-                new("Élodie Bernard", "elodie.bernard.deco@laposte.net", "Décoration intérieure", "Lille", 4.9f, "Approuvé"),
-                new("Thomas Faure", "thomas.faure.services@gmail.com", "Chauffage", "Strasbourg", 4.2f, "Approuvé"),
-                new("Inès Mercier", "ines.mercier.artisan@outlook.com", "Vitrerie", "Montpellier", 3.8f, "En attente"),
-                new("Alexandre Chevalier", "alex.chevalier.pro@gmail.com", "Couverture", "Rennes", 4.4f, "Approuvé"),
-                new("Mélanie Giraud", "melanie.giraud.habitat@yahoo.com", "Isolation", "Reims", 4.0f, "Approuvé"),
-                new("Youssef El Amrani", "y.elamrani.travaux@gmail.com", "Climatisation", "Le Havre", 3.6f, "Rejeté"),
-                new("Pauline Blanchard", "pauline.blanchard.pro@icloud.com", "Serrurerie", "Saint-Étienne", 4.1f, "En attente"),
-                new("Julien Perrot", "julien.perrot.btp@gmail.com", "Terrassement", "Toulon", 3.7f, "Rejeté"),
-                new("Céline Renaud", "celine.renaud.renov@orange.fr", "Peinture", "Grenoble", 4.6f, "Approuvé"),
-                new("Hugo Lemoine", "hugo.lemoine.menuiserie@gmail.com", "Menuiserie", "Dijon", 4.3f, "Approuvé"),
-                new("Nadia Colin", "nadia.colin.services@outlook.fr", "Nettoyage chantier", "Angers", 4.0f, "En attente"),
-                new("Baptiste Noel", "baptiste.noel.pro@gmail.com", "Électricité", "Nîmes", 4.7f, "Approuvé"),
-                new("Sarah Lopez", "sarah.lopez.habitat@yahoo.fr", "Plomberie", "Villeurbanne", 4.4f, "Approuvé"),
-                new("Vincent Marchand", "vincent.marchand.travaux@gmail.com", "Maçonnerie", "Clermont-Ferrand", 3.5f, "Rejeté"),
-                new("Anaïs Tessier", "anais.tessier.deco@gmail.com", "Décoration intérieure", "Le Mans", 4.8f, "Approuvé"),
-                new("Romain Picard", "romain.picard.bricolage@laposte.net", "Carrelage", "Aix-en-Provence", 4.2f, "En attente"),
-                new("Fatou Diop", "fatou.diop.pro@outlook.com", "Isolation", "Brest", 4.5f, "Approuvé"),
-                new("Damien Aubry", "damien.aubry.chauffage@gmail.com", "Chauffage", "Limoges", 3.9f, "En attente"),
-                new("Manon Lefèvre", "manon.lefevre.vitrerie@yahoo.com", "Vitrerie", "Tours", 4.1f, "Approuvé"),
-                new("Walid Saidi", "walid.saidi.renov@gmail.com", "Climatisation", "Amiens", 3.4f, "Rejeté"),
-                new("Chloé Roy", "chloe.roy.serrurerie@orange.fr", "Serrurerie", "Annecy", 4.6f, "Approuvé"),
-                new("Guillaume Barbier", "guillaume.barbier.toiture@gmail.com", "Couverture", "Perpignan", 4.0f, "En attente"),
-                new("Leïla Haddad", "leila.haddad.travaux@icloud.com", "Plâtrerie", "Besançon", 4.3f, "Approuvé")
+                new(1, "Jean Dupont", "jean.dupont@artisanmail.fr", "Plomberie", "Paris", 4.8f, "Approuvé"),
+                new(2, "Sophie Martin", "sophie.martin.pro@gmail.com", "Électricité", "Lyon", 4.6f, "Approuvé"),
+                new(3, "Karim Benali", "karim.benali@outlook.fr", "Peinture", "Marseille", 4.3f, "En attente"),
+                new(4, "Camille Petit", "camille.petit.travaux@yahoo.fr", "Menuiserie", "Bordeaux", 4.7f, "Approuvé"),
+                new(5, "Nicolas Moreau", "n.moreau.renov@gmail.com", "Maçonnerie", "Toulouse", 4.1f, "En attente"),
+                new(6, "Laura Garcia", "laura.garcia.pro@orange.fr", "Carrelage", "Nice", 4.5f, "Approuvé"),
+                new(7, "Mehdi Roux", "mehdi.roux.batiment@gmail.com", "Plâtrerie", "Nantes", 3.9f, "En attente"),
+                new(8, "Élodie Bernard", "elodie.bernard.deco@laposte.net", "Décoration intérieure", "Lille", 4.9f, "Approuvé"),
+                new(9, "Thomas Faure", "thomas.faure.services@gmail.com", "Chauffage", "Strasbourg", 4.2f, "Approuvé"),
+                new(10, "Inès Mercier", "ines.mercier.artisan@outlook.com", "Vitrerie", "Montpellier", 3.8f, "En attente"),
+                new(11, "Alexandre Chevalier", "alex.chevalier.pro@gmail.com", "Couverture", "Rennes", 4.4f, "Approuvé"),
+                new(12, "Mélanie Giraud", "melanie.giraud.habitat@yahoo.com", "Isolation", "Reims", 4.0f, "Approuvé"),
+                new(13, "Youssef El Amrani", "y.elamrani.travaux@gmail.com", "Climatisation", "Le Havre", 3.6f, "Rejeté"),
+                new(14, "Pauline Blanchard", "pauline.blanchard.pro@icloud.com", "Serrurerie", "Saint-Étienne", 4.1f, "En attente"),
+                new(15, "Julien Perrot", "julien.perrot.btp@gmail.com", "Terrassement", "Toulon", 3.7f, "Rejeté"),
+                new(16, "Céline Renaud", "celine.renaud.renov@orange.fr", "Peinture", "Grenoble", 4.6f, "Approuvé"),
+                new(17, "Hugo Lemoine", "hugo.lemoine.menuiserie@gmail.com", "Menuiserie", "Dijon", 4.3f, "Approuvé"),
+                new(18, "Nadia Colin", "nadia.colin.services@outlook.fr", "Nettoyage chantier", "Angers", 4.0f, "En attente"),
+                new(19, "Baptiste Noel", "baptiste.noel.pro@gmail.com", "Électricité", "Nîmes", 4.7f, "Approuvé"),
+                new(20, "Sarah Lopez", "sarah.lopez.habitat@yahoo.fr", "Plomberie", "Villeurbanne", 4.4f, "Approuvé"),
+                new(21, "Vincent Marchand", "vincent.marchand.travaux@gmail.com", "Maçonnerie", "Clermont-Ferrand", 3.5f, "Rejeté"),
+                new(22, "Anaïs Tessier", "anais.tessier.deco@gmail.com", "Décoration intérieure", "Le Mans", 4.8f, "Approuvé"),
+                new(23, "Romain Picard", "romain.picard.bricolage@laposte.net", "Carrelage", "Aix-en-Provence", 4.2f, "En attente"),
+                new(24, "Fatou Diop", "fatou.diop.pro@outlook.com", "Isolation", "Brest", 4.5f, "Approuvé"),
+                new(25, "Damien Aubry", "damien.aubry.chauffage@gmail.com", "Chauffage", "Limoges", 3.9f, "En attente"),
+                new(26, "Manon Lefèvre", "manon.lefevre.vitrerie@yahoo.com", "Vitrerie", "Tours", 4.1f, "Approuvé"),
+                new(27, "Walid Saidi", "walid.saidi.renov@gmail.com", "Climatisation", "Amiens", 3.4f, "Rejeté"),
+                new(28, "Chloé Roy", "chloe.roy.serrurerie@orange.fr", "Serrurerie", "Annecy", 4.6f, "Approuvé"),
+                new(29, "Guillaume Barbier", "guillaume.barbier.toiture@gmail.com", "Couverture", "Perpignan", 4.0f, "En attente"),
+                new(30, "Leïla Haddad", "leila.haddad.travaux@icloud.com", "Plâtrerie", "Besançon", 4.3f, "Approuvé")
             ]);
 
             ProvidersList.ItemsSource = providers;
@@ -141,6 +141,33 @@ namespace Prestalia_Desktop
             OrderAndFilter();
         }
 
+        private void OrderAndFilter2()
+        {
+            string convertedFilter = filter switch
+            {
+                "pending" => "En attente",
+                "approved" => "Approuvé",
+                "rejected" => "Rejeté",
+                _ => "all",
+            };
+
+            var filteredProviders = providers.Where(provider => convertedFilter == "all" || provider.Statut == convertedFilter);
+
+            Func<Provider, object> keySelector = orderBy switch
+            {
+                "Name" => c => c.Name,
+                "Category" => c => c.Category,
+                "City" => c => c.City,
+                "Rating" => c => c.Rating,
+                "Statut" => c => c.Statut,
+                _ => c => c.Id
+            };
+
+            ProvidersList.ItemsSource = (orderBy == "desc"
+                ? filteredProviders.OrderByDescending(keySelector)
+                : filteredProviders.OrderBy(keySelector)).ToList();
+        }
+
         private void OrderAndFilter()
         {
             string convertedFilter = filter switch
@@ -213,6 +240,11 @@ namespace Prestalia_Desktop
                     }
                     break;
             }
+        }
+
+        private void ProvidersList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ProvidersList.SelectedItem = null;
         }
     }
 }

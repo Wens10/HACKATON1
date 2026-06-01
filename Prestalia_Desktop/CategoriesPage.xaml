@@ -284,6 +284,7 @@
                             Title="Modifier la catégorie"
                             DefaultButton="Primary"
                             PrimaryButtonText="Enregistrer"
+                            SecondaryButtonText="Supprimer"
                             CloseButtonText="Annuler"
                             PrimaryButtonClick="EditCategoryDialog_PrimaryButtonClick">
                             <StackPanel Spacing="8">
