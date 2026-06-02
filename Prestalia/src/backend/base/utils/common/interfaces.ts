@@ -10,3 +10,28 @@ export interface Config {
   certType: "certbot" | "self-signed";
   forceDomainUsage: boolean;
 }
+
+export interface Config {
+  // Réseau
+  hostname: string;
+  domain: string;
+  httpPort: number;
+  httpsPort: number;
+
+  // SSL
+  certDirPath: string;
+  certType: "certbot" | "self-signed";
+  forceDomainUsage: boolean;
+
+  // Sécurité
+  argon2Secret: string;
+  jwtSecret: string;
+
+  // Initialisation
+  adminDefaultPassword: string;
+
+  // Base de données
+  mysqlHost: string;
+  mysqlUser: string;
+  mysqlPassword: string;
+}

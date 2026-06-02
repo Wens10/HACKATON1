@@ -10,6 +10,7 @@ import Stream from "stream";
 import {error, hasProps} from ".";
 import {SupportedEncoding} from "./types.js";
 import {MIME_TYPES} from "./constants.js";
+import {PageParams} from "../utils/types";
 
 interface Context {
   readonly url: URL | undefined;
@@ -61,7 +62,7 @@ interface Context {
       // eslint-disable-next-line no-unused-vars
       onError,
     }: {
-      pageParams?: any[];
+      pageParams?: PageParams | [];
       // eslint-disable-next-line no-unused-vars
       onError?: ((code: number) => void) | undefined;
     },
@@ -223,7 +224,7 @@ export class Http1Context implements Context {
       pageParams = [],
       onError,
     }: {
-      pageParams?: any[];
+      pageParams?: PageParams | [];
       // eslint-disable-next-line no-unused-vars
       onError?: ((code: number) => void) | undefined;
     },

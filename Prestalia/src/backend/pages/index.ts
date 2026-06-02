@@ -7,10 +7,11 @@ import {join} from "path";
 import {hasProps} from "../core";
 import {cookieToJSON, getCategories, verifyJWT} from "../utils/functions";
 import {PageHandler} from "../utils/types";
+import {RowDataPacket} from "mysql2";
 
 export default (async (context, db) => {
   const data: Record<string, any> = {
-    categories: getCategories(db, {sortBy: "most_popular", limit: 12}),
+    categories: await getCategories(db, {sortBy: "most_popular", limit: 12}),
   };
 
   const cookies = cookieToJSON(context.headers.cookie);
@@ -31,9 +32,12 @@ export default (async (context, db) => {
       return null;
     }
 
-    const user = db
-      .prepare("SELECT name, role FROM users WHERE id = ?")
-      .get(payload.userId);
+    const [rows] = await db.execute<RowDataPacket[]>(
+      "SELECT name, role FROM users WHERE id = ?",
+      [payload.userId],
+    );
+
+    const user = rows[0];
 
     if (!user) {
       context.respond(307, {

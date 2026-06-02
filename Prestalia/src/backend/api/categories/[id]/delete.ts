@@ -1,8 +1,9 @@
+import {RowDataPacket} from "mysql2";
 import {Context, error, hasProps} from "../../../core";
-import {DatabaseSync} from "node:sqlite";
 import {getCategory, verifyJWT} from "../../../utils/functions";
+import {APIParams} from "../../../utils/types";
 
-export default ((context, headers, db, categoryId) => {
+export default (async (context, headers, db, categoryId) => {
   const authorizationHeader = headers.authorization;
 
   if (!authorizationHeader) return context.respond(400, {end: true});
@@ -22,7 +23,12 @@ export default ((context, headers, db, categoryId) => {
 
   try {
     const userId = payload.userId,
-      user = db.prepare("SELECT id, role FROM users WHERE id = ?").get(userId);
+      user = (
+        await db.execute<RowDataPacket[]>(
+          "SELECT id, role FROM users WHERE id = ?",
+          [userId],
+        )
+      )[0][0];
 
     if (!user || !hasProps(user, {id: "number", role: "string"}))
       return context.respond(401, {end: true});
@@ -30,10 +36,17 @@ export default ((context, headers, db, categoryId) => {
     if (user.role.toLowerCase() !== "admin")
       return context.respond(401, {end: true});
 
-    if (!db.prepare("SELECT 1 FROM categories WHERE id = ?").get(categoryId))
+    if (
+      !(
+        await db.execute<RowDataPacket[]>(
+          "SELECT 1 FROM categories WHERE id = ?",
+          [categoryId],
+        )
+      )[0][0]
+    )
       return context.respond(404, {end: true});
 
-    const cat = getCategory(db, categoryId);
+    const cat = await getCategory(db, categoryId);
 
     if (!cat) return context.respond(404, {end: true});
 
@@ -41,7 +54,7 @@ export default ((context, headers, db, categoryId) => {
       return context.respond(409, {end: true});
 
     try {
-      db.prepare("DELETE FROM categories WHERE id = ?").run(categoryId);
+      await db.execute("DELETE FROM categories WHERE id = ?", [categoryId]);
 
       return context.respond(204, {end: true});
     } catch (error) {
@@ -64,7 +77,5 @@ export default ((context, headers, db, categoryId) => {
   // eslint-disable-next-line no-unused-vars
   headers: Context["headers"],
   // eslint-disable-next-line no-unused-vars
-  db: DatabaseSync,
-  // eslint-disable-next-line no-unused-vars
-  categoryId: number,
+  ...params: [...APIParams, ...id: number[]]
 ) => void;

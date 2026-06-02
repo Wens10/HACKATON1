@@ -14,9 +14,19 @@ Le dossier *example* contient du contenu permettant de tester les applications.
 2. À la racine du dossier **Prestalia**, créez un fichier *.env* avec le contenu suivant :
 
 ```env
+HOSTNAME=127.0.0.1
+DOMAIN=example.local
+HTTP_PORT=8080
+HTTPS_PORT=8443
+CERT_DIR_PATH=./cert
+CERT_TYPE=self-signed
+FORCE_DOMAIN_USAGE=false
 ADMIN_DEFAULT_PASSWORD=mon_mdp_par_defaut
 ARGON2_SECRET=mon_secret_pour_argon2
 JWT_SECRET=mon_secret_pour_jwt
+MYSQL_HOST=mysql_host
+MYSQL_USER=mysql_user
+MYSQL_PASSWORD=mysql_password
 ```
 
 3. Installer les dépendances :

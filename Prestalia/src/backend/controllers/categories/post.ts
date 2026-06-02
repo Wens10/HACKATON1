@@ -1,14 +1,21 @@
 import {hasProps, workingDirPath} from "../../core";
-import {DatabaseSync} from "node:sqlite";
 import {writeFile} from "fs/promises";
 import {join} from "path";
 import {getCategory} from "../../utils/functions";
 import {randomUUID} from "crypto";
+import {Pool, RowDataPacket} from "mysql2/promise";
 
 export default (async (body, db) => {
   if (!hasProps(body, {name: "string"})) return {ok: false, status: 400};
 
-  if (db.prepare("SELECT 1 FROM categories WHERE name = ?").get(body.name))
+  if (
+    (
+      await db.execute<RowDataPacket[]>(
+        "SELECT 1 FROM categories WHERE name = ?",
+        [body.name],
+      )
+    )[0][0]
+  )
     return {ok: false, status: 400};
 
   const icon =
@@ -17,22 +24,25 @@ export default (async (body, db) => {
       ? body.icon[0].data
       : null;
 
-  const catId = db
-    .prepare("INSERT INTO categories (name) VALUES (?)")
-    .run(body.name).lastInsertRowid;
+  const [result] = (await db.execute(
+    "INSERT INTO categories (name) VALUES (?)",
+    [body.name],
+  )) as any;
+
+  const catId = result.insertId;
 
   if (icon) {
     const iconPath = join("/data", `c${randomUUID().replace(/-/g, "")}.png`);
 
-    await writeFile(join(workingDirPath, iconPath), icon).then(() => {
-      db.prepare("UPDATE categories SET icon = ? WHERE id = ?").run(
-        iconPath,
-        catId,
-      );
-    });
+    await writeFile(join(workingDirPath, iconPath), icon);
+
+    await db.execute("UPDATE categories SET icon = ? WHERE id = ?", [
+      iconPath,
+      catId,
+    ]);
   }
 
-  const cat = getCategory(db, catId);
+  const cat = await getCategory(db, catId);
 
   if (cat)
     return {
@@ -54,7 +64,7 @@ export default (async (body, db) => {
     number | string | {filename: string; data: Buffer<ArrayBuffer>}[]
   >,
   // eslint-disable-next-line no-unused-vars
-  db: DatabaseSync,
+  db: Pool,
 ) => Promise<
   | {
       ok: boolean;

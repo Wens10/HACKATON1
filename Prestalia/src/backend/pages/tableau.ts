@@ -7,6 +7,7 @@ import {join} from "path";
 import {hasProps} from "../core";
 import {cookieToJSON, verifyJWT} from "../utils/functions";
 import {PageHandler} from "../utils/types";
+import {RowDataPacket} from "mysql2";
 
 export default (async (context, db) => {
   const cookies = cookieToJSON(context.headers.cookie);
@@ -17,9 +18,12 @@ export default (async (context, db) => {
 
   if (payload === false || !hasProps(payload, {userId: "number"})) throw null;
 
-  const user = db
-    .prepare("SELECT name, role, email FROM users WHERE id = ?")
-    .get(payload.userId);
+  const [rows] = await db.execute<RowDataPacket[]>(
+    "SELECT name, email, role FROM users WHERE id = ?",
+    [payload.userId],
+  );
+
+  const user = rows[0];
 
   if (!user) throw null;
 

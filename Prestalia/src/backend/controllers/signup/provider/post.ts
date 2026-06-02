@@ -1,11 +1,11 @@
 import {error, hasProps, workingDirPath} from "../../../core";
-import {DatabaseSync} from "node:sqlite";
 import {isValidEmail} from "../../../utils/functions";
 import {fileTypeFromBuffer} from "file-type";
 import {mkdir, writeFile} from "fs/promises";
 import {extname, join} from "path";
 import {Days} from "../../../utils/enums";
 import {randomUUID} from "crypto";
+import {Pool, RowDataPacket} from "mysql2/promise";
 
 const supportedExtForFiles = ["jpg", "pdf", "png", "apng", "webp"];
 
@@ -97,9 +97,12 @@ export default (async (body, userId, db) => {
   }
 
   try {
-    const categoryId = db
-      .prepare("SELECT id FROM categories WHERE id = ?")
-      .get(body.category);
+    const categoryId = (
+      await db.execute<RowDataPacket[]>(
+        "SELECT id FROM categories WHERE id = ?",
+        [body.category],
+      )
+    )[0][0];
 
     if (!categoryId) return {ok: false, status: 400};
   } catch (err) {
@@ -109,9 +112,10 @@ export default (async (body, userId, db) => {
   }
 
   try {
-    db.prepare(
+    await db.execute(
       "UPDATE users SET role = 'provider', name = ?, email = ? WHERE id = ?",
-    ).run(body.name, body.email, userId);
+      [body.name, body.email, userId],
+    );
   } catch (err) {
     error("Erreur lors du changement du rôle d'un utilisateur", err);
 
@@ -119,16 +123,17 @@ export default (async (body, userId, db) => {
   }
 
   try {
-    db.prepare(
+    await db.execute(
       "INSERT INTO providers (tel, city, category, descr, exp, price, days) VALUES (?, ?, ?, ?, ?, ?, ?)",
-    ).run(
-      body.tel,
-      body.city,
-      body.category,
-      body.descr,
-      body.exp,
-      body.price,
-      body.days,
+      [
+        body.tel,
+        body.city,
+        body.category,
+        body.descr,
+        body.exp,
+        body.price,
+        body.days,
+      ],
     );
 
     return {ok: true};
@@ -149,7 +154,7 @@ export default (async (body, userId, db) => {
   // eslint-disable-next-line no-unused-vars
   userId: number,
   // eslint-disable-next-line no-unused-vars
-  db: DatabaseSync,
+  db: Pool,
 ) => Promise<
   | {
       ok: boolean;

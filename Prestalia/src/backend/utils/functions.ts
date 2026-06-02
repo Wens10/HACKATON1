@@ -23,17 +23,18 @@ import {
   DEFAULT_EJS_STATIC_PAGE_DIR,
   EMAIL_REGEX,
 } from "./constants";
-import {DatabaseSync} from "node:sqlite";
 import {readdir, readFileSync} from "fs";
 import {availableParallelism, totalmem} from "os";
 import {renderFile} from "ejs";
 import {mkdir, writeFile} from "fs/promises";
 import {verify} from "jsonwebtoken";
+import {Pool, RowDataPacket} from "mysql2/promise";
+import {APIParams, PageParams} from "./types";
 
 export async function handleRequest(
   context: Context,
-  pageParams: any[],
-  apiParams: any[],
+  pageParams: PageParams,
+  apiParams: APIParams,
 ): Promise<any> {
   try {
     if (!context.hostname)
@@ -248,27 +249,17 @@ export function isValidPassword(password: string): boolean {
   return true;
 }
 
-export function isAdminExists(context: Context, params: any[]) {
+export async function isAdminExists(context: Context, params: [Pool]) {
   if (process.env["ADMIN_EXISTS"] === "1") return true;
 
   const db = params[0];
 
-  if (!(db instanceof DatabaseSync)) {
-    context
-      .respond(500, {
-        headers: {"content-type": "text/plain; charset=utf-8"},
-      })
-      .end(
-        "Erreur interne: le paramètre qui doit être une instance de DatabaseSync ne l'est pas",
-      );
-
-    return false;
-  }
-
   try {
-    const adminExists = db
-      .prepare("SELECT id FROM users WHERE role = 'admin' LIMIT 1")
-      .get();
+    const adminExists = (
+      await db.execute<RowDataPacket[]>(
+        "SELECT 1 FROM users WHERE role = 'admin' LIMIT 1",
+      )
+    )[0][0];
 
     if (adminExists) {
       process.env["ADMIN_EXISTS"] = "1";
@@ -318,7 +309,7 @@ export function isAdminExists(context: Context, params: any[]) {
       (context instanceof Http2Context ? context.stream : context.req)
         .on("error", (err) => error(err))
         .on("data", (chunk) => (data += chunk))
-        .on("end", () => {
+        .on("end", async () => {
           const params = new URLSearchParams(data),
             defaultPassword = params.get("default-password"),
             name = params.get("name"),
@@ -381,9 +372,12 @@ export function isAdminExists(context: Context, params: any[]) {
               .end("Le mot de passe est invalide");
 
           try {
-            const userExist = Boolean(
-              db.prepare("SELECT * FROM users WHERE email = ?").get(email),
-            );
+            const userExist = (
+              await db.execute<RowDataPacket[]>(
+                "SELECT 1 FROM users WHERE email = ? LIMIT 1",
+                [email],
+              )
+            )[0][0];
 
             if (userExist)
               return context
@@ -413,11 +407,12 @@ export function isAdminExists(context: Context, params: any[]) {
             },
             {secret: process.env["ARGON2_SECRET"]},
           )
-            .then((hash) => {
+            .then(async (hash) => {
               try {
-                db.prepare(
+                await db.execute(
                   "INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, 'admin')",
-                ).run(name, email, hash);
+                  [name, email, hash],
+                );
 
                 process.env["ADMIN_EXISTS"] = "1";
 
@@ -458,22 +453,8 @@ export function isAdminExists(context: Context, params: any[]) {
   return false;
 }
 
-export function isDataRequest(context: Context, params: any[]) {
+export function isDataRequest(context: Context) {
   if (!context.path?.startsWith("/data")) return false;
-
-  const db = params[0];
-
-  if (!(db instanceof DatabaseSync)) {
-    context
-      .respond(500, {
-        headers: {"content-type": "text/plain; charset=utf-8"},
-      })
-      .end(
-        "Erreur interne: le paramètre qui doit être une instance de DatabaseSync ne l'est pas",
-      );
-
-    return false;
-  }
 
   switch (context.method) {
     case "GET":
@@ -538,38 +519,36 @@ export function verifyJWT(token: string) {
   }
 }
 
-export function getCategories(
-  db: DatabaseSync,
+export async function getCategories(
+  db: Pool,
   {sortBy, limit}: {sortBy?: "most_popular"; limit?: number},
 ) {
-  return db
-    .prepare(
-      `
-        SELECT
-          c.id,
-          c.name,
-          CASE
-            WHEN c.icon IS NULL THEN NULL
-            WHEN c.icon LIKE 'http%' THEN c.icon
-            ELSE 'https://localhost:8443' || REPLACE(c.icon, '\\', '/')
-          END AS icon,
-          c.created_at,
-          COUNT(DISTINCT p.id) AS provider_count,
-          COUNT(DISTINCT r.id) AS reservation_count
-        FROM categories c
-        LEFT JOIN providers p ON c.id = p.category
-        LEFT JOIN reservations r ON p.id = r.provider
-        GROUP BY c.id
-        ${sortBy !== undefined ? "ORDER BY reservation_count DESC" : ""}
-        ${limit !== undefined ? `LIMIT ${limit}` : ""}
-      `,
-    )
-    .all();
+  return (
+    await db.execute(`
+    SELECT
+      c.id,
+      c.name,
+      CASE
+        WHEN c.icon IS NULL THEN NULL
+        WHEN c.icon LIKE 'http%' THEN c.icon
+        ELSE CONCAT('https://localhost:8443', REPLACE(c.icon, '\\\\', '/'))
+      END AS icon,
+      c.created_at,
+      COUNT(DISTINCT p.id) AS provider_count,
+      COUNT(DISTINCT r.id) AS reservation_count
+    FROM categories c
+    LEFT JOIN providers p ON c.id = p.category
+    LEFT JOIN reservations r ON p.id = r.provider
+    GROUP BY c.id, c.name, c.icon, c.created_at
+    ${sortBy !== undefined ? "ORDER BY reservation_count DESC" : ""}
+    ${limit !== undefined ? `LIMIT ${limit}` : ""}
+  `)
+  )[0];
 }
 
-export function getCategory(db: DatabaseSync, categoryId: number | bigint) {
-  return db
-    .prepare(
+export async function getCategory(db: Pool, categoryId: number | bigint) {
+  return (
+    await db.execute<RowDataPacket[]>(
       `
         SELECT
           c.id,
@@ -577,7 +556,7 @@ export function getCategory(db: DatabaseSync, categoryId: number | bigint) {
           CASE
             WHEN c.icon IS NULL THEN NULL
             WHEN c.icon LIKE 'http%' THEN c.icon
-            ELSE 'https://localhost:8443' || REPLACE(c.icon, '\\', '/')
+            ELSE CONCAT('https://localhost:8443', REPLACE(c.icon, '\\\\', '/'))
           END AS icon,
           c.created_at,
           COUNT(DISTINCT p.id) AS provider_count,
@@ -586,7 +565,9 @@ export function getCategory(db: DatabaseSync, categoryId: number | bigint) {
         LEFT JOIN providers p ON c.id = p.category
         LEFT JOIN reservations r ON p.id = r.provider
         WHERE c.id = ?
+        GROUP BY c.id, c.name, c.icon, c.created_at
       `,
+      [categoryId],
     )
-    .get(categoryId);
+  )[0][0];
 }

@@ -17,6 +17,7 @@ import {Context, SupportedEncoding, SupportedExtname} from "./types.js";
 import {createServer} from "http";
 import {createReadStream, existsSync, statSync} from "fs";
 import {certChallengesDirPath} from "./paths.js";
+import {APIParams, PageParams} from "../utils/types.js";
 
 const logId = `${cluster.isPrimary ? "Master" : "Worker"} | ${process.pid} \t|`,
   isValid: {[K in keyof Types]: (value: unknown) => value is Types[K]} = {
@@ -338,7 +339,7 @@ export async function resolveAPIRequest(
   context: Context,
   path: string,
   method: string,
-  params: any[],
+  params: APIParams,
 ) {
   let pathWithoutId = path;
 
@@ -411,7 +412,7 @@ export function resolveResourceRequest(
   context: Context,
   path: string,
   method: string,
-  pageParams: any[],
+  pageParams: PageParams,
   // eslint-disable-next-line no-unused-vars
   shouldSkipCompression?: (path: string) => boolean | Promise<boolean>,
 ) {

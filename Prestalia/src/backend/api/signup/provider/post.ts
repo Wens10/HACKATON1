@@ -1,10 +1,11 @@
 import {Context, error, hasProps} from "../../../core";
-import {DatabaseSync} from "node:sqlite";
 import busboy from "busboy";
 import {cookieToJSON, verifyJWT} from "../../../utils/functions";
 import signup from "../../../controllers/signup/provider/post";
+import {APIParams} from "../../../utils/types";
+import {RowDataPacket} from "mysql2";
 
-export default ((context, headers, db) => {
+export default (async (context, headers, db) => {
   const cookies = cookieToJSON(headers.cookie);
 
   if (!hasProps(cookies, {token: "string"}))
@@ -23,7 +24,12 @@ export default ((context, headers, db) => {
 
   try {
     const userId = payload.userId,
-      user = db.prepare("SELECT id, role FROM users WHERE id = ?").get(userId);
+      user = (
+        await db.execute<RowDataPacket[]>(
+          "SELECT id, role FROM users WHERE id = ?",
+          [userId],
+        )
+      )[0][0];
 
     if (!user || !hasProps(user, {role: "string"}))
       return context.respond(401, {
@@ -100,5 +106,5 @@ export default ((context, headers, db) => {
   // eslint-disable-next-line no-unused-vars
   headers: Context["headers"],
   // eslint-disable-next-line no-unused-vars
-  db: DatabaseSync,
+  ...params: [...APIParams, ...id: number[]]
 ) => void;

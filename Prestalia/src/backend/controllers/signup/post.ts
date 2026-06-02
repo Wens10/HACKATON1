@@ -1,5 +1,4 @@
 import {error} from "../../core";
-import {DatabaseSync} from "node:sqlite";
 import {availableParallelism, totalmem} from "os";
 import {sign} from "jsonwebtoken";
 import {
@@ -7,6 +6,7 @@ import {
   isValidEmail,
   isValidPassword,
 } from "../../utils/functions";
+import {Pool, RowDataPacket} from "mysql2/promise";
 
 const jwtSecret = process.env["JWT_SECRET"];
 
@@ -26,9 +26,11 @@ export default (async (name, email, password, db) => {
   if (!isValidPassword(normalizedPassword)) return {ok: false, status: 400};
 
   try {
-    const userExist = Boolean(
-      db.prepare("SELECT id FROM users WHERE email = ?").get(normalizedEmail),
-    );
+    const userExist = (
+      await db.execute<RowDataPacket[]>("SELECT 1 FROM users WHERE email = ?", [
+        normalizedEmail,
+      ])
+    )[0][0];
 
     if (userExist) return {ok: false, status: 400};
   } catch (err) {
@@ -47,11 +49,14 @@ export default (async (name, email, password, db) => {
     },
     {secret: process.env["ARGON2_SECRET"]},
   )
-    .then((hash) => {
+    .then(async (hash) => {
       try {
-        const userId = db
-          .prepare("INSERT INTO users (name, email, password) VALUES (?, ?, ?)")
-          .run(normalizedName, normalizedEmail, hash).lastInsertRowid;
+        const [result] = (await db.execute(
+          "INSERT INTO users (name, email, password) VALUES (?, ?, ?)",
+          [normalizedName, normalizedEmail, hash],
+        )) as any;
+
+        const userId = result.insertId;
 
         try {
           const token = sign({userId}, jwtSecret, {
@@ -87,7 +92,7 @@ export default (async (name, email, password, db) => {
   // eslint-disable-next-line no-unused-vars
   password: string,
   // eslint-disable-next-line no-unused-vars
-  db: DatabaseSync,
+  db: Pool,
 ) => Promise<
   | {
       ok: boolean;

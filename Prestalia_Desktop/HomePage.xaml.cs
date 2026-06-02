@@ -141,7 +141,7 @@ namespace Prestalia_Desktop
             OrderAndFilter();
         }
 
-        private void OrderAndFilter2()
+        private void OrderAndFilter()
         {
             string convertedFilter = filter switch
             {
@@ -163,88 +163,9 @@ namespace Prestalia_Desktop
                 _ => c => c.Id
             };
 
-            ProvidersList.ItemsSource = (orderBy == "desc"
+            ProvidersList.ItemsSource = (order == "desc"
                 ? filteredProviders.OrderByDescending(keySelector)
                 : filteredProviders.OrderBy(keySelector)).ToList();
-        }
-
-        private void OrderAndFilter()
-        {
-            string convertedFilter = filter switch
-            {
-                "pending" => "En attente",
-                "approved" => "Approuvé",
-                "rejected" => "Rejeté",
-                _ => "all",
-            };
-
-            var filteredProviders = providers.Where(provider => convertedFilter == "all" || provider.Statut == convertedFilter);
-
-            switch (order)
-            {
-                case "asc":
-                    switch (orderBy)
-                    {
-                        case "Name":
-                            ProvidersList.ItemsSource = filteredProviders.OrderBy(provider => provider.Name);
-                            break;
-
-                        case "Category":
-                            ProvidersList.ItemsSource = filteredProviders.OrderBy(provider => provider.Category);
-                            break;
-
-                        case "City":
-                            ProvidersList.ItemsSource = filteredProviders.OrderBy(provider => provider.City);
-                            break;
-
-                        case "Rating":
-                            ProvidersList.ItemsSource = filteredProviders.OrderBy(provider => provider.Rating);
-                            break;
-
-                        case "Statut":
-                            ProvidersList.ItemsSource = filteredProviders.OrderBy(provider => provider.Statut);
-                            break;
-
-                        case "default":
-                            ProvidersList.ItemsSource = filteredProviders;
-                            break;
-                    }
-                    break;
-
-                case "desc":
-                    switch (orderBy)
-                    {
-                        case "Name":
-                            ProvidersList.ItemsSource = filteredProviders.OrderByDescending(provider => provider.Name);
-                            break;
-
-                        case "Category":
-                            ProvidersList.ItemsSource = filteredProviders.OrderByDescending(provider => provider.Category);
-                            break;
-
-                        case "City":
-                            ProvidersList.ItemsSource = filteredProviders.OrderByDescending(provider => provider.City);
-                            break;
-
-                        case "Rating":
-                            ProvidersList.ItemsSource = filteredProviders.OrderByDescending(provider => provider.Rating);
-                            break;
-
-                        case "Statut":
-                            ProvidersList.ItemsSource = filteredProviders.OrderByDescending(provider => provider.Statut);
-                            break;
-
-                        case "default":
-                            ProvidersList.ItemsSource = filteredProviders.Reverse();
-                            break;
-                    }
-                    break;
-            }
-        }
-
-        private void ProvidersList_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            ProvidersList.SelectedItem = null;
         }
     }
 }

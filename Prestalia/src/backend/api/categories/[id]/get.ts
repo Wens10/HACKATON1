@@ -1,10 +1,10 @@
 import {Context, error, MIME_TYPES} from "../../../core";
-import {DatabaseSync} from "node:sqlite";
 import {getCategory} from "../../../utils/functions";
+import {APIParams} from "../../../utils/types";
 
-export default ((context, _headers, db, categoryId) => {
+export default (async (context, _headers, db, categoryId) => {
   try {
-    const cat = getCategory(db, categoryId);
+    const cat = await getCategory(db, categoryId);
 
     if (!cat) context.respond(404, {end: true});
     else
@@ -25,7 +25,5 @@ export default ((context, _headers, db, categoryId) => {
   // eslint-disable-next-line no-unused-vars
   headers: Context["headers"],
   // eslint-disable-next-line no-unused-vars
-  db: DatabaseSync,
-  // eslint-disable-next-line no-unused-vars
-  categoryId: number,
+  ...params: [...APIParams, ...id: number[]]
 ) => void;
