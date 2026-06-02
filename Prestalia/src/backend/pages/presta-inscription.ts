@@ -7,6 +7,7 @@ import {join} from "path";
 import {hasProps} from "../core";
 import {cookieToJSON, getCategories, verifyJWT} from "../utils/functions";
 import {PageHandler} from "../utils/types";
+import {RowDataPacket} from "mysql2";
 
 export default (async (context, db) => {
   const cookies = cookieToJSON(context.headers.cookie);
@@ -37,9 +38,12 @@ export default (async (context, db) => {
     return null;
   }
 
-  const user = db
-    .prepare("SELECT name, email, role FROM users WHERE id = ?")
-    .get(payload.userId);
+  const [rows] = await db.execute<RowDataPacket[]>(
+    "SELECT name, email, role FROM users WHERE id = ?",
+    [payload.userId],
+  );
+
+  const user = rows[0];
 
   if (!user) {
     context.respond(307, {
@@ -78,7 +82,7 @@ export default (async (context, db) => {
 
   return renderFile(
     join(DEFAULT_EJS_DYNAMIC_PAGE_DIR, "presta-inscription.ejs"),
-    {user, categories: getCategories(db, {})},
+    {user, categories: await getCategories(db, {})},
     {root: DEFAULT_EJS_COMPONENT_DIR},
   );
 }) satisfies PageHandler;

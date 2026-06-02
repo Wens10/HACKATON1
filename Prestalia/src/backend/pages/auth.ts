@@ -7,6 +7,7 @@ import {join} from "path";
 import {hasProps} from "../core";
 import {cookieToJSON, verifyJWT} from "../utils/functions";
 import {PageHandler} from "../utils/types";
+import {RowDataPacket} from "mysql2";
 
 export default (async (context, db) => {
   const cookies = cookieToJSON(context.headers.cookie),
@@ -36,9 +37,12 @@ export default (async (context, db) => {
     return null;
   }
 
-  const user = db
-    .prepare("SELECT name, role FROM users WHERE id = ?")
-    .get(payload.userId);
+  const user = (
+    await db.execute<RowDataPacket[]>(
+      "SELECT name, role FROM users WHERE id = ?",
+      [payload.userId],
+    )
+  )[0][0];
 
   return renderFile(
     join(DEFAULT_EJS_DYNAMIC_PAGE_DIR, "auth.ejs"),

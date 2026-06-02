@@ -1,7 +1,7 @@
 import {error, hasProps} from "../../core";
-import {DatabaseSync} from "node:sqlite";
 import {sign} from "jsonwebtoken";
 import {verifyPassword} from "../../utils/functions";
+import {Pool, RowDataPacket} from "mysql2/promise";
 
 const jwtSecret = process.env["JWT_SECRET"];
 
@@ -15,9 +15,12 @@ export default (async (email, password, db) => {
   if (normalizedPassword === "") return {ok: false, status: 400};
 
   try {
-    const user = db
-      .prepare("SELECT id, password FROM users WHERE email = ?")
-      .get(normalizedEmail);
+    const user = (
+      await db.execute<RowDataPacket[]>(
+        "SELECT id, password FROM users WHERE email = ?",
+        [normalizedEmail],
+      )
+    )[0][0];
 
     if (!user) return {ok: false, status: 401};
 
@@ -64,7 +67,7 @@ export default (async (email, password, db) => {
   // eslint-disable-next-line no-unused-vars
   password: string,
   // eslint-disable-next-line no-unused-vars
-  db: DatabaseSync,
+  db: Pool,
 ) => Promise<
   | {
       ok: boolean;

@@ -1,13 +1,14 @@
 import {Context, error, hasProps, Http2Context} from "../../core";
-import {DatabaseSync} from "node:sqlite";
 import {cookieToJSON, verifyJWT} from "../../utils/functions";
 import signup from "../../controllers/signup/post";
+import {APIParams} from "../../utils/types";
+import {RowDataPacket} from "mysql2";
 
 const jwtSecret = process.env["JWT_SECRET"];
 
 if (!jwtSecret) throw new Error("Le secret JWT est manquant");
 
-export default ((context, headers, db) => {
+export default (async (context, headers, db) => {
   let data = "";
 
   const cookies = cookieToJSON(headers.cookie),
@@ -19,7 +20,12 @@ export default ((context, headers, db) => {
     try {
       if (
         hasProps(payload, {userId: "number"}) &&
-        db.prepare("SELECT id FROM users WHERE id = ?").get(payload.userId)
+        (
+          await db.execute<RowDataPacket[]>(
+            "SELECT 1 FROM users WHERE id = ?",
+            [payload.userId],
+          )
+        )[0][0]
       )
         return context.respond(303, {
           end: true,
@@ -106,5 +112,5 @@ export default ((context, headers, db) => {
   // eslint-disable-next-line no-unused-vars
   headers: Context["headers"],
   // eslint-disable-next-line no-unused-vars
-  db: DatabaseSync,
+  ...params: [...APIParams, ...id: number[]]
 ) => void;

@@ -1,10 +1,11 @@
 import {Context, error, hasProps, MIME_TYPES} from "../../core";
-import {DatabaseSync} from "node:sqlite";
 import busboy from "busboy";
 import {verifyJWT} from "../../utils/functions";
 import createCategory from "../../controllers/categories/post";
+import {APIParams} from "../../utils/types";
+import {RowDataPacket} from "mysql2";
 
-export default ((context, headers, db) => {
+export default (async (context, headers, db) => {
   const authorizationHeader = headers.authorization;
 
   if (!authorizationHeader) return context.respond(400, {end: true});
@@ -24,7 +25,12 @@ export default ((context, headers, db) => {
 
   try {
     const userId = payload.userId,
-      user = db.prepare("SELECT id, role FROM users WHERE id = ?").get(userId);
+      user = (
+        await db.execute<RowDataPacket[]>(
+          "SELECT id, role FROM users WHERE id = ?",
+          [userId],
+        )
+      )[0][0];
 
     if (!user || !hasProps(user, {id: "number", role: "string"}))
       return context.respond(401, {end: true});
@@ -102,5 +108,5 @@ export default ((context, headers, db) => {
   // eslint-disable-next-line no-unused-vars
   headers: Context["headers"],
   // eslint-disable-next-line no-unused-vars
-  db: DatabaseSync,
+  ...params: [...APIParams, ...id: number[]]
 ) => void;

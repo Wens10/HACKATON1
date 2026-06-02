@@ -1,18 +1,14 @@
-import {join} from "path";
-import {workingDirPath} from "../core";
-import {DatabaseSync} from "node:sqlite";
+import {createPool} from "mysql2/promise";
+import {APIParams, PageParams} from "../utils/types";
+import config from "../config";
 
-export default ((pageParams, apiParams) => {
-  const db = new DatabaseSync(join(workingDirPath, "database.db"));
+export default (() => {
+  const db = createPool({
+    host: config.mysqlHost,
+    user: config.mysqlUser,
+    password: config.mysqlPassword,
+    database: "prestalia",
+  });
 
-  db.exec(`
-    PRAGMA journal_mode = WAL;
-    PRAGMA synchronous = NORMAL;
-    PRAGMA foreign_keys = ON;
-  `);
-
-  pageParams.push(db);
-  apiParams.push(db);
-
-  // eslint-disable-next-line no-unused-vars
-}) satisfies (pageParams: any[], apiParams: any[]) => void;
+  return [[db], [db]];
+}) satisfies () => [PageParams, APIParams];

@@ -1,9 +1,13 @@
-import {DatabaseSync} from "node:sqlite";
 import {Context} from "../core";
+import {Pool} from "mysql2/promise";
 
 export type PageHandler = (
   // eslint-disable-next-line no-unused-vars
   context: Context,
   // eslint-disable-next-line no-unused-vars
-  db: DatabaseSync,
+  db: Pool,
 ) => string | null | Promise<string | null>;
+
+export type PageParams = [Pool];
+
+export type APIParams = [Pool];

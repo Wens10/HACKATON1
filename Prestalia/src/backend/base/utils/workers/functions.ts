@@ -7,11 +7,12 @@ import {
 } from "../../../core";
 import config from "../../../config";
 import {join} from "path";
+import {APIParams, PageParams} from "../../../utils/types";
 
 export async function handleRequest(
   context: Context,
-  pageParams: any[],
-  apiParams: any[],
+  pageParams: PageParams,
+  apiParams: APIParams,
 ): Promise<any> {
   try {
     if (!context.hostname)
