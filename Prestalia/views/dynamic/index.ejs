@@ -1,97 +1,344 @@
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="shortcut icon" href="/photos/Gemini_Generated_Image.png" type="image/png">
-  <title>Document</title>
+  <title>Prestalia — Trouvez le prestataire idéal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/index.css">
   <link rel="stylesheet" href="/css/header.css">
   <link rel="stylesheet" href="/css/footer.css">
 </head>
-
 <body>
+
   <%- include(typeof user !== "undefined" ? "/header" : "/default-header") %>
+
   <main>
-    <section class="blue-gradient-bg" id="product-descr">
-      <h1>Trouvez le prestataire idéal pour tous vos besoins</h1>
-      <p>Connectez-vous avec des professionnels vérifiés et qualifiés partout en France</p>
-      <div id="search-container">
-        <input type="text" name="search" id="search" placeholder="rechercher un service">
-        <button>Rechercher</button>
+
+    <!-- ── HERO ─────────────────────────────────────────── -->
+    <section class="hero">
+      <div class="hero-bg">
+        <canvas id="particleCanvas"></canvas>
+      </div>
+      <div class="hero-content">
+        <div class="hero-badge">
+          <span class="badge-dot"></span>
+          Des prestataires vérifiés
+        </div>
+        <h1 class="hero-title">
+          Trouvez le prestataire<br>
+          <em>idéal</em> pour vous
+        </h1>
+        <p class="hero-sub">Connectez-vous avec des professionnels vérifiés et qualifiés partout en France. Rapide, sûr, efficace.</p>
+
+        <form class="hero-search" action="/recherche" method="GET">
+          <div class="search-wrap">
+            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            <input type="text" name="q" placeholder="Plombier, électricien, développeur…" autocomplete="off">
+            <button type="submit">Rechercher</button>
+          </div>
+        </form>
+
+        <div class="hero-tags">
+          <span class="tag-label">Populaires :</span>
+          <a href="/recherche?q=plombier" class="hero-tag">Plombier</a>
+          <a href="/recherche?q=electricien" class="hero-tag">Électricien</a>
+          <a href="/recherche?q=developpeur" class="hero-tag">Développeur</a>
+          <a href="/recherche?q=jardinier" class="hero-tag">Jardinier</a>
+        </div>
+      </div>
+
+      <div class="hero-stats">
+        <!-- <div class="stat-item">
+          <strong>2 000+</strong>
+          <span>Prestataires</span>
+        </div>
+        <div class="stat-sep"></div> -->
+        <div class="stat-item">
+          <strong>98%</strong>
+          <span>Satisfaction</span>
+        </div>
+        <div class="stat-sep"></div>
+        <div class="stat-item">
+          <strong>10+</strong>
+          <span>Catégories</span>
+        </div>
+        <div class="stat-sep"></div>
+        <div class="stat-item">
+          <strong>24h</strong>
+          <span>Réponse moyenne</span>
+        </div>
       </div>
     </section>
-    <section id="popular-categories" class="grey-bg">
-      <h2>Catégories populaires</h2>
-      <p>Parcourez nos catégories pour trouver rapidement ce dont vous avez besoin</p>
-      <div id="popular">
-        <% for (const category of categories) { %>
-          <div class="category">
-            <% if (category.icon) { %>
-              <img src="<%= category.icon %>" alt="" width="48" height="48">
-            <% } %>
-            <p><strong><%= category.name %></strong></p>
-          </div>
-        <% } %>
-        </div>
-      </section>
-      <section id="reasons">
-        <h2>Pourquoi choisir Prestalia ?</h2>
-        <div id="reason-list">
-          <div class="reason">
-            <img class="svg" src="/svg/verify-button-circle-svgrepo-com.svg" alt="">
-            <h3>Prestataires vérifiés</h3>
-            <p>Tous nos prestataires sont validés manuellement pour garantir la qualité et la sécurité</p>
-          </div>
-          <div class="reason">
-            <img class="svg" src="/svg/star-svgrepo-com.svg" alt="">
-            <h3>Avis certifiés</h3>
-            <p>Consultez les avis authentiques de clients pour faire le meilleur choix</p>
-          </div>
-          <div class="reason">
-            <img class="svg" src="/svg/reply-svgrepo-com.svg" alt="">
-            <h3>Réponse rapide</h3>
-            <p>Obtenez des réponses et devis rapidement de la part des professionnels</p>
-          </div>
-        </div>
-      </section>
-      <section id="how-work" class="grey-bg">
-        <h2>Comment ça marche ?</h2>
-        <div id="steps">
-          <div class="step">
-            <img class="svg" src="/svg/one-circle-svgrepo-com.svg" alt="">
-            <h3>Recherchez</h3>
-            <p>Trouvez le service dont vous avez besoin</p>
-          </div>
-          <div class="step">
-            <img class="svg" src="/svg/two-circle-svgrepo-com.svg" alt="">
-            <h3>Comparez</h3>
-            <p>Consultez les profils et avis des prestataires</p>
-          </div>
-          <div class="step">
-            <img class="svg" src="/svg/three-circle-svgrepo-com.svg" alt="">
-            <h3>Contactez</h3>
-            <p>Prenez contact avec le prestataire choisi</p>
-          </div>
-          <div class="step">
-            <img class="svg" src="/svg/four-circle-svgrepo-com.svg" alt="">
-            <h3>Évaluez</h3>
-            <p>Partagez votre expérience avec la communauté</p>
-          </div>
-        </div>
-      </section>
-      <section id="pro" class="blue-bg">
-        <img class="svg" src="/svg/user-shield-alt-1-svgrepo-com.svg" alt="">
-        <h2>Vous êtes un professionnel ?</h2>
-        <p>Rejoignez notre communauté de prestataires et développez votre activité</p>
-        <a href="/presta-inscription">
-          <img class="svg" src="/svg/verify-button-circle-svgrepo-com.svg" alt="">
-          Devenir prestataire
-        </a>
-      </section>
-    </main>
-    <%- include("/footer") %>
-</body>
 
+    <!-- ── CATÉGORIES ──────────────────────────────────── -->
+    <section class="section-categories" id="popular-categories">
+      <div class="section-inner">
+        <div class="section-header">
+          <div class="section-label">Catégories</div>
+          <h2>Tous les services<br>dont vous avez besoin</h2>
+          <p>Parcourez nos catégories pour trouver rapidement ce dont vous avez besoin</p>
+        </div>
+        <div class="categories-grid" id="popular">
+          <% for (const category of categories) { %>
+            <a href="/recherche?category=<%= category.name %>" class="category-card reveal">
+              <div class="category-icon">
+                <% if (category.icon) { %>
+                  <img src="<%= category.icon %>" alt="" width="32" height="32">
+                <% } else { %>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="32" height="32"><rect x="3" y="3" width="18" height="18" rx="4"/></svg>
+                <% } %>
+              </div>
+              <span><%= category.name %></span>
+              <svg class="card-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M7 7h10v10"/></svg>
+            </a>
+          <% } %>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── POURQUOI NOUS ───────────────────────────────── -->
+    <section class="section-why" id="reasons">
+      <div class="section-inner">
+        <div class="why-grid">
+          <div class="why-left">
+            <div class="section-label">Pourquoi Prestalia</div>
+            <h2>La confiance au cœur de chaque service</h2>
+            <p>Chaque prestataire est vérifié manuellement. Chaque avis est authentique. Chaque échange est sécurisé.</p>
+            <a href="/recherche" class="btn-primary">Explorer les prestataires →</a>
+          </div>
+          <div class="why-right">
+            <div class="reason-card reveal">
+              <div class="reason-icon">
+                <img src="/svg/verify-button-circle-svgrepo-com.svg" alt="" width="28" height="28">
+              </div>
+              <div>
+                <h3>Prestataires vérifiés</h3>
+                <p>Tous nos prestataires sont validés manuellement pour garantir la qualité et la sécurité</p>
+              </div>
+            </div>
+            <div class="reason-card reveal">
+              <div class="reason-icon">
+                <img src="/svg/star-svgrepo-com.svg" alt="" width="28" height="28">
+              </div>
+              <div>
+                <h3>Avis certifiés</h3>
+                <p>Consultez les avis authentiques de clients réels pour faire le meilleur choix</p>
+              </div>
+            </div>
+            <div class="reason-card reveal">
+              <div class="reason-icon">
+                <img src="/svg/reply-svgrepo-com.svg" alt="" width="28" height="28">
+              </div>
+              <div>
+                <h3>Réponse rapide</h3>
+                <p>Obtenez des réponses et devis rapidement de la part des professionnels</p>
+              </div>
+            </div>
+            <div class="reason-card reveal">
+              <div class="reason-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="28" height="28"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              </div>
+              <div>
+                <h3>Paiement sécurisé</h3>
+                <p>Vos transactions sont protégées. Payez en toute confiance via notre plateforme</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── COMMENT ÇA MARCHE ───────────────────────────── -->
+    <section class="section-steps" id="how-work">
+      <div class="section-inner">
+        <div class="section-header centered">
+          <div class="section-label">Processus</div>
+          <h2>Simple en 4 étapes</h2>
+          <p>De la recherche à l'évaluation, tout est pensé pour vous faciliter la vie</p>
+        </div>
+        <div class="steps-track">
+          <div class="steps-line"></div>
+          <div class="step-item reveal">
+            <div class="step-num">01</div>
+            <div class="step-body">
+              <img src="/svg/one-circle-svgrepo-com.svg" alt="" width="40" height="40">
+              <h3>Recherchez</h3>
+              <p>Décrivez votre besoin ou parcourez nos catégories pour trouver le bon prestataire</p>
+            </div>
+          </div>
+          <div class="step-item reveal">
+            <div class="step-num">02</div>
+            <div class="step-body">
+              <img src="/svg/two-circle-svgrepo-com.svg" alt="" width="40" height="40">
+              <h3>Comparez</h3>
+              <p>Consultez les profils, portfolios et avis des prestataires pour faire votre choix</p>
+            </div>
+          </div>
+          <div class="step-item reveal">
+            <div class="step-num">03</div>
+            <div class="step-body">
+              <img src="/svg/three-circle-svgrepo-com.svg" alt="" width="40" height="40">
+              <h3>Contactez</h3>
+              <p>Échangez directement avec le prestataire et obtenez un devis personnalisé</p>
+            </div>
+          </div>
+          <div class="step-item reveal">
+            <div class="step-num">04</div>
+            <div class="step-body">
+              <img src="/svg/four-circle-svgrepo-com.svg" alt="" width="40" height="40">
+              <h3>Évaluez</h3>
+              <p>Partagez votre expérience pour aider la communauté à choisir</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── TÉMOIGNAGES ─────────────────────────────────── -->
+    <section class="section-reviews">
+      <div class="section-inner">
+        <div class="section-header centered">
+          <div class="section-label">Témoignages</div>
+          <h2>Ce qu'ils en disent</h2>
+        </div>
+        <div class="reviews-grid">
+          <div class="review-card reveal">
+            <div class="review-stars">★★★★★</div>
+            <p>« Prestataire trouvé en moins de 10 minutes. Travail impeccable, je recommande à 100%. »</p>
+            <div class="reviewer">
+              <div class="reviewer-avatar">ML</div>
+              <div>
+                <strong>Marie L.</strong>
+                <span>Paris, 75</span>
+              </div>
+            </div>
+          </div>
+          <div class="review-card reveal">
+            <div class="review-stars">★★★★★</div>
+            <p>« La vérification des prestataires m'a rassurée. Électricien ponctuel et très professionnel. »</p>
+            <div class="reviewer">
+              <div class="reviewer-avatar">TD</div>
+              <div>
+                <strong>Thomas D.</strong>
+                <span>Lyon, 69</span>
+              </div>
+            </div>
+          </div>
+          <div class="review-card reveal">
+            <div class="review-stars">★★★★★</div>
+            <p>« Interface simple, choix énorme. J'ai trouvé un développeur React en 24h pour mon projet. »</p>
+            <div class="reviewer">
+              <div class="reviewer-avatar">SC</div>
+              <div>
+                <strong>Sophie C.</strong>
+                <span>Bordeaux, 33</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-pro" id="pro">
+      <div class="pro-inner">
+        <div class="pro-content">
+          <div class="section-label light">Professionnels</div>
+          <h2>Développez votre activité<br>avec Prestalia</h2>
+          <p>Rejoignez notre plateforme pour trouver de nouveaux clients chaque jour.</p>
+          <div class="pro-perks">
+            <div class="perk">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><polyline points="20 6 9 17 4 12"/></svg>
+              Profil gratuit et illimité
+            </div>
+            <div class="perk">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><polyline points="20 6 9 17 4 12"/></svg>
+              Visibilité auprès de milliers de clients
+            </div>
+            <div class="perk">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><polyline points="20 6 9 17 4 12"/></svg>
+              Gestion simplifiée des demandes
+            </div>
+          </div>
+          <a href="/presta-inscription" class="btn-white">Devenir prestataire →</a>
+        </div>
+        <div class="pro-visual">
+          <div class="pro-card">
+            <div class="pro-card-header">
+              <div class="pro-avatar">JD</div>
+              <div>
+                <strong>Jean Dupont</strong>
+                <span>Plombier certifié</span>
+              </div>
+              <div class="pro-badge">✓ Vérifié</div>
+            </div>
+            <div class="pro-card-stats">
+              <div class="pro-stat"><strong>4.9</strong><span>Note</span></div>
+              <div class="pro-stat"><strong>124</strong><span>Avis</span></div>
+              <div class="pro-stat"><strong>8 ans</strong><span>Exp.</span></div>
+            </div>
+            <div class="pro-card-bar">
+              <div class="bar-fill"></div>
+            </div>
+            <p class="pro-card-sub">Profil vu <strong>38 fois</strong> cette semaine</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <%- include("/footer") %>
+
+  <script>
+  (function(){
+    var canvas=document.getElementById('particleCanvas');
+    if(!canvas)return;
+    var ctx=canvas.getContext('2d');
+    var particles=[];
+    function resize(){canvas.width=canvas.offsetWidth;canvas.height=canvas.offsetHeight;}
+    resize();
+    window.addEventListener('resize',resize);
+    for(var i=0;i<60;i++){
+      particles.push({
+        x:Math.random()*canvas.width,
+        y:Math.random()*canvas.height,
+        r:Math.random()*2+.5,
+        dx:(Math.random()-.5)*.3,
+        dy:(Math.random()-.5)*.3,
+        o:Math.random()*.5+.1
+      });
+    }
+    function draw(){
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      particles.forEach(function(p){
+        ctx.beginPath();
+        ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+        ctx.fillStyle='rgba(255,255,255,'+p.o+')';
+        ctx.fill();
+        p.x+=p.dx;p.y+=p.dy;
+        if(p.x<0||p.x>canvas.width)p.dx*=-1;
+        if(p.y<0||p.y>canvas.height)p.dy*=-1;
+      });
+      requestAnimationFrame(draw);
+    }
+    draw();
+  })();
+
+  // ── Scroll reveal ────────────────────────────────────
+  (function(){
+    var els=document.querySelectorAll('.reveal');
+    var obs=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){e.target.classList.add('revealed');obs.unobserve(e.target);}
+      });
+    },{threshold:.15});
+    els.forEach(function(el){obs.observe(el);});
+  })();
+  </script>
+
+</body>
 </html>

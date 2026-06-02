@@ -4,21 +4,21 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="shortcut icon" href="/photos/Gemini_Generated_Image.png" type="image/png">
-  <title>Annuaire Prestataires - CSS Pur</title>
+  <title>Recherche </title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <link rel="stylesheet" href="/css/recherche.css">
   <link rel="stylesheet" href="/css/header.css">
   <link rel="stylesheet" href="/css/footer.css">
 </head>
 <body>
-  <%- include("/default-header") %>
+  <%- include(typeof user !== "undefined" ? "/header" : "/default-header") %>
   <main>
     <div class="container">
       <div class="search-bar">
         <div class="search-input-wrapper">
           <input type="text" placeholder="Rechercher un service (ex: plombier, jardinier)...">
         </div>
-        <button class="btn-search">Rechercher</button>
+        <button class="btn-search"> Rechercher</button>
       </div>
       <div class="main-layout">
         <aside class="filters-sidebar">

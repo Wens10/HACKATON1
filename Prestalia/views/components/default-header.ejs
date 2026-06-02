@@ -1,11 +1,41 @@
-  <header>
-    <a href="/"><img src="/photos/Gemini_Generated_Image_3be0lc3be0lc3be0-removebg-preview.png" alt="Logo Prestalia" width="70" height="70" ></a>
-    <nav class="desktop-view">
-      <a href="/">Accueil</a>
-      <a href="/recherche">Rechercher</a>
-    </nav>
-    <div class="auth_desk_view">
+<header>
+  <div class="pnav-inner">
+    <a href="/" class="pnav-logo">
+      <img src="/photos/Gemini_Generated_Image_3be0lc3be0lc3be0-removebg-preview.png" alt="Logo Prestalia" width="52" height="52">
+    </a>
+    <ul class="pnav-links">
+      <li><a href="/">Accueil</a></li>
+      <li><a href="/recherche">Rechercher</a></li>
+    </ul>
+    <div class="pnav-actions">
       <a href="/auth#login" class="btn-bg1">Connexion</a>
       <a href="/auth#signup" class="btn-bg">Inscription</a>
     </div>
-  </header>
+    <button class="pnav-burger" id="burgerBtn" aria-label="Ouvrir le menu">
+      <span class="burger-bar"></span>
+      <span class="burger-bar"></span>
+      <span class="burger-bar"></span>
+    </button>
+  </div>
+
+  <div class="drawer-overlay" id="drawerOverlay"></div>
+  <aside class="pnav-drawer" id="navDrawer">
+    <button class="drawer-close" id="drawerClose">✕</button>
+    <nav class="drawer-links">
+      <a href="/">Accueil</a>
+      <a href="/recherche">Rechercher</a>
+    </nav>
+    <div class="drawer-cta">
+      <a href="/auth#login" class="btn-bg1">Connexion</a>
+      <a href="/auth#signup" class="btn-bg">Inscription</a>
+    </div>
+  </aside>
+</header>
+<script>
+(function(){
+  var b=document.getElementById('burgerBtn'),o=document.getElementById('drawerOverlay'),d=document.getElementById('navDrawer'),c=document.getElementById('drawerClose'),bars=b.querySelectorAll('.burger-bar');
+  function open(){d.classList.add('open');o.classList.add('open');bars[0].style.transform='translateY(7px) rotate(45deg)';bars[1].style.opacity='0';bars[2].style.transform='translateY(-7px) rotate(-45deg)';document.body.style.overflow='hidden';}
+  function close(){d.classList.remove('open');o.classList.remove('open');bars[0].style.transform='';bars[1].style.opacity='';bars[2].style.transform='';document.body.style.overflow='';}
+  b.addEventListener('click',open);c.addEventListener('click',close);o.addEventListener('click',close);
+})();
+</script>
