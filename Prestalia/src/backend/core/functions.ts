@@ -340,8 +340,33 @@ export async function resolveAPIRequest(
   method: string,
   params: any[],
 ) {
-  const resourcePath = join(resourceDir, path),
-    handlerPath = join(resourcePath, `${method.toLowerCase()}.js`);
+  let pathWithoutId = path;
+
+  Array.from(path.matchAll(/\/[A-Za-z0-9_-]+\/(\d+)/g))
+    .map(([res, id]) => id && [res, res.replace(id, "[id]")])
+    .filter((arr) => Array.isArray(arr))
+    .forEach(
+      ([searchValue, replaceValue]) =>
+        (pathWithoutId = pathWithoutId.replace(
+          searchValue ?? "",
+          replaceValue ?? "",
+        )),
+    );
+
+  pathWithoutId = pathWithoutId.replace(/\/$/, "");
+
+  const resourcePath = join(resourceDir, pathWithoutId),
+    handlerPath = join(resourcePath, `${method.toLowerCase()}.js`),
+    ids: number[] = [];
+
+  for (const id of Array.from(path.matchAll(/\/[A-Za-z0-9_-]+\/(\d+)/g)).map(
+    (res) => res[1],
+  )) {
+    const parsedId = Number(id);
+
+    if (!id || isNaN(parsedId)) return context.respond(400, {end: true});
+    else ids.push(parsedId);
+  }
 
   try {
     const defaultExport: unknown = require(handlerPath)?.default;
@@ -352,7 +377,7 @@ export async function resolveAPIRequest(
       );
 
       context.respond(500, {end: true});
-    } else defaultExport(context, context.headers, ...params);
+    } else defaultExport(context, context.headers, ...params, ...ids);
   } catch (err) {
     error(`Erreur lors du chargement du fichier ${handlerPath}:`, err);
 
@@ -375,6 +400,8 @@ export async function resolveAPIRequest(
       }
     else context.respond(404, {end: true});
   }
+
+  return;
 }
 
 export function resolveResourceRequest(

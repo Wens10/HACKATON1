@@ -125,9 +125,19 @@
                                             Content="Icône de la catégorie"
                                             Click="PickCategoryIconButton_Click"/>
 
-                                        <TextBlock
-                                            x:Name="PickCategoryIconTextBlock"
-                                            Text="Aucune"/>
+                                        <Grid
+                                            Grid.Column="0"
+                                            HorizontalAlignment="Left">
+                                            <TextBlock
+                                                x:Name="PickCategoryIconTextBlock"
+                                                Text="Aucune"/>
+
+                                            <Image
+                                                x:Name="PickCategoryIconImage"
+                                                Visibility="Collapsed"
+                                                Width="40"
+                                                Height="40"/>
+                                        </Grid>
                                     </StackPanel>
                                 </ContentDialog>
                             </StackPanel>
@@ -207,7 +217,7 @@
                                             <ColumnDefinition Width="*"/>
                                             <ColumnDefinition Width="*"/>
                                             <ColumnDefinition Width="106"/>
-                                            <ColumnDefinition Width="66"/>
+                                            <ColumnDefinition Width="77"/>
                                         </Grid.ColumnDefinitions>
 
                                         <Grid
@@ -260,12 +270,58 @@
                                             Spacing="8"
                                             Orientation="Horizontal"
                                             VerticalAlignment="Center">
-                                            <Button Content="Détails"/>
+                                            <Button
+                                                Content="Modifier"
+                                                Tag="{x:Bind}"
+                                                Click="EditCategory_Click"/>
                                         </StackPanel>
                                     </Grid>
                                 </DataTemplate>
                             </ListView.ItemTemplate>
                         </ListView>
+                        <ContentDialog
+                            x:Name="EditCategoryDialog"
+                            Title="Modifier la catégorie"
+                            DefaultButton="Primary"
+                            PrimaryButtonText="Enregistrer"
+                            SecondaryButtonText="Supprimer"
+                            CloseButtonText="Annuler"
+                            PrimaryButtonClick="EditCategoryDialog_PrimaryButtonClick">
+                            <StackPanel Spacing="8">
+                                <InfoBar
+                                    x:Name="EditCategoryInfoBar"
+                                    IsOpen="False"
+                                    Severity="Error"
+                                    Title="Erreur"
+                                    Message="Erreur lors de la modification"/>
+
+                                <TextBox
+                                    x:Name="EditCategoryName"
+                                    Header="Nom de la catégorie :"
+                                    MaxLength="100"/>
+
+                                <TextBlock Text="Choisir une nouvelle icône (optionnel)"/>
+
+                                <Button
+                                    x:Name="PickEditCategoryIconButton"
+                                    Content="Icône de la catégorie"
+                                    Click="PickEditCategoryIconButton_Click"/>
+
+                                <Grid
+                                    Grid.Column="0"
+                                    HorizontalAlignment="Left">
+                                    <TextBlock
+                                        x:Name="PickEditCategoryIconTextBlock"
+                                        Text="Aucune"/>
+
+                                    <Image
+                                        x:Name="PickEditCategoryIconImage"
+                                        Visibility="Collapsed"
+                                        Width="40"
+                                        Height="40"/>
+                                </Grid>
+                            </StackPanel>
+                        </ContentDialog>
                     </Grid>
                 </Border>
             </ScrollViewer>

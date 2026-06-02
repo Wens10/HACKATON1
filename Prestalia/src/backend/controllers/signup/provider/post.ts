@@ -3,8 +3,9 @@ import {DatabaseSync} from "node:sqlite";
 import {isValidEmail} from "../../../utils/functions";
 import {fileTypeFromBuffer} from "file-type";
 import {mkdir, writeFile} from "fs/promises";
-import {join} from "path";
+import {extname, join} from "path";
 import {Days} from "../../../utils/enums";
+import {randomUUID} from "crypto";
 
 const supportedExtForFiles = ["jpg", "pdf", "png", "apng", "webp"];
 
@@ -76,7 +77,11 @@ export default (async (body, userId, db) => {
           });
 
           await writeFile(
-            join(workingDirPath, `/data/${userId}`, file.filename),
+            join(
+              workingDirPath,
+              `/data/${userId}`,
+              `${randomUUID()}${extname(file.filename)}`,
+            ),
             file.data,
           );
         } catch (err) {
