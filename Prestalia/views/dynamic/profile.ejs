@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="/css/profil.css">
 </head>
 <body>
-  <%- include("/header") %>
+  <%- include(typeof user !== "undefined" ? "/header" : "/default-header") %>
   <main>
     <div class="container">
       <div class="profile-header">
@@ -21,7 +21,7 @@
           <p class="category">Plomberie</p>
           <div class="stats">
             <span class="star">★</span> <strong>4.8</strong> <span style="color:var(--text-light)">(124 avis)</span>
-            <span style="margin-left: 15px; color:var(--text-light)"><i class="fa-solid fa-location-dot"></i>Paris</span>
+            <span style="margin-left: 15px; color:var(--text-light)"><i class="fa-solid fa-location-dot"></i> Paris</span>
           </div>
           <div class="tags">
             <span class="tag">Dépannage</span>

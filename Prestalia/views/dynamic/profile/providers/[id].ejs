@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="/photos/Gemini_Generated_Image.png" type="image/png">
+  <title>Profil - Jean Dupont</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/header.css">
+  <link rel="stylesheet" href="/css/footer.css">
+  <link rel="stylesheet" href="/css/profil.css">
+</head>
+<body>
+  <%- include(typeof user !== "undefined" ? "/header" : "/default-header") %>
+  <main>
+    <div class="container">
+      <div class="profile-header">
+        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Jean" alt="Avatar" class="avatar">
+        <div class="header-info">
+          <h1><%= provider.name %></h1>
+          <p class="category"><%= provider.category_name %></p>
+          <div class="stats">
+            <span class="star">★</span> <strong>4.8</strong> <span style="color:var(--text-light)">(124 avis)</span>
+            <span style="margin-left: 15px; color:var(--text-light)"><i class="fa-solid fa-location-dot"></i> <%= provider.city %></span>
+          </div>
+          <div class="tags">
+            <span class="tag">Dépannage</span>
+            <span class="tag">Installation</span>
+            <span class="tag">Rénovation</span>
+          </div>
+          <div class="header-actions">
+            <button class="btn btn-primary"><i class="fa-solid fa-phone"></i> Contacter</button>
+            <button class="btn btn-outline"><i class="fa-regular fa-calendar"></i> Réserver</button>
+          </div>
+        </div>
+        <div class="verified-badge">
+          <i class="fa-solid fa-circle-check"></i> Vérifié
+        </div>
+      </div>
+      <div class="profile-content">
+        <div class="main-column">
+          <section>
+            <h2>À propos</h2>
+            <p style="color: var(--text-light); line-height: 1.6;"><%= provider.descr %></p>
+          </section>
+          <section>
+            <h2>Galerie</h2>
+            <div class="galerie-grid">
+              <img src="https://images.unsplash.com/photo-1581244276892-ecfb6122044c?q=80&w=600" alt="Travail 1">
+              <img src="https://images.unsplash.com/photo-1504148455328-c376907d081c?q=80&w=600" alt="Travail 2">
+            </div>
+          </section>
+          <section>
+            <h2>Avis clients</h2>
+            <div class="review">
+              <strong>Client 1</strong>
+              <div class="star">★★★★☆</div>
+              <p style="font-size: 14px;">Excellent service, très professionnel et ponctuel. Je recommande vivement !</p>
+              <span class="review-date">Il y a 1 jour</span>
+            </div>
+            <div class="review">
+              <strong>Client 2</strong>
+              <div class="star">★★★★☆</div>
+              <p style="font-size: 14px;">Excellent service, très professionnel et ponctuel. Je recommande vivement !</p>
+              <span class="review-date">Il y a 2 jours</span>
+            </div>
+          </section>
+        </div>
+        <div class="sidebar">
+          <div class="sidebar-card">
+            <div style="font-size: 14px; color: var(--text-light);">Tarification</div>
+            <div class="price-big"><%= provider.price %>€<span style="font-size: 16px; font-weight: normal; color: var(--text-light);">/heure</span>
+            </div>
+            <div style="font-size: 12px; color: var(--text-light);">Tarif indicatif</div>
+          </div>
+          <div class="sidebar-card">
+            <h3 style="font-size: 16px; margin-top: 0;">Informations</h3>
+            <ul class="sidebar-list" style="color: var(--text-light);">
+              <li><span><i class="fa-regular fa-clock"></i> Temps de réponse</span> <span>&lt; 1h</span></li>
+              <li><span><i class="fa-solid fa-briefcase"></i> Expérience</span> <span><%= provider.exp %> ans</span></li>
+              <li><span><i class="fa-solid fa-check"></i> Prestations réalisées</span> <span>456</span></li>
+            </ul>
+          </div>
+          <div class="sidebar-card">
+            <h3 style="font-size: 16px; margin-top: 0;">Disponibilités</h3>
+            <ul class="sidebar-list">
+              <li>Lundi <span class="status-available">Disponible</span></li>
+              <li>Mardi <span class="status-available">Disponible</span></li>
+              <li>Mercredi <span class="status-available">Disponible</span></li>
+              <li>Samedi <span class="status-busy">Indisponible</span></li>
+              <li>Dimanche <span class="status-busy">Indisponible</span></li>
+            </ul>
+          </div>
+          <div class="sidebar-card">
+            <h3 style="font-size: 16px; margin-top: 0;">Contact</h3>
+            <a href="#" class="contact-link"><i class="fa-solid fa-phone"></i> <%= provider.tel %></a>
+            <a href="#" class="contact-link"><i class="fa-regular fa-envelope"></i> <%= provider.email %></a></div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <%- include("/footer") %>
+</body>
+</html>
