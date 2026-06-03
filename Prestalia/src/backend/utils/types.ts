@@ -11,3 +11,12 @@ export type PageHandler = (
 export type PageParams = [Pool];
 
 export type APIParams = [Pool];
+
+export type APIHandler = (
+  // eslint-disable-next-line no-unused-vars
+  context: Context,
+  // eslint-disable-next-line no-unused-vars
+  headers: Context["headers"],
+  // eslint-disable-next-line no-unused-vars
+  ...params: [...APIParams, ...id: number[]]
+) => void;

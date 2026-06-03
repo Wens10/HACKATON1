@@ -1,8 +1,8 @@
-import {Context, error, hasProps} from "../../../core";
+import {error, hasProps} from "../../../core";
 import busboy from "busboy";
 import {cookieToJSON, verifyJWT} from "../../../utils/functions";
 import signup from "../../../controllers/signup/provider/post";
-import {APIParams} from "../../../utils/types";
+import {APIHandler} from "../../../utils/types";
 import {RowDataPacket} from "mysql2";
 
 export default (async (context, headers, db) => {
@@ -100,11 +100,4 @@ export default (async (context, headers, db) => {
       },
     });
   }
-}) satisfies (
-  // eslint-disable-next-line no-unused-vars
-  context: Context,
-  // eslint-disable-next-line no-unused-vars
-  headers: Context["headers"],
-  // eslint-disable-next-line no-unused-vars
-  ...params: [...APIParams, ...id: number[]]
-) => void;
+}) satisfies APIHandler;

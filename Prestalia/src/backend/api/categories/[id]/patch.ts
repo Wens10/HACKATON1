@@ -1,8 +1,8 @@
-import {Context, error, hasProps, MIME_TYPES} from "../../../core";
+import {error, hasProps, MIME_TYPES} from "../../../core";
 import busboy from "busboy";
 import {verifyJWT} from "../../../utils/functions";
 import updateCategory from "../../../controllers/categories/[id]/patch";
-import {APIParams} from "../../../utils/types";
+import {APIHandler} from "../../../utils/types";
 import {RowDataPacket} from "mysql2";
 
 export default (async (context, headers, db, categoryId) => {
@@ -93,11 +93,4 @@ export default (async (context, headers, db, categoryId) => {
       },
     });
   }
-}) satisfies (
-  // eslint-disable-next-line no-unused-vars
-  context: Context,
-  // eslint-disable-next-line no-unused-vars
-  headers: Context["headers"],
-  // eslint-disable-next-line no-unused-vars
-  ...params: [...APIParams, ...id: number[]]
-) => void;
+}) satisfies APIHandler;

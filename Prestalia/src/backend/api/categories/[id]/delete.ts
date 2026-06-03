@@ -1,7 +1,7 @@
 import {RowDataPacket} from "mysql2";
-import {Context, error, hasProps} from "../../../core";
+import {error, hasProps} from "../../../core";
 import {getCategory, verifyJWT} from "../../../utils/functions";
-import {APIParams} from "../../../utils/types";
+import {APIHandler} from "../../../utils/types";
 
 export default (async (context, headers, db, categoryId) => {
   const authorizationHeader = headers.authorization;
@@ -71,11 +71,4 @@ export default (async (context, headers, db, categoryId) => {
       },
     });
   }
-}) satisfies (
-  // eslint-disable-next-line no-unused-vars
-  context: Context,
-  // eslint-disable-next-line no-unused-vars
-  headers: Context["headers"],
-  // eslint-disable-next-line no-unused-vars
-  ...params: [...APIParams, ...id: number[]]
-) => void;
+}) satisfies APIHandler;

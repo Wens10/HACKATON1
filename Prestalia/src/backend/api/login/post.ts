@@ -1,7 +1,7 @@
-import {Context, error, hasProps, Http2Context} from "../../core";
+import {error, hasProps, Http2Context} from "../../core";
 import {cookieToJSON, verifyJWT} from "../../utils/functions";
 import login from "../../controllers/login/post";
-import {APIParams} from "../../utils/types";
+import {APIHandler} from "../../utils/types";
 import {RowDataPacket} from "mysql2";
 
 const jwtSecret = process.env["JWT_SECRET"];
@@ -156,11 +156,4 @@ export default (async (context, headers, db) => {
           });
       }
     });
-}) satisfies (
-  // eslint-disable-next-line no-unused-vars
-  context: Context,
-  // eslint-disable-next-line no-unused-vars
-  headers: Context["headers"],
-  // eslint-disable-next-line no-unused-vars
-  ...params: [...APIParams, ...id: number[]]
-) => void;
+}) satisfies APIHandler;

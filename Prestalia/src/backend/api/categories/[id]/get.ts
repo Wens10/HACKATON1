@@ -1,6 +1,6 @@
-import {Context, error, MIME_TYPES} from "../../../core";
+import {error, MIME_TYPES} from "../../../core";
 import {getCategory} from "../../../utils/functions";
-import {APIParams} from "../../../utils/types";
+import {APIHandler} from "../../../utils/types";
 
 export default (async (context, _headers, db, categoryId) => {
   try {
@@ -19,11 +19,4 @@ export default (async (context, _headers, db, categoryId) => {
 
     context.respond(500, {end: true});
   }
-}) satisfies (
-  // eslint-disable-next-line no-unused-vars
-  context: Context,
-  // eslint-disable-next-line no-unused-vars
-  headers: Context["headers"],
-  // eslint-disable-next-line no-unused-vars
-  ...params: [...APIParams, ...id: number[]]
-) => void;
+}) satisfies APIHandler;
