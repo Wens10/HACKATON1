@@ -9,6 +9,32 @@
   <link rel="stylesheet" href="/css/header.css">
   <link rel="stylesheet" href="/css/footer.css">
   <link rel="stylesheet" href="/css/auth.css">
+  <style>
+    .form-error {
+      background: #fdecea;
+      color: #c0392b;
+      border: 1px solid #e74c3c;
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.95rem;
+    }
+    .form-success {
+      background: #eafaf1;
+      color: #1e8449;
+      border: 1px solid #27ae60;
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.95rem;
+    }
+  </style>
 </head>
 <body>
   <% if (user) { %>
@@ -21,7 +47,8 @@
       <div id="login"></div>
       <div id="signup"></div>
       <div id="login-form" class="form-content">
-        <form action="/api/login<%= to ? '?to=' + to : '' %>" method="post">
+        <div id="login-error"></div>
+        <form id="form-login" action="/api/login<%= to ? '?to=' + to : '' %>" method="post">
           <div class="form-group">
             <label for="email">Email</label>
             <div class="input-wrapper">
@@ -41,7 +68,8 @@
         </form>
       </div>
       <div id="signup-form" class="form-content">
-        <form action="/api/signup<%= to ? '?to=' + to : '' %>" method="post">
+        <div id="signup-error"></div>
+        <form id="form-signup" action="/api/signup<%= to ? '?to=' + to : '' %>" method="post">
           <div class="form-group">
             <label for="name">Nom complet</label>
             <div class="input-wrapper">
@@ -74,5 +102,75 @@
     </div>
   </main>
   <%- include("/footer") %>
+  <script>
+    const errorMessages = {
+      login: {
+        401: "Email ou mot de passe incorrect.",
+        500: "Erreur serveur, veuillez réessayer.",
+        default: "Une erreur est survenue."
+      },
+      signup: {
+        409: "Un compte existe déjà avec cet email.",
+        400: "Données invalides, vérifiez le formulaire.",
+        500: "Erreur serveur, veuillez réessayer.",
+        default: "Une erreur est survenue."
+      }
+    };
+
+    function showError(containerId, message) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = `
+        <div class="form-error">
+          <i class="fa-solid fa-circle-exclamation"></i> ${message}
+        </div>`;
+    }
+
+    function clearError(containerId) {
+      document.getElementById(containerId).innerHTML = "";
+    }
+
+    async function handleForm(formId, errorContainerId, type) {
+      const form = document.getElementById(formId);
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        clearError(errorContainerId);
+
+        const btn = form.querySelector("button[type=submit]");
+        btn.disabled = true;
+        btn.textContent = "Chargement....";
+
+        const body = new URLSearchParams(new FormData(form));
+
+        try {
+          const res = await fetch(form.action, {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: body.toString(),
+            redirect: "manual"
+          });
+
+          if (res.ok || res.type === "opaqueredirect" || res.status === 303) {
+            // Succès → on suit la redirection manuellement
+            window.location.href = form.action.includes("?to=")
+              ? decodeURIComponent(form.action.split("?to=")[1])
+              : "/";
+          } else {
+            const msgs = errorMessages[type];
+            showError(errorContainerId, msgs[res.status] || msgs.default);
+            btn.disabled = false;
+            btn.textContent = type === "login" ? "Se connecter" : "Créer mon compte";
+          }
+        } catch (err) {
+          showError(errorContainerId, "Impossible de contacter le serveur.");
+          btn.disabled = false;
+          btn.textContent = type === "login" ? "Se connecter" : "Créer mon compte";
+        }
+      });
+    }
+
+    handleForm("form-login", "login-error", "login");
+    handleForm("form-signup", "signup-error", "signup");
+  </script>
 </body>
 </html>
