@@ -115,6 +115,7 @@
 }
 
 .footer-col a {
+  color: #edf4ff;
   text-decoration: none;
   font-size: .875rem;
   transition: color .2s;
