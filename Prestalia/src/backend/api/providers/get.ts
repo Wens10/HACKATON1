@@ -15,7 +15,7 @@ export default (async (context, _headers, db) => {
         p.exp,
         p.price,
         p.days,
-        c.name,
+        c.name as category_name,
         u.name,
         u.email
       FROM providers p

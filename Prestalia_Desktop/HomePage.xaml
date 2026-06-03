@@ -62,7 +62,7 @@
                                         x:Name="TextProviderCount"
                                         VerticalAlignment="Center"
                                         Grid.Column="0"
-                                        Text="999999999"
+                                        Text="0"
                                         Style="{StaticResource SubtitleTextBlockStyle}"/>
 
                                     <SymbolIcon

@@ -2,6 +2,8 @@ using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -18,55 +20,63 @@ namespace Prestalia_Desktop
         private string order = "asc";
         private string orderBy = "default";
 
+        public record APIProvider(
+            [property: JsonPropertyName("id")] int Id,
+            [property: JsonPropertyName("created_at")] string CreatedAt,
+            [property: JsonPropertyName("valided")] bool? Valided,
+            [property: JsonPropertyName("tel")] string Tel,
+            [property: JsonPropertyName("city")] string City,
+            [property: JsonPropertyName("descr")] string Descr,
+            [property: JsonPropertyName("exp")] int Exp,
+            [property: JsonPropertyName("price")] int Price,
+            [property: JsonPropertyName("days")] int Days,
+            [property: JsonPropertyName("category_name")] string CategoryName,
+            [property: JsonPropertyName("name")] string Name,
+            [property: JsonPropertyName("email")] string Email
+        );
+
         public HomePage()
         {
             InitializeComponent();
 
-            providers.AddRange([
-                new(1, "Jean Dupont", "jean.dupont@artisanmail.fr", "Plomberie", "Paris", 4.8f, "Approuvé"),
-                new(2, "Sophie Martin", "sophie.martin.pro@gmail.com", "Électricité", "Lyon", 4.6f, "Approuvé"),
-                new(3, "Karim Benali", "karim.benali@outlook.fr", "Peinture", "Marseille", 4.3f, "En attente"),
-                new(4, "Camille Petit", "camille.petit.travaux@yahoo.fr", "Menuiserie", "Bordeaux", 4.7f, "Approuvé"),
-                new(5, "Nicolas Moreau", "n.moreau.renov@gmail.com", "Maçonnerie", "Toulouse", 4.1f, "En attente"),
-                new(6, "Laura Garcia", "laura.garcia.pro@orange.fr", "Carrelage", "Nice", 4.5f, "Approuvé"),
-                new(7, "Mehdi Roux", "mehdi.roux.batiment@gmail.com", "Plâtrerie", "Nantes", 3.9f, "En attente"),
-                new(8, "Élodie Bernard", "elodie.bernard.deco@laposte.net", "Décoration intérieure", "Lille", 4.9f, "Approuvé"),
-                new(9, "Thomas Faure", "thomas.faure.services@gmail.com", "Chauffage", "Strasbourg", 4.2f, "Approuvé"),
-                new(10, "Inès Mercier", "ines.mercier.artisan@outlook.com", "Vitrerie", "Montpellier", 3.8f, "En attente"),
-                new(11, "Alexandre Chevalier", "alex.chevalier.pro@gmail.com", "Couverture", "Rennes", 4.4f, "Approuvé"),
-                new(12, "Mélanie Giraud", "melanie.giraud.habitat@yahoo.com", "Isolation", "Reims", 4.0f, "Approuvé"),
-                new(13, "Youssef El Amrani", "y.elamrani.travaux@gmail.com", "Climatisation", "Le Havre", 3.6f, "Rejeté"),
-                new(14, "Pauline Blanchard", "pauline.blanchard.pro@icloud.com", "Serrurerie", "Saint-Étienne", 4.1f, "En attente"),
-                new(15, "Julien Perrot", "julien.perrot.btp@gmail.com", "Terrassement", "Toulon", 3.7f, "Rejeté"),
-                new(16, "Céline Renaud", "celine.renaud.renov@orange.fr", "Peinture", "Grenoble", 4.6f, "Approuvé"),
-                new(17, "Hugo Lemoine", "hugo.lemoine.menuiserie@gmail.com", "Menuiserie", "Dijon", 4.3f, "Approuvé"),
-                new(18, "Nadia Colin", "nadia.colin.services@outlook.fr", "Nettoyage chantier", "Angers", 4.0f, "En attente"),
-                new(19, "Baptiste Noel", "baptiste.noel.pro@gmail.com", "Électricité", "Nîmes", 4.7f, "Approuvé"),
-                new(20, "Sarah Lopez", "sarah.lopez.habitat@yahoo.fr", "Plomberie", "Villeurbanne", 4.4f, "Approuvé"),
-                new(21, "Vincent Marchand", "vincent.marchand.travaux@gmail.com", "Maçonnerie", "Clermont-Ferrand", 3.5f, "Rejeté"),
-                new(22, "Anaïs Tessier", "anais.tessier.deco@gmail.com", "Décoration intérieure", "Le Mans", 4.8f, "Approuvé"),
-                new(23, "Romain Picard", "romain.picard.bricolage@laposte.net", "Carrelage", "Aix-en-Provence", 4.2f, "En attente"),
-                new(24, "Fatou Diop", "fatou.diop.pro@outlook.com", "Isolation", "Brest", 4.5f, "Approuvé"),
-                new(25, "Damien Aubry", "damien.aubry.chauffage@gmail.com", "Chauffage", "Limoges", 3.9f, "En attente"),
-                new(26, "Manon Lefèvre", "manon.lefevre.vitrerie@yahoo.com", "Vitrerie", "Tours", 4.1f, "Approuvé"),
-                new(27, "Walid Saidi", "walid.saidi.renov@gmail.com", "Climatisation", "Amiens", 3.4f, "Rejeté"),
-                new(28, "Chloé Roy", "chloe.roy.serrurerie@orange.fr", "Serrurerie", "Annecy", 4.6f, "Approuvé"),
-                new(29, "Guillaume Barbier", "guillaume.barbier.toiture@gmail.com", "Couverture", "Perpignan", 4.0f, "En attente"),
-                new(30, "Leïla Haddad", "leila.haddad.travaux@icloud.com", "Plâtrerie", "Besançon", 4.3f, "Approuvé")
-            ]);
+            Loaded += async (_, _) =>
+            {
+                var response = await HttpClientProvider.Http.GetAsync("/api/providers");
+                var body = await response.Content.ReadAsStringAsync();
+                var data = String.IsNullOrEmpty(body) ? [] : JsonSerializer.Deserialize<List<APIProvider>>(body) ?? [];
 
-            ProvidersList.ItemsSource = providers;
+                foreach (var provider in data) AddAPIProvider(provider);
 
-            AllProvidersButton.IsChecked = true;
+                ProvidersList.ItemsSource = providers;
 
-            int pendingCount = providers.Count(provider => provider.Statut == "En attente");
+                AllProvidersButton.IsChecked = true;
 
-            InfoBadgePendingCount.Value = Math.Min(pendingCount, 99);
+                int pendingCount = providers.Count(provider => provider.Statut == "En attente");
 
-            setTextCount(TextPendingCount, pendingCount);
-            setTextCount(TextRejectedCount, providers.Count(provider => provider.Statut == "Rejeté"));
-            setTextCount(TextApprovedCount, providers.Count(provider => provider.Statut == "Approuvé"));
-            setTextCount(TextProviderCount, providers.Count);
+                InfoBadgePendingCount.Value = Math.Min(pendingCount, 99);
+
+                setTextCount(TextPendingCount, pendingCount);
+                setTextCount(TextRejectedCount, providers.Count(provider => provider.Statut == "Rejeté"));
+                setTextCount(TextApprovedCount, providers.Count(provider => provider.Statut == "Approuvé"));
+                setTextCount(TextProviderCount, providers.Count);
+            };
+        }
+
+        public void AddAPIProvider(APIProvider provider)
+        {
+            String statut = provider.Valided == null ? "En attente" : provider.Valided == true ? "Approuvé" : "Rejeté";
+
+            Provider newProvider = new(
+                provider.Id,
+                provider.Name,
+                provider.Email,
+                provider.CategoryName,
+                provider.City,
+                0,
+                statut
+            );
+
+            providers.Add(newProvider);
         }
 
         private void setTextCount(TextBlock textBlock, int count)
