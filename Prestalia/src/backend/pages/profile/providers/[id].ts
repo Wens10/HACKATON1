@@ -85,8 +85,6 @@ export default (async (context, db, providerId) => {
 
     data["provider"] = provider;
 
-    console.log("PROVIDER", provider);
-
     return renderFile(
       join(DEFAULT_EJS_DYNAMIC_PAGE_DIR, "profile/providers/[id].ejs"),
       data,
