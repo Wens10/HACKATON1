@@ -62,12 +62,14 @@ export default (async () => {
       valided BOOLEAN,
       tel VARCHAR(20),
       city VARCHAR(100),
-      category INTEGER,
+      category INTEGER NOT NULL,
+      user_id INTEGER NOT NULL,
       descr VARCHAR(1000),
       exp INTEGER,
       price FLOAT,
       days INTEGER,
-      FOREIGN KEY(category) REFERENCES categories(id)
+      FOREIGN KEY(category) REFERENCES categories(id),
+      FOREIGN KEY(user_id) REFERENCES users(id)
     );
   `);
 
