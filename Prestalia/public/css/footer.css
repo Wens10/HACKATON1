@@ -115,7 +115,7 @@
 }
 
 .footer-col a {
-  color: #475569;
+  color: #edf4ff;
   text-decoration: none;
   font-size: .875rem;
   transition: color .2s;
@@ -123,7 +123,8 @@
 }
 
 .footer-col a:hover {
-  color: #cbd5e1;
+  color: #3264a1;
+
 }
 
 /* ── Bottom bar ── */
