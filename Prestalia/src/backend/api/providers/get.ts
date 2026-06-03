@@ -5,24 +5,24 @@ export default (async (context, _headers, db) => {
   try {
     const providers = (
       await db.execute(`
-      SELECT
-        p.id,
-        p.created_at,
-        p.valided,
-        p.tel,
-        p.city,
-        p.descr,
-        p.exp,
-        p.price,
-        p.days,
-        c.name as category_name,
-        u.name,
-        u.email
-      FROM providers p
-      LEFT JOIN categories c ON p.category = c.id
-      LEFT JOIN users u ON p.user_id = u.id
-      WHERE u.role = 'provider'
-    `)
+        SELECT
+          p.id,
+          p.created_at,
+          p.valided,
+          p.tel,
+          p.city,
+          p.descr,
+          p.exp,
+          p.price,
+          p.days,
+          c.name as category_name,
+          u.name,
+          u.email
+        FROM providers p
+        LEFT JOIN categories c ON p.category = c.id
+        LEFT JOIN users u ON p.user_id = u.id
+        WHERE u.role = 'provider'
+      `)
     )[0];
 
     context

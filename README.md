@@ -11,7 +11,11 @@ Le dossier *example* contient du contenu permettant de tester les applications.
 - cert
 - cert-challenges
 
-2. À la racine du dossier **Prestalia**, créez un fichier *.env* avec le contenu suivant :
+2. Dans le dossier **views** de **Prestalia**, créez le dossier :
+
+- static
+
+3. À la racine du dossier **Prestalia**, créez un fichier *.env* avec le contenu suivant :
 
 ```env
 HOSTNAME=127.0.0.1
@@ -29,19 +33,19 @@ MYSQL_USER=mysql_user
 MYSQL_PASSWORD=mysql_password
 ```
 
-3. Installer les dépendances :
+4. Installer les dépendances :
 
 ```bash
 npm ci
 ```
 
-4. Faire la commande suivante dans le dossier **Prestalia** pour build le projet et vérifier qu'il n'y a aucune erreur avant le démarrage :
+5. Faire la commande suivante dans le dossier **Prestalia** pour build le projet et vérifier qu'il n'y a aucune erreur avant le démarrage :
 
 ```bash
 npm run predev
 ```
 
-5. Faire la/les commande(s) suivante dans le dossier **Prestalia** pour lancer le site :
+6. Faire la/les commande(s) suivante dans le dossier **Prestalia** pour lancer le site :
 
 - En production :
 

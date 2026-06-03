@@ -60,9 +60,14 @@ interface Context {
     method: string,
     {
       // eslint-disable-next-line no-unused-vars
+      pageParams,
+      // eslint-disable-next-line no-unused-vars
+      ids,
+      // eslint-disable-next-line no-unused-vars
       onError,
     }: {
       pageParams?: PageParams | [];
+      ids: number[];
       // eslint-disable-next-line no-unused-vars
       onError?: ((code: number) => void) | undefined;
     },
@@ -222,9 +227,11 @@ export class Http1Context implements Context {
     method: string,
     {
       pageParams = [],
+      ids,
       onError,
     }: {
       pageParams?: PageParams | [];
+      ids: number[];
       // eslint-disable-next-line no-unused-vars
       onError?: ((code: number) => void) | undefined;
     },
@@ -237,7 +244,7 @@ export class Http1Context implements Context {
 
         this.respond(500, {end: true});
       } else {
-        const page = defaultExport(this, ...pageParams);
+        const page = defaultExport(this, ...pageParams, ...ids);
 
         if (
           page !== null &&
@@ -460,9 +467,11 @@ export class Http2Context implements Context {
     method: string,
     {
       pageParams = [],
+      ids,
       onError,
     }: {
       pageParams?: any[];
+      ids: number[];
       // eslint-disable-next-line no-unused-vars
       onError?: ((code: number) => void) | undefined;
     },
@@ -475,7 +484,7 @@ export class Http2Context implements Context {
 
         this.respond(500, {end: true});
       } else {
-        const page = defaultExport(this, ...pageParams);
+        const page = defaultExport(this, ...pageParams, ...ids);
 
         if (
           page !== null &&

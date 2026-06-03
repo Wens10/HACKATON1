@@ -5,7 +5,7 @@ export type PageHandler = (
   // eslint-disable-next-line no-unused-vars
   context: Context,
   // eslint-disable-next-line no-unused-vars
-  db: Pool,
+  ...params: [...APIParams, ...id: number[]]
 ) => string | null | Promise<string | null>;
 
 export type PageParams = [Pool];

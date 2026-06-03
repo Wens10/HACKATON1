@@ -416,14 +416,48 @@ export function resolveResourceRequest(
   // eslint-disable-next-line no-unused-vars
   shouldSkipCompression?: (path: string) => boolean | Promise<boolean>,
 ) {
+  const normalizedPath =
+    path === "/"
+      ? "/index"
+      : extname(path) === ".html"
+        ? path.slice(0, -5)
+        : path;
+
+  let pathWithoutId = normalizedPath;
+
+  Array.from(path.matchAll(/\/[A-Za-z0-9_-]+\/(\d+)/g))
+    .map(([res, id]) => id && [res, res.replace(id, "[id]")])
+    .filter((arr) => Array.isArray(arr))
+    .forEach(
+      ([searchValue, replaceValue]) =>
+        (pathWithoutId = pathWithoutId.replace(
+          searchValue ?? "",
+          replaceValue ?? "",
+        )),
+    );
+
+  pathWithoutId = pathWithoutId.replace(/\/$/, "");
+
+  const ids: number[] = [];
+
+  for (const id of Array.from(path.matchAll(/\/[A-Za-z0-9_-]+\/(\d+)/g)).map(
+    (res) => res[1],
+  )) {
+    const parsedId = Number(id);
+
+    if (!id || isNaN(parsedId)) return context.respond(400, {end: true});
+    else ids.push(parsedId);
+  }
+
   const dirIsString = typeof resourceDir === "string",
     pagePath = join(
       dirIsString ? join(resourceDir, "/pages") : resourceDir.dynamicPages,
-      `${path === "/" ? "/index" : extname(path) === ".html" ? path.slice(0, -5) : path}.js`,
+      `${pathWithoutId}.js`,
     );
 
-  context.respondWithDynamicFile(pagePath, method, {
+  return context.respondWithDynamicFile(pagePath, method, {
     pageParams,
+    ids,
     // Dossier /public du site
     onError: async () => {
       const filePath = join(
