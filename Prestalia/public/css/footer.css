@@ -49,7 +49,7 @@
 }
 
 .footer-tagline {
-  color: #475569;
+  color: #edf4ff;
   font-size: .875rem;
   line-height: 1.75;
   margin: 0;
@@ -115,7 +115,7 @@
 }
 
 .footer-col a {
-  color: #475569;
+  color: #edf4ff;
   text-decoration: none;
   font-size: .875rem;
   transition: color .2s;
@@ -123,7 +123,8 @@
 }
 
 .footer-col a:hover {
-  color: #cbd5e1;
+  color: #3264a1;
+
 }
 
 /* ── Bottom bar ── */
@@ -139,7 +140,7 @@
 .footer-copy {
   margin: 0;
   font-size: .8rem;
-  color: #334155;
+  color: #edf4ff;
 }
 
 .footer-bottom-links {
@@ -148,7 +149,7 @@
 }
 
 .footer-bottom-links a {
-  color: #334155;
+  color: #edf4ff;
   text-decoration: none;
   font-size: .8rem;
   transition: color .2s;
