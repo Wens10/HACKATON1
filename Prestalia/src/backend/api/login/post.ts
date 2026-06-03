@@ -3,6 +3,7 @@ import {cookieToJSON, verifyJWT} from "../../utils/functions";
 import login from "../../controllers/login/post";
 import {APIHandler} from "../../utils/types";
 import {RowDataPacket} from "mysql2";
+import {CLEAR_TOKEN_COOKIE} from "../../utils/constants";
 
 const jwtSecret = process.env["JWT_SECRET"];
 
@@ -43,8 +44,7 @@ export default (async (context, headers, db) => {
         end: true,
         headers: {
           "location": to ?? "/auth#login",
-          "set-cookie":
-            "token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; Secure; HttpOnly; SameSite=Strict;",
+          "set-cookie": CLEAR_TOKEN_COOKIE,
         },
       });
     }
