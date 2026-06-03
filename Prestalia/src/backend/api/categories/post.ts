@@ -4,6 +4,7 @@ import {verifyJWT} from "../../utils/functions";
 import createCategory from "../../controllers/categories/post";
 import {APIHandler} from "../../utils/types";
 import {RowDataPacket} from "mysql2";
+import {CLEAR_TOKEN_COOKIE} from "../../utils/constants";
 
 export default (async (context, headers, db) => {
   const authorizationHeader = headers.authorization;
@@ -97,8 +98,7 @@ export default (async (context, headers, db) => {
     return context.respond(500, {
       end: true,
       headers: {
-        "set-cookie":
-          "token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; Secure; HttpOnly; SameSite=Strict;",
+        "set-cookie": CLEAR_TOKEN_COOKIE,
       },
     });
   }

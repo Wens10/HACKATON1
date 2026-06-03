@@ -2,6 +2,7 @@ import {RowDataPacket} from "mysql2";
 import {error, hasProps} from "../../../core";
 import {getCategory, verifyJWT} from "../../../utils/functions";
 import {APIHandler} from "../../../utils/types";
+import {CLEAR_TOKEN_COOKIE} from "../../../utils/constants";
 
 export default (async (context, headers, db, categoryId) => {
   const authorizationHeader = headers.authorization;
@@ -66,8 +67,7 @@ export default (async (context, headers, db, categoryId) => {
     return context.respond(500, {
       end: true,
       headers: {
-        "set-cookie":
-          "token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; Secure; HttpOnly; SameSite=Strict;",
+        "set-cookie": CLEAR_TOKEN_COOKIE,
       },
     });
   }

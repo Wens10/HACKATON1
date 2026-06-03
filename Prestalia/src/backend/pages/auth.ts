@@ -1,5 +1,6 @@
 import {renderFile} from "ejs";
 import {
+  CLEAR_TOKEN_COOKIE,
   DEFAULT_EJS_COMPONENT_DIR,
   DEFAULT_EJS_DYNAMIC_PAGE_DIR,
 } from "../utils/constants";
@@ -28,8 +29,7 @@ export default (async (context, db) => {
     context.respond(307, {
       headers: {
         "location": context.url?.href ?? "/auth",
-        "set-cookie":
-          "token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; Secure; HttpOnly; SameSite=Strict;",
+        "set-cookie": CLEAR_TOKEN_COOKIE,
       },
       end: true,
     });

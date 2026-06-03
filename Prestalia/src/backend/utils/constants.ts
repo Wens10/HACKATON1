@@ -17,3 +17,6 @@ export const DEFAULT_EJS_COMPONENT_DIR = join(
   workingDirPath,
   "/views/components",
 );
+
+export const CLEAR_TOKEN_COOKIE =
+  "token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; Secure; HttpOnly; SameSite=Strict;";
