@@ -16,7 +16,7 @@ export default (async (context, db) => {
   if (!hasProps(cookies, {token: "string"})) {
     context.respond(307, {
       headers: {
-        location: "/auth?to=/presta-inscriptions",
+        location: "/auth?to=/presta-inscription",
       },
       end: true,
     });
@@ -29,7 +29,7 @@ export default (async (context, db) => {
   if (payload === false || !hasProps(payload, {userId: "number"})) {
     context.respond(307, {
       headers: {
-        "location": "/auth?to=/presta-inscriptions",
+        "location": "/auth?to=/presta-inscription",
         "set-cookie": CLEAR_TOKEN_COOKIE,
       },
       end: true,
@@ -48,7 +48,7 @@ export default (async (context, db) => {
   if (!user) {
     context.respond(307, {
       headers: {
-        "location": "/auth?to=/presta-inscriptions",
+        "location": "/auth?to=/presta-inscription",
         "set-cookie": CLEAR_TOKEN_COOKIE,
       },
       end: true,

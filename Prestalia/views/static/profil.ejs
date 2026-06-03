@@ -243,47 +243,7 @@
 </head>
 
 <body>
-    <header>
-  <div class="pnav-inner">
-    <a href="/" class="pnav-logo">
-      <img src="/photos/Gemini_Generated_Image_3be0lc3be0lc3be0-removebg-preview.png" alt="Logo Prestalia" width="52" height="52">
-    </a>
-    <ul class="pnav-links">
-      <li><a href="/">Accueil</a></li>
-      <li><a href="/recherche">Rechercher</a></li>
-    </ul>
-    <div class="pnav-actions">
-      <a href="/auth#login" class="btn-bg1">Connexion</a>
-      <a href="/auth#signup" class="btn-bg">Inscription</a>
-    </div>
-    <button class="pnav-burger" id="burgerBtn" aria-label="Ouvrir le menu">
-      <span class="burger-bar"></span>
-      <span class="burger-bar"></span>
-      <span class="burger-bar"></span>
-    </button>
-  </div>
-
-  <div class="drawer-overlay" id="drawerOverlay"></div>
-  <aside class="pnav-drawer" id="navDrawer">
-    <button class="drawer-close" id="drawerClose">✕</button>
-    <nav class="drawer-links">
-      <a href="/">Accueil</a>
-      <a href="/recherche">Rechercher</a>
-    </nav>
-    <div class="drawer-cta">
-      <a href="/auth#login" class="btn-bg1">Connexion</a>
-      <a href="/auth#signup" class="btn-bg">Inscription</a>
-    </div>
-  </aside>
-</header>
-<script>
-(function(){
-  var b=document.getElementById('burgerBtn'),o=document.getElementById('drawerOverlay'),d=document.getElementById('navDrawer'),c=document.getElementById('drawerClose'),bars=b.querySelectorAll('.burger-bar');
-  function open(){d.classList.add('open');o.classList.add('open');bars[0].style.transform='translateY(7px) rotate(45deg)';bars[1].style.opacity='0';bars[2].style.transform='translateY(-7px) rotate(-45deg)';document.body.style.overflow='hidden';}
-  function close(){d.classList.remove('open');o.classList.remove('open');bars[0].style.transform='';bars[1].style.opacity='';bars[2].style.transform='';document.body.style.overflow='';}
-  b.addEventListener('click',open);c.addEventListener('click',close);o.addEventListener('click',close);
-})();
-</script>
+    <%- include("/default-header") %>
     <main>
         <div class="container">
             <div class="profile-header">
@@ -394,66 +354,6 @@
             </div>
         </div>
     </main>
-    <footer class="site-footer">
-  <div class="footer-container">
-
-    <div class="footer-top">
-      <div class="footer-brand">
-        <a href="/" class="footer-logo">
-          <img src="/photos/Gemini_Generated_Image.png" alt="Logo Prestalia" width="44" height="44">
-          <span>Prestalia</span>
-        </a>
-        <p class="footer-tagline">La plateforme de confiance pour trouver les meilleurs prestataires de services en France.</p>
-        <div class="footer-socials">
-          <a href="" aria-label="Instagram" class="social-btn">
-            <img src="/svg/instagram-1-svgrepo-com.svg" alt="" width="18" height="18">
-          </a>
-          <a href="" aria-label="TikTok" class="social-btn">
-            <img src="/svg/tiktok-svgrepo-com.svg" alt="" width="18" height="18">
-          </a>
-          <a href="" aria-label="LinkedIn" class="social-btn">
-            <img src="/svg/linkedin-color-svgrepo-com.svg" alt="" width="18" height="18">
-          </a>
-          <a href="" aria-label="Facebook" class="social-btn">
-            <img src="/svg/facebook-color-svgrepo-com.svg" alt="" width="18" height="18">
-          </a>
-        </div>
-      </div>
-
-      <div class="footer-nav">
-        <div class="footer-col">
-          <h4>Services</h4>
-          <a href="/recherche">Trouver un prestataire</a>
-          <a href="/presta-inscription">Devenir prestataire</a>
-          <a href="/#how-work">Comment ça marche</a>
-        </div>
-        <div class="footer-col">
-          <h4>Entreprise</h4>
-          <a href="">À propos</a>
-          <a href="">Conditions d'utilisation</a>
-          <a href="">Confidentialité</a>
-          <a href="">Cookies</a>
-        </div>
-        <div class="footer-col">
-          <h4>Contact</h4>
-          <a href="mailto:contact@prestalia.fr">contact@prestalia.fr</a>
-          <a href="">Support</a>
-          <a href="">FAQ</a>
-        </div>
-      </div>
-    </div>
-
-    <div class="footer-bottom">
-      <p class="footer-copy">© 2026 Prestalia. Tous droits réservés.</p>
-      <div class="footer-bottom-links">
-        <a href="">Mentions légales</a>
-        <a href="">Confidentialité</a>
-        <a href="">Cookies</a>
-      </div>
-    </div>
-
-  </div>
-</footer>
-
+    <%- include("/footer") %>
 </body>
 </html>

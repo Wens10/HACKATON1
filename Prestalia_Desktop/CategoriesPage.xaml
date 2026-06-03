@@ -229,17 +229,16 @@
                                                 <ColumnDefinition Width="*"/>
                                             </Grid.ColumnDefinitions>
 
-                                            <Grid
-                                                Grid.Column="0"
-                                                Width="40"
-                                                Height="40">
+                                            <Grid Grid.Column="0">
                                                 <!-- Fallback initiale si pas d'icône -->
                                                 <PersonPicture
+                                                    Width="40"
                                                     DisplayName="{x:Bind Name}"
                                                     Visibility="{x:Bind Icon, Mode=OneWay, Converter={StaticResource NullToVisibilityConverter}}"/>
 
                                                 <!-- Image si icône présente -->
                                                 <Image
+                                                    Width="40"
                                                     Source="{x:Bind Icon, Mode=OneWay}"
                                                     Visibility="{x:Bind Icon, Mode=OneWay, Converter={StaticResource NotNullToVisibilityConverter}}"/>
                                             </Grid>

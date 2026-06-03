@@ -124,7 +124,7 @@ export default (async (body, userId, db) => {
 
   try {
     await db.execute(
-      "INSERT INTO providers (tel, city, category, descr, exp, price, days) VALUES (?, ?, ?, ?, ?, ?, ?)",
+      "INSERT INTO providers (tel, city, category, descr, exp, price, days, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
       [
         body.tel,
         body.city,
@@ -133,6 +133,7 @@ export default (async (body, userId, db) => {
         body.exp,
         body.price,
         body.days,
+        userId,
       ],
     );
 
