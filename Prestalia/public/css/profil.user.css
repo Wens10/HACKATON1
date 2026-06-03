@@ -103,6 +103,10 @@
   transition: all 0.3s ease;
 }
 
+a.btn {
+  text-decoration: none;
+}
+
 .btn-primary {
   background-color: #007bff;
   color: white;

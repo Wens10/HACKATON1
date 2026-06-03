@@ -11,24 +11,22 @@
   <link rel="stylesheet" href="/css/profil.user.css">
 </head>
 <body>
-  <%- include("/default-header") %>
+  <%- include("/header") %>
   <main>
     <div class="container">
       <div class="profile-header">
         <div class="header-info">
-          <h1><%= "user.firstName" %> <%= "user.lastName" %></h1>
-          <p class="username">@<%= "user.username" %></p>
+          <h1><%= user.name %></h1>
           <div class="user-details">
-            <p><strong>Email:</strong> <%= "user.email" %></p>
-            <p><strong>Date d'inscription:</strong> <%= new Date("user.createdAt").toLocaleDateString('fr-FR') %></p>
+            <p><strong>Email:</strong> <%= user.email %></p>
+            <p><strong>Date d'inscription:</strong> <%= new Date(user.created_at).toLocaleDateString("fr-FR") %></p>
           </div>
           <div class="header-actions">
-            <button class="btn btn-primary"><i class="fa-solid fa-edit"></i> Modifier le profil</button>
-            <button class="btn btn-outline"><i class="fa-solid fa-sign-out-alt"></i> Déconnexion</button>
+            <button class="btn btn-primary"><i class="fa-solid fa-edit"></i>Modifier le profil</button>
+            <a class="btn btn-outline" href="/logout"><i class="fa-solid fa-sign-out-alt"></i>Déconnexion</a>
           </div>
         </div>
       </div>
-
     </div>
   </main>
   <%- include("/footer") %>
