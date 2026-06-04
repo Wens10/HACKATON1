@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="/photos/Gemini_Generated_Image.png" type="image/png">
+  <title>Mon tableau de bord — Prestalia</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/header.css">
+  <link rel="stylesheet" href="/css/footer.css">
+  <link rel="stylesheet" href="/css/form_edit_profile.css">
+</head>
+<body>
+  <%- include("/default-header") %>
+
+        <!-- ── Contenu principal ──────────────────────────── -->
+    <div class="main-content">
+        <div class="container edit-profile-container">
+            <h1 class="page-title">Modifier mon profil</h1>
+            
+            <form action="/profile/edit" method="POST" enctype="multipart/form-data" class="edit-profile-form">
+                
+                <div class="profile-card picture-section">
+                    <div class="section-title">
+                        <i class="fas fa-camera"></i> Photo de profil
+                    </div>
+                    <div class="picture-upload-wrapper">
+                        <div class="current-picture">
+                            <img src="" alt="">
+                        </div>
+                        <div class="upload-controls">
+                            <label for="profilePicture" class="custom-file-upload">
+                                <i class="fas fa-upload"></i> Choisir une nouvelle image
+                            </label>
+                            <input type="file" id="profilePicture" name="profilePicture" accept="image/*">
+                            <span class="file-info">Formats acceptés : JPG, PNG</span>
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="profile-card info-section">
+                    <div class="section-title">
+                        <i class="fas fa-user"></i> Informations personnelles
+                    </div>
+                    
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="fullName">Nom complet</label>
+                            <input type="text" id="fullName" name="fullName" value="" placeholder="Votre nom complet">
+                        </div>
+    
+                        <div class="form-group">
+                            <label for="email">Adresse email</label>
+                            <input type="email" id="email" name="email" value="" placeholder="Votre adresse email">
+                        </div>
+    
+                        <div class="form-group">
+                            <label for="phone">Numéro de téléphone</label>
+                            <input type="tel" id="phone" name="phone" value="" placeholder="Ex: 06 01 02 03 04">
+                        </div>
+    
+                        <div class="form-group">
+                            <label for="address">Adresse résidentielle</label>
+                            <input type="text" id="address" name="address" value="" placeholder="Ex: 15 Rue de la Paix">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="description">Description</label>
+                            <textarea id="description" name="description" value="" placeholder="Décrivez-vous en quelques mots"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="zipCode">Code postal</label>
+                            <input type="text" id="zipCode" name="zipCode" value="" placeholder="Ex: 75001">
+                        </div>
+    
+                        <div class="form-group">
+                            <label for="city">Ville</label>
+                            <input type="text" id="city" name="city" value="" placeholder="Ex: Paris">
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="form-actions">
+                    <a href="/profile" class="btn-cancel">Annuler</a>
+                    <button type="submit" class="btn-submit">Enregistrer les modifications</button>
+                </div>
+    
+            </form>
+        </div>
+    </div>
+    
+
+  <%- include("/footer") %>
+</body>
+</html>
