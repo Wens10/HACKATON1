@@ -378,6 +378,48 @@ body {
 
 .tip-card p { color: var(--text-light); line-height: 1.5; }
 
+/* ── Historique items ────────────────────────────────── */
+.reservation-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 11px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  margin-bottom: 10px;
+  gap: 1rem;
+}
+
+.reservation-item:last-child { margin-bottom: 0; }
+
+.res-info strong {
+  display: block;
+  font-size: 0.9rem;
+  margin-bottom: 2px;
+}
+
+.res-info small {
+  display: block;
+  font-size: 0.76rem;
+  color: var(--text-light);
+  margin-top: 4px;
+}
+
+/* ── État vide ───────────────────────────────────────── */
+.empty-state {
+  text-align: center;
+  padding: 1.5rem 1rem;
+  color: var(--text-light);
+  font-size: 0.85rem;
+}
+
+.empty-state i {
+  font-size: 1.8rem;
+  color: #c7d2fe;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
 /* ── Responsive ──────────────────────────────────────── */
 @media (max-width: 900px) {
   .stats-grid { grid-template-columns: repeat(2, 1fr); }

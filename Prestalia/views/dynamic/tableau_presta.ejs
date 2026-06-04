@@ -47,7 +47,7 @@
         <div>
           <div class="stat-label">Prestations</div>
           <div class="stat-value"><%= stats ? stats['total'] : 0 %></div>
-          <div class="stat-sub"><%= stats ? stats['upcoming_count'] : 0 %> à venir</div>
+          <div class="stat-sub"><%= stats ? (stats['upcoming_count'] || 0) : 0 %> à venir</div>
         </div>
       </div>
       <div class="stat-card">
