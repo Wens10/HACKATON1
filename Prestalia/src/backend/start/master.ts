@@ -95,6 +95,7 @@ export default (async () => {
       date DATETIME(3) NOT NULL,
       FOREIGN KEY(author) REFERENCES users(id),
       FOREIGN KEY(provider) REFERENCES providers(id)
+      
     );
   `);
 

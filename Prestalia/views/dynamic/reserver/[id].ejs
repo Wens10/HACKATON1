@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="/photos/Gemini_Generated_Image.png" type="image/png">
+  <title>Réserver — <%= provider.name %></title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/header.css">
+  <link rel="stylesheet" href="/css/footer.css">
+  <link rel="stylesheet" href="/css/reserver.css">
+</head>
+<body>
+  <%- include(typeof user !== "undefined" ? "/header" : "/default-header") %>
+
+  <!-- ── Bannière prestataire ──────────────────────────── -->
+  <div class="booking-banner">
+    <div class="banner-inner">
+      <div class="banner-avatar">
+        <%= provider.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase() %>
+      </div>
+      <div class="banner-info">
+        <h1>Réserver avec <%= provider.name %></h1>
+        <div class="banner-meta">
+          <% if (provider.category_name) { %>
+            <span><i class="fa-solid fa-tag"></i> <%= provider.category_name %></span>
+          <% } %>
+          <% if (provider.city) { %>
+            <span><i class="fa-solid fa-location-dot"></i> <%= provider.city %></span>
+          <% } %>
+          <% if (provider.price) { %>
+            <span><i class="fa-solid fa-euro-sign"></i> <%= provider.price %>€/h</span>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Stepper ────────────────────────────────────────── -->
+  <div class="stepper">
+    <div class="step active" id="step1">
+      <div class="step-circle">1</div>
+      <span class="step-label">Choisir une date</span>
+    </div>
+    <div class="step-line" id="line1"></div>
+    <div class="step" id="step2">
+      <div class="step-circle">2</div>
+      <span class="step-label">Choisir un créneau</span>
+    </div>
+    <div class="step-line" id="line2"></div>
+    <div class="step" id="step3">
+      <div class="step-circle">3</div>
+      <span class="step-label">Confirmer</span>
+    </div>
+  </div>
+
+  <!-- ── Contenu ────────────────────────────────────────── -->
+  <main>
+
+    <!-- Calendrier + créneaux -->
+    <div>
+      <!-- Calendrier -->
+      <div class="card" style="margin-bottom:1.25rem;">
+        <div class="card-title"><i class="fa-regular fa-calendar" style="margin-right:6px;"></i>Choisissez une date</div>
+        <div class="cal-nav">
+          <button id="prevMonth" type="button"><i class="fa-solid fa-chevron-left"></i></button>
+          <h3 id="calTitle"></h3>
+          <button id="nextMonth" type="button"><i class="fa-solid fa-chevron-right"></i></button>
+        </div>
+        <div class="cal-grid" id="calGrid">
+          <div class="cal-day-header">L</div>
+          <div class="cal-day-header">M</div>
+          <div class="cal-day-header">M</div>
+          <div class="cal-day-header">J</div>
+          <div class="cal-day-header">V</div>
+          <div class="cal-day-header">S</div>
+          <div class="cal-day-header">D</div>
+        </div>
+      </div>
+
+      <!-- Créneaux horaires -->
+      <div class="card" id="slotsCard">
+        <div class="card-title"><i class="fa-regular fa-clock" style="margin-right:6px;"></i>Choisissez un créneau</div>
+        <div class="slots-placeholder" id="slotsPlaceholder">
+          <i class="fa-regular fa-calendar-days"></i>
+          Sélectionnez d'abord une date
+        </div>
+        <div id="slotsContent" style="display:none;">
+          <div class="slots-date-title" id="slotsDateTitle"></div>
+          <div class="slots-grid" id="slotsGrid"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Résumé & confirmation -->
+    <aside>
+      <div class="card">
+        <div class="card-title"><i class="fa-solid fa-receipt" style="margin-right:6px;"></i>Récapitulatif</div>
+
+        <div class="summary-row">
+          <span class="summary-label">Prestataire</span>
+          <span class="summary-value"><%= provider.name %></span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-label">Service</span>
+          <span class="summary-value"><%= provider.category_name ?? '—' %></span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-label">Date</span>
+          <span class="summary-value" id="summaryDate">—</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-label">Heure</span>
+          <span class="summary-value" id="summaryTime">—</span>
+        </div>
+
+        <div class="price-total"><%= provider.price ? provider.price + '€' : 'Sur devis' %></div>
+        <div class="price-note">Tarif indicatif par heure</div>
+
+        <form action="/api/reservations" method="post" id="bookingForm">
+          <input type="hidden" name="provider_id" value="<%= provider.id %>">
+          <input type="hidden" name="date" id="inputDate">
+          <input type="hidden" name="time" id="inputTime">
+          <button type="submit" class="btn-submit" id="btnSubmit" disabled>
+            <i class="fa-solid fa-check"></i> Confirmer la réservation
+          </button>
+        </form>
+
+        <a href="/profile/providers/<%= provider.id %>" class="back-link">
+          <i class="fa-solid fa-arrow-left"></i> Retour au profil
+        </a>
+      </div>
+    </aside>
+  </main>
+
+  <%- include("/footer") %>
+
+  <script>
+  (function () {
+    // Bitmask jours : Sun=64, Mon=1, Tue=2, Wed=4, Thu=8, Fri=16, Sat=32
+    var DAY_BITS = [64, 1, 2, 4, 8, 16, 32];
+    var providerDays = <%= provider.days %>;
+    var SLOTS = ['08:00','09:00','10:00','11:00','14:00','15:00','16:00','17:00'];
+    var MONTHS = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+    var DAYS_FR = ['dimanche','lundi','mardi','mercredi','jeudi','vendredi','samedi'];
+
+    var today = new Date();
+    today.setHours(0,0,0,0);
+    var cur = new Date(today.getFullYear(), today.getMonth(), 1);
+
+    var selectedDate = null;
+    var selectedTime = null;
+
+    function isAvailable(date) {
+      if (date < today) return false;
+      return !!(providerDays & DAY_BITS[date.getDay()]);
+    }
+
+    function renderCal() {
+      var grid = document.getElementById('calGrid');
+      // Garder les 7 headers
+      while (grid.children.length > 7) grid.removeChild(grid.lastChild);
+
+      document.getElementById('calTitle').textContent = MONTHS[cur.getMonth()] + ' ' + cur.getFullYear();
+
+      // Premier jour du mois (0=dim, 1=lun ...)
+      var firstDay = new Date(cur.getFullYear(), cur.getMonth(), 1).getDay();
+      // Décalage pour grille lun-dim (0=lun)
+      var offset = (firstDay + 6) % 7;
+      var daysInMonth = new Date(cur.getFullYear(), cur.getMonth() + 1, 0).getDate();
+
+      for (var i = 0; i < offset; i++) {
+        var empty = document.createElement('div');
+        empty.className = 'cal-day empty';
+        grid.appendChild(empty);
+      }
+
+      for (var d = 1; d <= daysInMonth; d++) {
+        var date = new Date(cur.getFullYear(), cur.getMonth(), d);
+        var el = document.createElement('div');
+        el.className = 'cal-day';
+        el.textContent = d;
+
+        if (!isAvailable(date)) {
+          el.classList.add('disabled');
+        } else {
+          if (selectedDate && date.toDateString() === selectedDate.toDateString()) {
+            el.classList.add('selected');
+          } else if (date.toDateString() === today.toDateString()) {
+            el.classList.add('today');
+          }
+          (function(d2) {
+            el.addEventListener('click', function() { selectDate(d2); });
+          })(date);
+        }
+
+        grid.appendChild(el);
+      }
+    }
+
+    function selectDate(date) {
+      selectedDate = date;
+      selectedTime = null;
+      document.getElementById('inputDate').value = fmtDate(date);
+      document.getElementById('inputTime').value = '';
+      document.getElementById('summaryDate').textContent =
+        DAYS_FR[date.getDay()] + ' ' + date.getDate() + ' ' + MONTHS[date.getMonth()].toLowerCase();
+      document.getElementById('summaryTime').textContent = '—';
+      document.getElementById('btnSubmit').disabled = true;
+
+      // Stepper
+      document.getElementById('step1').classList.add('done');
+      document.getElementById('line1').classList.add('done');
+      document.getElementById('step2').classList.add('active');
+
+      renderSlots();
+      renderCal();
+    }
+
+    function renderSlots() {
+      document.getElementById('slotsPlaceholder').style.display = 'none';
+      var content = document.getElementById('slotsContent');
+      content.style.display = 'block';
+      document.getElementById('slotsDateTitle').textContent =
+        'Créneaux disponibles — ' + DAYS_FR[selectedDate.getDay()] + ' ' +
+        selectedDate.getDate() + ' ' + MONTHS[selectedDate.getMonth()].toLowerCase();
+
+      var grid = document.getElementById('slotsGrid');
+      grid.innerHTML = '';
+      SLOTS.forEach(function(t) {
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'slot-btn' + (t === selectedTime ? ' active' : '');
+        btn.textContent = t;
+        btn.addEventListener('click', function() { selectTime(t); });
+        grid.appendChild(btn);
+      });
+    }
+
+    function selectTime(time) {
+      selectedTime = time;
+      document.getElementById('inputTime').value = time;
+      document.getElementById('summaryTime').textContent = time;
+      document.getElementById('btnSubmit').disabled = false;
+
+      // Stepper
+      document.getElementById('step2').classList.add('done');
+      document.getElementById('line2').classList.add('done');
+      document.getElementById('step3').classList.add('active');
+
+      // Highlight slot actif
+      document.querySelectorAll('.slot-btn').forEach(function(b) {
+        b.classList.toggle('active', b.textContent === time);
+      });
+    }
+
+    function fmtDate(date) {
+      var y = date.getFullYear();
+      var m = String(date.getMonth() + 1).padStart(2, '0');
+      var d = String(date.getDate()).padStart(2, '0');
+      return y + '-' + m + '-' + d;
+    }
+
+    document.getElementById('prevMonth').addEventListener('click', function() {
+      var prev = new Date(cur.getFullYear(), cur.getMonth() - 1, 1);
+      if (prev >= new Date(today.getFullYear(), today.getMonth(), 1)) {
+        cur = prev;
+        renderCal();
+      }
+    });
+
+    document.getElementById('nextMonth').addEventListener('click', function() {
+      cur = new Date(cur.getFullYear(), cur.getMonth() + 1, 1);
+      renderCal();
+    });
+
+    renderCal();
+  })();
+  </script>
+</body>
+</html>
