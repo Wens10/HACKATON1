@@ -264,16 +264,11 @@
                                             VerticalAlignment="Center"
                                             Text="{x:Bind CreationDate}"/>
 
-                                        <StackPanel
+                                        <Button
                                             Grid.Column="4"
-                                            Spacing="8"
-                                            Orientation="Horizontal"
-                                            VerticalAlignment="Center">
-                                            <Button
-                                                Content="Modifier"
-                                                Tag="{x:Bind}"
-                                                Click="EditCategory_Click"/>
-                                        </StackPanel>
+                                            Content="Modifier"
+                                            Tag="{x:Bind}"
+                                            Click="EditCategory_Click"/>
                                     </Grid>
                                 </DataTemplate>
                             </ListView.ItemTemplate>

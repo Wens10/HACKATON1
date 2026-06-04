@@ -27,9 +27,9 @@ export default (async (body, db, categoryId) => {
 
   if (
     hasName &&
-    !(
+    (
       await db.execute<RowDataPacket[]>(
-        "SELECT 1 FROM categories WHERE name = ? AND id = ?",
+        "SELECT 1 FROM categories WHERE name = ? AND id != ?",
         [body.name, categoryId],
       )
     )[0][0]

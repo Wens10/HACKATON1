@@ -531,7 +531,7 @@ export async function getCategories(
       CASE
         WHEN c.icon IS NULL THEN NULL
         WHEN c.icon LIKE 'http%' THEN c.icon
-        ELSE CONCAT('https://localhost:8443', REPLACE(c.icon, '\\\\', '/'))
+        ELSE CONCAT('https://${config.hostname}:${config.httpsPort}', REPLACE(c.icon, '\\\\', '/'))
       END AS icon,
       c.created_at,
       COUNT(DISTINCT p.id) AS provider_count,
@@ -556,7 +556,7 @@ export async function getCategory(db: Pool, categoryId: number | bigint) {
           CASE
             WHEN c.icon IS NULL THEN NULL
             WHEN c.icon LIKE 'http%' THEN c.icon
-            ELSE CONCAT('https://localhost:8443', REPLACE(c.icon, '\\\\', '/'))
+            ELSE CONCAT('https://${config.hostname}:${config.httpsPort}', REPLACE(c.icon, '\\\\', '/'))
           END AS icon,
           c.created_at,
           COUNT(DISTINCT p.id) AS provider_count,

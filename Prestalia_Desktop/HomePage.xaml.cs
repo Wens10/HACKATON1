@@ -1,9 +1,13 @@
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using static Prestalia_Desktop.CategoriesPage;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -13,12 +17,23 @@ namespace Prestalia_Desktop
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
+
+    public record APIDocument(
+        [property: JsonPropertyName("id")] int Id,
+        [property: JsonPropertyName("name")] string Name,
+        [property: JsonPropertyName("url")] string Url
+    );
+
     public sealed partial class HomePage : Page
     {
         private List<Provider> providers = [];
         private string filter = "all";
         private string order = "asc";
         private string orderBy = "default";
+        private Provider? selectedProvider;
+
+        private List<APIDocument> currentDocs = [];
+        private int currentDocIndex = 0;
 
         public record APIProvider(
             [property: JsonPropertyName("id")] int Id,
@@ -72,7 +87,7 @@ namespace Prestalia_Desktop
                 provider.Email,
                 provider.CategoryName,
                 provider.City,
-                0,
+                2.5f,
                 statut
             );
 
@@ -149,6 +164,75 @@ namespace Prestalia_Desktop
             };
 
             OrderAndFilter();
+        }
+
+        private void CheckProviderDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        {
+
+        }
+
+        private async void CheckProviderButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+        {
+            if (sender is Button btn && btn.Tag is Provider provider)
+            {
+                selectedProvider = provider;
+
+                CheckProviderDialog.DataContext = provider;
+                CheckProviderDialog.XamlRoot = this.XamlRoot;
+
+                CheckProviderDialog.IsPrimaryButtonEnabled = provider.Statut == "En attente";
+                CheckProviderDialog.IsSecondaryButtonEnabled = provider.Statut == "En attente";
+
+                DocumentsPanel.Visibility = Visibility.Collapsed;
+                NoDocumentsText.Visibility = Visibility.Collapsed;
+                DocumentsLoadingRing.IsActive = true;
+
+                var _ = CheckProviderDialog.ShowAsync();
+
+                var response = await HttpClientProvider.Http.GetAsync($"/api/providers/{provider.Id}/docs");
+                var body = await response.Content.ReadAsStringAsync();
+                var docs = string.IsNullOrEmpty(body) ? [] : JsonSerializer.Deserialize<List<APIDocument>>(body) ?? [];
+
+                DocumentsLoadingRing.IsActive = false;
+
+                if (docs.Count == 0)
+                {
+                    NoDocumentsText.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    currentDocs = docs;
+                    currentDocIndex = 0;
+                    DocumentsPanel.Visibility = Visibility.Visible;
+                    ShowDocument(0);
+                }
+            }
+        }
+
+        private async void ShowDocument(int index)
+        {
+            var doc = currentDocs[index];
+            DocNameText.Text = $"{index + 1}/{currentDocs.Count} — {doc.Name}";
+
+            await DocWebView.EnsureCoreWebView2Async();
+            _ = DocWebView.CoreWebView2.CallDevToolsProtocolMethodAsync(
+                "Security.setIgnoreCertificateErrors", "{\"ignore\": true}"
+            );
+
+            DocWebView.Source = new Uri(doc.Url);
+
+            PrevDocButton.IsEnabled = index > 0;
+            NextDocButton.IsEnabled = index < currentDocs.Count - 1;
+        }
+
+        private void PrevDocButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (currentDocIndex > 0) ShowDocument(--currentDocIndex);
+        }
+
+        private void NextDocButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (currentDocIndex < currentDocs.Count - 1) ShowDocument(++currentDocIndex);
         }
 
         private void OrderAndFilter()
