@@ -454,16 +454,20 @@ export async function isAdminExists(context: Context, params: [Pool]) {
 }
 
 export function isDataRequest(context: Context) {
-  if (!context.path?.startsWith("/data")) return false;
+  const path = context.path;
+
+  if (!path?.startsWith("/data")) return false;
 
   switch (context.method) {
     case "GET":
     case "HEAD":
-      context.respondWithFile(
-        join(workingDirPath, context.path),
-        context.method,
-        {mimeType: MIME_TYPES[".png"]},
-      );
+      context.respondWithFile(join(workingDirPath, path), context.method, {
+        mimeType: path.endsWith(".png")
+          ? MIME_TYPES[".png"]
+          : path.endsWith(".pdf")
+            ? MIME_TYPES[".pdf"]
+            : MIME_TYPES[".txt"],
+      });
       break;
     default:
       context.respond(405, {end: true, headers: {allow: "GET, HEAD"}});

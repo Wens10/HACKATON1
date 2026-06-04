@@ -21,4 +21,5 @@ export type SupportedExtname =
   | ".css"
   | ".html"
   | ".js"
-  | ".mjs";
+  | ".mjs"
+  | ".txt";
