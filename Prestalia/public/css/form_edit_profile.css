@@ -1,0 +1,212 @@
+/* Variables de couleurs basées sur votre image */
+:root {
+    --color-bg: #f4f6fa;
+    --color-card-bg: #ffffff;
+    --color-text-main: #121a40;
+    --color-text-muted: #64748b;
+    --color-primary: #3b4cb8;
+    --color-primary-hover: #2a3a9e;
+    --color-border: #e2e8f0;
+    --color-danger: #dc2626;
+    --radius-lg: 16px;
+    --radius-md: 8px;
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+}
+
+body {
+    background-color: var(--color-bg);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: var(--color-text-main);
+    padding: 0;
+    margin: 0;
+}
+
+.edit-profile-container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.page-title {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 24px;
+    color: var(--color-text-main);
+}
+
+/* Style des cartes de section (comme sur l'image) */
+.profile-card {
+    background: var(--color-card-bg);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: var(--shadow);
+    border: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+.section-title {
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--color-primary);
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--color-border);
+}
+
+/* Design de la section Photo de Profil */
+.picture-upload-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.current-picture img {
+    width: 100px;
+    aspect-ratio: 1 / 1;
+    display: block;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--color-border);
+    box-shadow: var(--shadow);
+}
+
+.upload-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* Cache l'input file de base pour mettre un joli bouton */
+input[type="file"] {
+    display: none;
+}
+
+.custom-file-upload {
+    display: inline-block;
+    padding: 10px 16px;
+    background: #f1f5f9;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-text-main);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.custom-file-upload:hover {
+    background: var(--color-border);
+}
+
+.file-info {
+    font-size: 12px;
+    color: var(--color-text-muted);
+}
+
+/* Grille du Formulaire pour les infos */
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+/* Permet à certains champs (comme l'adresse) de prendre toute la largeur */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-group:nth-child(4) { 
+    grid-column: span 2; 
+}
+
+.form-group label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    letter-spacing: 0.5px;
+}
+
+.form-group input {
+    padding: 12px 16px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border);
+    font-size: 14px;
+    color: var(--color-text-main);
+    background-color: #f8fafc;
+    transition: all 0.2s ease;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    background-color: #fff;
+    box-shadow: 0 0 0 3px rgba(59, 76, 184, 0.1);
+}
+
+/* Boutons d'actions en bas */
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 16px;
+    margin-top: 32px;
+}
+
+.btn-cancel {
+    padding: 12px 24px;
+    border-radius: var(--radius-md);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    transition: color 0.2s;
+}
+
+.btn-cancel:hover {
+    color: var(--color-danger);
+}
+
+.btn-submit {
+    padding: 12px 24px;
+    background-color: var(--color-primary);
+    color: #ffffff;
+    border: none;
+    border-radius: var(--radius-md);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: var(--shadow);
+    transition: background-color 0.2s ease;
+}
+
+.btn-submit:hover {
+    background-color: var(--color-primary-hover);
+}
+
+/* Responsive pour les smartphones */
+@media (max-width: 600px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+    .form-group:nth-child(4) { 
+        grid-column: span 1; 
+    }
+    .picture-upload-wrapper {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    .form-actions {
+        flex-direction: column-reverse;
+    }
+    .btn-cancel, .btn-submit {
+        text-align: center;
+        justify-content: center;
+    }
+}
