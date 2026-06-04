@@ -80,7 +80,7 @@ export default (async (body, userId, db) => {
             join(
               workingDirPath,
               `/data/${userId}`,
-              `${randomUUID()}${extname(file.filename)}`,
+              `${randomUUID().replace(/-/g, "")}${extname(file.filename)}`,
             ),
             file.data,
           );
