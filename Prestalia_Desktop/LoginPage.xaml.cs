@@ -33,18 +33,11 @@ namespace Prestalia_Desktop
             string email = EmailTextBox.Text;
             string password = PasswordBox.Password;
 
-            HttpClientHandler handler = new()
-            {
-                ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true
-            };
-
-            HttpClient client = new(handler);
-
             try
             {
                 var data = new { email, password };
 
-                HttpResponseMessage response = await client.PostAsJsonAsync("https://localhost:8443/api/login", data);
+                HttpResponseMessage response = await HttpClientProvider.Http.PostAsJsonAsync("/api/login", data);
 
                 if (response.IsSuccessStatusCode)
                 {
