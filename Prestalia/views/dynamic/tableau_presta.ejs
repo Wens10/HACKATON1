@@ -39,32 +39,31 @@
         <div class="stat-icon green"><i class="fa-solid fa-euro-sign"></i></div>
         <div>
           <div class="stat-label">Revenus ce mois</div>
-          <div class="stat-value">2 450€</div>
-          <div class="stat-trend"><i class="fa-solid fa-arrow-trend-up"></i> +12% vs mois dernier</div>
+          <div class="stat-value"><%= stats && stats['monthly_revenue'] ? Math.round(stats['monthly_revenue']) + '€' : '0€' %></div>
         </div>
       </div>
       <div class="stat-card">
         <div class="stat-icon blue"><i class="fa-regular fa-calendar-check"></i></div>
         <div>
           <div class="stat-label">Prestations</div>
-          <div class="stat-value">18</div>
-          <div class="stat-sub">8 cette semaine</div>
+          <div class="stat-value"><%= stats ? stats['total'] : 0 %></div>
+          <div class="stat-sub"><%= stats ? stats['upcoming_count'] : 0 %> à venir</div>
         </div>
       </div>
       <div class="stat-card">
         <div class="stat-icon yellow"><i class="fa-solid fa-star"></i></div>
         <div>
           <div class="stat-label">Note moyenne</div>
-          <div class="stat-value">4.8</div>
-          <div class="stat-sub">124 avis</div>
+          <div class="stat-value">—</div>
+          <div class="stat-sub">Bientôt disponible</div>
         </div>
       </div>
       <div class="stat-card">
         <div class="stat-icon purple"><i class="fa-regular fa-comment-dots"></i></div>
         <div>
           <div class="stat-label">Taux de réponse</div>
-          <div class="stat-value">95%</div>
-          <div class="stat-sub">Excellent</div>
+          <div class="stat-value">—</div>
+          <div class="stat-sub">Bientôt disponible</div>
         </div>
       </div>
     </div>
@@ -76,47 +75,78 @@
         <!-- Interventions -->
         <section class="section-card">
           <div class="section-header">
-            <h2><i class="fa-regular fa-calendar" style="margin-right:6px;"></i>Prochaines interventions</h2>
-            <button class="btn-text">Voir tout</button>
+            <h2><i class="fa-regular fa-calendar" style="margin-right:6px;"></i>Interventions</h2>
           </div>
 
-          <div class="intervention-item">
-            <div class="int-header">
-              <div>
-                <strong>Dépannage plomberie</strong>
-                <p class="client-name">Client 1</p>
+          <% var upcoming = reservations.filter(function(r){ return new Date(r.date) > new Date() && r.status !== 'rejected'; }); %>
+          <% if (upcoming.length === 0) { %>
+            <div class="empty-state">
+              <i class="fa-regular fa-calendar-xmark"></i>
+              Aucune intervention à venir.
+            </div>
+          <% } else { %>
+            <% upcoming.forEach(function(r) {
+              var d = new Date(r.date);
+              var now = new Date();
+              var diffDays = Math.floor((d - now) / 86400000);
+              var dateStr = d.toLocaleDateString('fr-FR', {day:'2-digit', month:'2-digit', year:'numeric'});
+              var timeStr = d.toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'});
+              var badgeLabel = diffDays === 0 ? "Aujourd'hui" : diffDays === 1 ? "Demain" : "Dans " + diffDays + " jours";
+              var badgeClass = diffDays === 0 ? "today" : "future";
+            %>
+              <div class="intervention-item" id="res-<%= r.id %>">
+                <div class="int-header">
+                  <div>
+                    <strong><%= r.client_name %></strong>
+                    <p class="client-name"><%= r.price %>€ &nbsp;·&nbsp; <%= dateStr %> à <%= timeStr %></p>
+                  </div>
+                  <span class="badge <%= badgeClass %>"><%= badgeLabel %></span>
+                </div>
+                <div class="int-actions" style="margin-top:10px;">
+                  <% if (r.status === 'pending') { %>
+                    <button class="btn-blue" onclick="updateStatus(<%= r.id %>, 'confirmed')">
+                      <i class="fa-solid fa-check"></i> Confirmer
+                    </button>
+                    <button class="btn-outline" onclick="updateStatus(<%= r.id %>, 'rejected')">
+                      <i class="fa-solid fa-xmark"></i> Refuser
+                    </button>
+                  <% } else if (r.status === 'confirmed') { %>
+                    <span style="color:#16a34a;font-weight:700;font-size:0.85rem;">
+                      <i class="fa-solid fa-circle-check"></i> Confirmé
+                    </span>
+                  <% } %>
+                </div>
               </div>
-              <span class="badge today">Aujourd'hui</span>
-            </div>
-            <div class="int-details">
-              <span><i class="fa-regular fa-calendar"></i> 16/12/2025</span>
-              <span><i class="fa-regular fa-clock"></i> 11:00</span>
-              <span><i class="fa-solid fa-location-dot"></i> Paris</span>
-            </div>
-            <div class="int-actions">
-              <button class="btn-blue">Détails</button>
-              <button class="btn-outline">Contacter</button>
-            </div>
-          </div>
+            <% }) %>
+          <% } %>
+        </section>
 
-          <div class="intervention-item">
-            <div class="int-header">
-              <div>
-                <strong>Installation électrique</strong>
-                <p class="client-name">Client 2</p>
-              </div>
-              <span class="badge future">Dans 2 jours</span>
-            </div>
-            <div class="int-details">
-              <span><i class="fa-regular fa-calendar"></i> 17/12/2025</span>
-              <span><i class="fa-regular fa-clock"></i> 12:00</span>
-              <span><i class="fa-solid fa-location-dot"></i> Lyon</span>
-            </div>
-            <div class="int-actions">
-              <button class="btn-blue">Détails</button>
-              <button class="btn-outline">Contacter</button>
-            </div>
+        <!-- Historique -->
+        <section class="section-card">
+          <div class="section-header">
+            <h2><i class="fa-solid fa-clock-rotate-left" style="margin-right:6px;"></i>Historique</h2>
           </div>
+          <% var past = reservations.filter(function(r){ return new Date(r.date) <= new Date(); }); %>
+          <% if (past.length === 0) { %>
+            <div class="empty-state">
+              <i class="fa-regular fa-folder-open"></i>
+              Aucune prestation passée.
+            </div>
+          <% } else { %>
+            <% past.slice(0, 5).forEach(function(r) {
+              var d = new Date(r.date);
+              var dateStr = d.toLocaleDateString('fr-FR', {day:'2-digit', month:'2-digit', year:'numeric'});
+              var timeStr = d.toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'});
+            %>
+              <div class="reservation-item">
+                <div class="res-info">
+                  <strong><%= r.client_name %></strong>
+                  <small><i class="fa-regular fa-calendar"></i> <%= dateStr %> &nbsp; <i class="fa-regular fa-clock"></i> <%= timeStr %></small>
+                </div>
+                <span class="status" style="background:#f1f5f9;color:#64748b;font-size:0.72rem;padding:4px 10px;border-radius:20px;font-weight:700;white-space:nowrap;"><%= r.price %>€</span>
+              </div>
+            <% }) %>
+          <% } %>
         </section>
 
         <!-- Graphique -->
@@ -218,5 +248,18 @@
   </div>
 
   <%- include("/footer") %>
+  <script>
+  function updateStatus(id, status) {
+    fetch('/api/reservations/' + id, {
+      method: 'PATCH',
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      body: 'status=' + status
+    }).then(function(res) {
+      if (res.ok) window.location.reload();
+    }).catch(function() {
+      alert('Erreur lors de la mise à jour. Veuillez réessayer.');
+    });
+  }
+  </script>
 </body>
 </html>

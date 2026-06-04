@@ -55,7 +55,8 @@ export default (async (context, db) => {
   );
 
   const q = context.url?.searchParams.get("q") ?? "";
-  const catFilter = context.url?.searchParams.get("cat") ?? "";
+  const catFilters =
+    context.url?.searchParams.getAll("cat").map(Number).filter(Boolean) ?? [];
   const maxPrice = context.url?.searchParams.get("price") ?? "";
 
   let query = `
@@ -73,9 +74,9 @@ export default (async (context, db) => {
       " AND (u.name LIKE ? OR c.name LIKE ? OR p.descr LIKE ? OR p.city LIKE ?)";
     params.push(`%${q}%`, `%${q}%`, `%${q}%`, `%${q}%`);
   }
-  if (catFilter) {
-    query += " AND p.category = ?";
-    params.push(Number(catFilter));
+  if (catFilters.length > 0) {
+    query += ` AND p.category IN (${catFilters.map(() => "?").join(",")})`;
+    params.push(...catFilters);
   }
   if (maxPrice) {
     query += " AND p.price <= ?";
@@ -84,10 +85,26 @@ export default (async (context, db) => {
 
   const [providers] = await db.execute<RowDataPacket[]>(query, params);
 
+  // Récupérer les IDs favoris de l'utilisateur connecté
+  if (data["user"]) {
+    const payload = verifyJWT(
+      cookieToJSON(context.headers.cookie)["token"] ?? "",
+    );
+    if (hasProps(payload, {userId: "number"})) {
+      const [favRows] = await db.execute<RowDataPacket[]>(
+        "SELECT provider_id FROM favorites WHERE user_id = ?",
+        [payload.userId],
+      );
+      data["favoriteIds"] = favRows.map((r) => r["provider_id"]);
+    }
+  } else {
+    data["favoriteIds"] = [];
+  }
+
   data["categories"] = categories;
   data["providers"] = providers;
   data["query"] = q;
-  data["selectedCat"] = catFilter;
+  data["selectedCats"] = catFilters;
   data["selectedPrice"] = maxPrice ? Number(maxPrice) : null;
 
   return renderFile(join(DEFAULT_EJS_DYNAMIC_PAGE_DIR, "recherche.ejs"), data, {

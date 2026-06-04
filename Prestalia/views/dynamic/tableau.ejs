@@ -34,14 +34,14 @@
         <div class="stat-icon blue"><i class="fa-regular fa-calendar-check"></i></div>
         <div>
           <div class="stat-label">Réservations</div>
-          <div class="stat-value">3</div>
+          <div class="stat-value"><%= reservations.length %></div>
         </div>
       </div>
       <div class="stat-card">
         <div class="stat-icon red"><i class="fa-solid fa-heart"></i></div>
         <div>
           <div class="stat-label">Favoris</div>
-          <div class="stat-value">8</div>
+          <div class="stat-value"><%= favorites.length %></div>
         </div>
       </div>
       <div class="stat-card">
@@ -55,7 +55,7 @@
         <div class="stat-icon yellow"><i class="fa-regular fa-bell"></i></div>
         <div>
           <div class="stat-label">Notifications</div>
-          <div class="stat-value">2</div>
+          <div class="stat-value"><%= reservations.filter(function(r){ return r.status !== 'pending'; }).length %></div>
         </div>
       </div>
     </div>
@@ -68,24 +68,48 @@
         <section class="section-card">
           <div class="section-header">
             <h2><i class="fa-regular fa-calendar-check" style="margin-right:6px;"></i>Mes réservations</h2>
-            <button class="btn-primary">+ Nouvelle</button>
+            <a href="/recherche" class="btn-primary" style="text-decoration:none;">+ Nouvelle</a>
           </div>
-          <div class="reservation-item">
-            <div class="res-info">
-              <strong>Dépannage plomberie</strong>
-              <span>Jean Dupont</span>
-              <small><i class="fa-regular fa-calendar"></i> 16/12/2025 &nbsp; <i class="fa-regular fa-clock"></i> 14:00</small>
+          <% if (reservations.length === 0) { %>
+            <div class="empty-state">
+              <i class="fa-regular fa-calendar-xmark"></i>
+              Aucune réservation pour le moment.
+              <br><a href="/recherche" style="color:var(--accent);font-weight:700;margin-top:8px;display:inline-block;">Trouver un prestataire →</a>
             </div>
-            <span class="status warning">En attente</span>
-          </div>
-          <div class="reservation-item">
-            <div class="res-info">
-              <strong>Installation électrique</strong>
-              <span>Marc Bernard</span>
-              <small><i class="fa-regular fa-calendar"></i> 17/12/2025 &nbsp; <i class="fa-regular fa-clock"></i> 09:00</small>
-            </div>
-            <span class="status success">Confirmé</span>
-          </div>
+          <% } else { %>
+            <% reservations.forEach(function(r) {
+              var d = new Date(r.date);
+              var isUpcoming = d > new Date();
+              var dateStr = d.toLocaleDateString('fr-FR', {day:'2-digit', month:'2-digit', year:'numeric'});
+              var timeStr = d.toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'});
+            %>
+              <div class="reservation-item">
+                <div class="res-info">
+                  <strong><%= r.category_name ?? 'Prestation' %></strong>
+                  <span><%= r.provider_name %></span>
+                  <small>
+                    <i class="fa-regular fa-calendar"></i> <%= dateStr %>
+                    &nbsp;
+                    <i class="fa-regular fa-clock"></i> <%= timeStr %>
+                    &nbsp;·&nbsp;
+                    <i class="fa-solid fa-euro-sign"></i> <%= r.price %>€
+                  </small>
+                </div>
+                <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
+                  <% if (r.status === 'confirmed') { %>
+                    <span class="status success"><i class="fa-solid fa-circle-check"></i> Confirmé</span>
+                  <% } else if (r.status === 'rejected') { %>
+                    <span class="status" style="background:#fff1f2;color:#e11d48;"><i class="fa-solid fa-circle-xmark"></i> Refusé</span>
+                  <% } else if (isUpcoming) { %>
+                    <span class="status warning"><i class="fa-regular fa-clock"></i> En attente</span>
+                  <% } else { %>
+                    <span class="status" style="background:#f1f5f9;color:#64748b;">Terminé</span>
+                  <% } %>
+                  <a href="/profile/providers/<%= r.provider_id %>" style="font-size:0.72rem;color:var(--accent);text-decoration:none;font-weight:700;">Voir profil →</a>
+                </div>
+              </div>
+            <% }) %>
+          <% } %>
         </section>
 
         <!-- Favoris -->
@@ -93,18 +117,25 @@
           <div class="section-header">
             <h2><i class="fa-solid fa-heart" style="margin-right:6px;"></i>Prestataires favoris</h2>
           </div>
-          <div class="fav-grid">
-            <a href="#" class="fav-item">
-              <div class="fav-avatar">JD</div>
-              Jean Dupont
-              <span class="heart"><i class="fa-solid fa-heart"></i></span>
-            </a>
-            <a href="#" class="fav-item">
-              <div class="fav-avatar">MB</div>
-              Marc Bernard
-              <span class="heart"><i class="fa-solid fa-heart"></i></span>
-            </a>
-          </div>
+          <% if (favorites.length === 0) { %>
+            <div class="empty-state">
+              <i class="fa-regular fa-heart"></i>
+              Aucun favori pour le moment.<br>
+              <a href="/recherche" style="color:var(--accent);font-weight:700;margin-top:8px;display:inline-block;">Trouver un prestataire →</a>
+            </div>
+          <% } else { %>
+            <div class="fav-grid">
+              <% favorites.forEach(function(f) { %>
+                <a href="/profile/providers/<%= f.provider_id %>" class="fav-item">
+                  <div class="fav-avatar">
+                    <%= f.provider_name.split(' ').map(function(n){ return n[0]; }).join('').slice(0,2).toUpperCase() %>
+                  </div>
+                  <%= f.provider_name %>
+                  <span class="heart"><i class="fa-solid fa-heart"></i></span>
+                </a>
+              <% }) %>
+            </div>
+          <% } %>
         </section>
 
       </div>

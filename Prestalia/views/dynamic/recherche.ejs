@@ -34,7 +34,7 @@
           <% categories.forEach(cat => { %>
             <label>
               <input type="checkbox" name="cat" value="<%= cat.id %>"
-                <%= String(selectedCat) === String(cat.id) ? 'checked' : '' %>> <%= cat.name %>
+                <%= selectedCats.includes(cat.id) ? 'checked' : '' %>> <%= cat.name %>
             </label>
           <% }) %>
         </div>
@@ -77,6 +77,14 @@
                 </div>
                 <div class="card-footer">
                   <span class="price"><%= p.price ? p.price + ' €/h' : 'Sur devis' %></span>
+                  <% if (typeof user !== 'undefined') { %>
+                    <% var isFav = favoriteIds.includes(p.provider_id); %>
+                    <button class="btn-fav <%= isFav ? 'fav-active' : '' %>"
+                            onclick="event.preventDefault(); toggleFav(this, <%= p.provider_id %>)"
+                            title="<%= isFav ? 'Retirer des favoris' : 'Ajouter aux favoris' %>">
+                      <i class="<%= isFav ? 'fa-solid' : 'fa-regular' %> fa-heart"></i>
+                    </button>
+                  <% } %>
                   <button class="btn-profil">Voir profil →</button>
                 </div>
               </div>
@@ -90,6 +98,26 @@
   </div>
 
   <%- include("/footer") %>
+  <script>
+  function toggleFav(btn, providerId) {
+    fetch('/api/favorites', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      body: 'provider_id=' + providerId
+    }).then(function(r){ return r.json(); }).then(function(data) {
+      var icon = btn.querySelector('i');
+      if (data.action === 'added') {
+        icon.className = 'fa-solid fa-heart';
+        btn.classList.add('fav-active');
+        btn.title = 'Retirer des favoris';
+      } else {
+        icon.className = 'fa-regular fa-heart';
+        btn.classList.remove('fav-active');
+        btn.title = 'Ajouter aux favoris';
+      }
+    });
+  }
+  </script>
   <script>
     const priceSlider = document.querySelector('.price-slider');
     const sidebarForm = document.querySelector('.sidebar');

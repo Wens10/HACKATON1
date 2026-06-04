@@ -65,6 +65,19 @@ main { padding: 0; }
 .btn-profil:hover { background: #283593; }
 .empty { color: #888; grid-column: 1/-1; text-align: center; padding: 2rem 0; }
 
+.btn-fav {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  color: #c7d2fe;
+  padding: 4px;
+  transition: color 0.15s, transform 0.15s;
+  line-height: 1;
+}
+.btn-fav:hover { color: #e11d48; transform: scale(1.2); }
+.btn-fav.fav-active { color: #e11d48; }
+
 @media (max-width: 768px) {
   .main-body { flex-direction: column; padding: 1rem; }
   .sidebar { width: 100%; position: static; }

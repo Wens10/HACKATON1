@@ -28,9 +28,46 @@ export default (async (context, db) => {
   if (!user) throw null;
   if (user["role"] !== "provider") throw null;
 
+  // Récupérer l'id du provider
+  const [providerRows] = await db.execute<RowDataPacket[]>(
+    "SELECT id FROM providers WHERE user_id = ?",
+    [payload.userId],
+  );
+
+  const provider = providerRows[0];
+  if (!provider) throw null;
+
+  // Réservations avec infos client
+  const [reservations] = await db.execute<RowDataPacket[]>(
+    `SELECT
+       r.id,
+       r.date,
+       r.price,
+       r.status,
+       u.name AS client_name
+     FROM reservations r
+     JOIN users u ON r.author = u.id
+     WHERE r.provider = ?
+     ORDER BY r.date ASC`,
+    [provider["id"]],
+  );
+
+  // Stats agrégées
+  const [statsRows] = await db.execute<RowDataPacket[]>(
+    `SELECT
+       COUNT(*) AS total,
+       SUM(CASE WHEN MONTH(r.date) = MONTH(NOW()) AND YEAR(r.date) = YEAR(NOW()) THEN r.price ELSE 0 END) AS monthly_revenue,
+       SUM(CASE WHEN r.date > NOW() THEN 1 ELSE 0 END) AS upcoming_count
+     FROM reservations r
+     WHERE r.provider = ?`,
+    [provider["id"]],
+  );
+
+  const stats = statsRows[0];
+
   return renderFile(
     join(DEFAULT_EJS_DYNAMIC_PAGE_DIR, "tableau_presta.ejs"),
-    {user},
+    {user, reservations, stats},
     {root: DEFAULT_EJS_COMPONENT_DIR},
   );
 }) satisfies PageHandler;

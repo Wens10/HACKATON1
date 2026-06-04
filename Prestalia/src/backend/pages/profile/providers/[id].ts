@@ -85,6 +85,22 @@ export default (async (context, db, providerId) => {
 
     data["provider"] = provider;
 
+    // Vérifier si ce prestataire est en favori pour l'utilisateur connecté
+    if (data["user"]) {
+      const payload = verifyJWT(
+        cookieToJSON(context.headers.cookie)["token"] ?? "",
+      );
+      if (hasProps(payload, {userId: "number"})) {
+        const [favRows] = await db.execute<RowDataPacket[]>(
+          "SELECT id FROM favorites WHERE user_id = ? AND provider_id = ?",
+          [payload.userId, provider["id"]],
+        );
+        data["isFavorite"] = !!favRows[0];
+      }
+    } else {
+      data["isFavorite"] = false;
+    }
+
     return renderFile(
       join(DEFAULT_EJS_DYNAMIC_PAGE_DIR, "profile/providers/[id].ejs"),
       data,

@@ -93,11 +93,33 @@ export default (async () => {
       provider INTEGER NOT NULL,
       price FLOAT NOT NULL,
       date DATETIME(3) NOT NULL,
+      status ENUM('pending','confirmed','rejected') NOT NULL DEFAULT 'pending',
       FOREIGN KEY(author) REFERENCES users(id),
       FOREIGN KEY(provider) REFERENCES providers(id)
-      
     );
   `);
+
+  await db.execute(`
+    CREATE TABLE IF NOT EXISTS favorites (
+      id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
+      created_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+      user_id INTEGER NOT NULL,
+      provider_id INTEGER NOT NULL,
+      UNIQUE KEY unique_fav (user_id, provider_id),
+      FOREIGN KEY(user_id) REFERENCES users(id),
+      FOREIGN KEY(provider_id) REFERENCES providers(id)
+    );
+  `);
+
+  // Migration : ajouter status si la table existait déjà sans cette colonne
+  try {
+    await db.execute(`
+      ALTER TABLE reservations
+      ADD COLUMN status ENUM('pending','confirmed','rejected') NOT NULL DEFAULT 'pending'
+    `);
+  } catch (_) {
+    /* colonne déjà présente */
+  }
 
   renderStaticEJSFiles();
 }) satisfies () => any;
