@@ -171,6 +171,11 @@ namespace Prestalia_Desktop
 
         }
 
+        private void CheckProviderDialog_SecondaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        {
+
+        }
+
         private async void CheckProviderButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
             if (sender is Button btn && btn.Tag is Provider provider)

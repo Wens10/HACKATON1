@@ -69,7 +69,8 @@ export default (async (context, db) => {
   const params: any[] = [];
 
   if (q) {
-    query += " AND (u.name LIKE ? OR c.name LIKE ?)";
+    query +=
+      " AND (u.name LIKE ? OR c.name LIKE ? OR u.descr LIKE ? OR u.city LIKE ?)";
     params.push(`%${q}%`, `%${q}%`);
   }
   if (catFilter) {
