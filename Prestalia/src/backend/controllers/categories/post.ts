@@ -25,23 +25,20 @@ export default (async (body, db) => {
       ? body.icon[0].data
       : null;
 
+  let iconPath = null;
+
+  if (icon) {
+    iconPath = join("/data", `c${randomUUID().replace(/-/g, "")}.png`);
+
+    await writeFile(join(workingDirPath, iconPath), icon);
+  }
+
   const [result] = await db.execute<ResultSetHeader>(
-    "INSERT INTO categories (name) VALUES (?)",
-    [body.name],
+    "INSERT INTO categories (name, icon) VALUES (?, ?)",
+    [body.name, iconPath],
   );
 
   const catId = result.insertId;
-
-  if (icon) {
-    const iconPath = join("/data", `c${randomUUID().replace(/-/g, "")}.png`);
-
-    await writeFile(join(workingDirPath, iconPath), icon);
-
-    await db.execute("UPDATE categories SET icon = ? WHERE id = ?", [
-      iconPath,
-      catId,
-    ]);
-  }
 
   const cat = await getCategory(db, catId);
 
