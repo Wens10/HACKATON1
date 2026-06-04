@@ -26,8 +26,8 @@ main { padding: 0; }
 .search-row button:hover { background: #283593; }
 
 .main-body {
-  display: flex; gap: 1.5rem; padding: 2rem;
-  align-items: flex-start; max-width: 1200px; margin: 0 auto;
+  display: flex; gap: 5.5rem; padding: 2rem;
+  align-items: flex-start; margin: 0 auto;
 }
 .sidebar {
   width: 240px; flex-shrink: 0; background: white;

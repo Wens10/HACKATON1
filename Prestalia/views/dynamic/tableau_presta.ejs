@@ -104,12 +104,19 @@
                 </div>
                 <div class="int-actions" style="margin-top:10px;">
                   <% if (r.status === 'pending') { %>
-                    <button class="btn-blue" onclick="updateStatus(<%= r.id %>, 'confirmed')">
-                      <i class="fa-solid fa-check"></i> Confirmer
-                    </button>
-                    <button class="btn-outline" onclick="updateStatus(<%= r.id %>, 'rejected')">
-                      <i class="fa-solid fa-xmark"></i> Refuser
-                    </button>
+                   <button class="btn-blue" 
+  data-id="<%= r.id %>" 
+  data-status="confirmed"
+  onclick="updateStatus(this.dataset.id, this.dataset.status)">
+  <i class="fa-solid fa-check"></i> Confirmer
+</button>
+
+<button class="btn-outline" 
+  data-id="<%= r.id %>" 
+  data-status="rejected"
+  onclick="updateStatus(this.dataset.id, this.dataset.status)">
+  <i class="fa-solid fa-xmark"></i> Refuser
+</button>
                   <% } else if (r.status === 'confirmed') { %>
                     <span style="color:#16a34a;font-weight:700;font-size:0.85rem;">
                       <i class="fa-solid fa-circle-check"></i> Confirmé
@@ -171,18 +178,11 @@
             <h2><i class="fa-solid fa-bolt" style="margin-right:6px;"></i>Actions rapides</h2>
           </div>
           <ul class="nav-list" style="margin-top:1rem;">
+            
             <li>
-              <span><i class="fa-solid fa-sliders"></i> Gérer mes services</span>
+              <a href="/form_edit_profile"><i class="fa-regular fa-pen-to-square"></i> Modifier mon profil</a>
             </li>
-            <li>
-              <a href="#"><i class="fa-regular fa-pen-to-square"></i> Modifier mon profil</a>
-            </li>
-            <li>
-              <span><i class="fa-regular fa-calendar"></i> Calendrier</span>
-            </li>
-            <li>
-              <a href="#"><i class="fa-regular fa-comment-dots"></i> Messages clients</a>
-            </li>
+           
             <li style="border-bottom:none;">
               <a href="/logout" style="color:#e11d48;">
                 <i class="fa-solid fa-right-from-bracket" style="color:#e11d48;"></i> Se déconnecter
