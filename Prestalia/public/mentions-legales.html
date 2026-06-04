@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="/photos/Gemini_Generated_Image.png" type="image/png">
+  <title>Mentions légales — Prestalia</title>
+  <link rel="stylesheet" href="/css/header.css">
+  <link rel="stylesheet" href="/css/footer.css">
+  <link rel="stylesheet" href="/css/mentions-legales.css">
+</head>
+<body>
+
+  <header>
+  <div class="pnav-inner">
+    <a href="/" class="pnav-logo">
+      <img src="/photos/Gemini_Generated_Image_3be0lc3be0lc3be0-removebg-preview.png" alt="Logo Prestalia" width="52" height="52">
+    </a>
+    <ul class="pnav-links">
+      <li><a href="/">Accueil</a></li>
+      <li><a href="/recherche">Rechercher</a></li>
+    </ul>
+    <div class="pnav-actions">
+      <a href="/auth#login" class="btn-bg1">Connexion</a>
+      <a href="/auth#signup" class="btn-bg">Inscription</a>
+    </div>
+    <button class="pnav-burger" id="burgerBtn" aria-label="Ouvrir le menu">
+      <span class="burger-bar"></span>
+      <span class="burger-bar"></span>
+      <span class="burger-bar"></span>
+    </button>
+  </div>
+
+  <div class="drawer-overlay" id="drawerOverlay"></div>
+  <aside class="pnav-drawer" id="navDrawer">
+    <button class="drawer-close" id="drawerClose">✕</button>
+    <nav class="drawer-links">
+      <a href="/">Accueil</a>
+      <a href="/recherche">Rechercher</a>
+    </nav>
+    <div class="drawer-cta">
+      <a href="/auth#login" class="btn-bg1">Connexion</a>
+      <a href="/auth#signup" class="btn-bg">Inscription</a>
+    </div>
+  </aside>
+</header>
+<script>
+(function(){
+  var b=document.getElementById('burgerBtn'),o=document.getElementById('drawerOverlay'),d=document.getElementById('navDrawer'),c=document.getElementById('drawerClose'),bars=b.querySelectorAll('.burger-bar');
+  function open(){d.classList.add('open');o.classList.add('open');bars[0].style.transform='translateY(7px) rotate(45deg)';bars[1].style.opacity='0';bars[2].style.transform='translateY(-7px) rotate(-45deg)';document.body.style.overflow='hidden';}
+  function close(){d.classList.remove('open');o.classList.remove('open');bars[0].style.transform='';bars[1].style.opacity='';bars[2].style.transform='';document.body.style.overflow='';}
+  b.addEventListener('click',open);c.addEventListener('click',close);o.addEventListener('click',close);
+
+  var path=window.location.pathname;
+  document.querySelectorAll('.pnav-links a, .drawer-links a').forEach(function(a){
+    var href=a.getAttribute('href');
+    var active=href==='/'?path==='/':path===href||path.startsWith(href+'/');
+    if(active)a.classList.add('active');
+  });
+})();
+</script>
+
+  <main class="legal-main">
+    <div class="legal-container">
+
+      <div class="legal-header">
+        <h1>Mentions légales</h1>
+        <p class="legal-updated">En vigueur au <time datetime="2026-06-04">4 juin 2026</time></p>
+      </div>
+
+      <nav class="legal-toc">
+        <p class="toc-title">Sommaire</p>
+        <ol>
+          <li><a href="#editeur">Éditeur du site</a></li>
+          <li><a href="#objet">Objet de la Plateforme</a></li>
+          <li><a href="#prestataire">Obligations légales du Prestataire</a></li>
+          <li><a href="#client">Obligations légales du Client</a></li>
+          <li><a href="#donnees">Protection des données personnelles</a></li>
+          <li><a href="#litiges">Responsabilité – Litiges</a></li>
+          <li><a href="#loi">Loi applicable et juridiction compétente</a></li>
+        </ol>
+      </nav>
+
+      <!-- 1. Éditeur -->
+      <section id="editeur" class="legal-section">
+        <h2><span class="section-num">1.</span> Éditeur du site</h2>
+        <p>Le site Prestalia (ci-après « la Plateforme ») est édité par la société :</p>
+        <ul class="legal-list">
+          <li><span class="label">Dénomination sociale :</span> Prestalia SAS</li>
+          <li><span class="label">Siège social :</span> Paris, France</li>
+          <li><span class="label">Contact :</span> <a href="mailto:contact@prestalia.fr">contact@prestalia.fr</a></li>
+        </ul>
+      </section>
+
+      <!-- 2. Objet -->
+      <section id="objet" class="legal-section">
+        <h2><span class="section-num">2.</span> Objet de la Plateforme</h2>
+        <p>Prestalia est une marketplace de services opérant en France, permettant la mise en relation entre des particuliers (« Clients ») et des professionnels indépendants ou sociétés (« Prestataires ») dans des domaines variés : plomberie, électricité, développement informatique, jardinage, etc. Prestalia agit en qualité d'intermédiaire et n'est pas partie aux contrats conclus entre les Clients et les Prestataires.</p>
+      </section>
+
+      <!-- 3. Prestataire -->
+      <section id="prestataire" class="legal-section">
+        <h2><span class="section-num">3.</span> Obligations légales du Prestataire</h2>
+
+        <h3>3.1 Conditions d'inscription et vérification</h3>
+        <ul class="legal-list">
+          <li>Être une personne physique majeure ou une personne morale légalement constituée et immatriculée en France.</li>
+          <li>Se soumettre au processus de vérification manuelle opéré par Prestalia avant toute activation du profil.</li>
+          <li>Maintenir à jour ses informations et renouveler ses justificatifs à leur expiration.</li>
+        </ul>
+
+        <h3>3.2 Conformité réglementaire et fiscale</h3>
+        <ul class="legal-list">
+          <li>Respecter l'ensemble des obligations légales, fiscales et sociales liées à son activité (déclaration de revenus, TVA le cas échéant, cotisations sociales).</li>
+          <li>Délivrer une facture conforme aux articles 289 et suivants du Code général des impôts pour toute prestation réalisée.</li>
+          <li>Respecter, selon l'activité exercée, les réglementations spécifiques applicables (certification RGE, habilitation électrique, qualifications professionnelles, etc.).</li>
+        </ul>
+
+        <h3>3.3 Exécution des prestations</h3>
+        <ul class="legal-list">
+          <li>Réaliser les prestations avec le soin, la diligence et les compétences attendus d'un professionnel qualifié, conformément aux règles de l'art.</li>
+          <li>Respecter scrupuleusement les délais et conditions convenus avec le Client via la Plateforme.</li>
+          <li>Garantir la confidentialité des informations du Client et se conformer au Règlement Général sur la Protection des Données (RGPD – Règlement UE 2016/679).</li>
+          <li>S'interdire tout démarchage direct du Client en dehors de la Plateforme pendant la durée du contrat-cadre et dans les 12 mois suivant sa résiliation.</li>
+        </ul>
+
+        <h3>3.4 Responsabilité et assurance</h3>
+        <p>Le Prestataire demeure seul responsable de l'exécution de ses prestations. Il assume l'entière responsabilité civile et, le cas échéant, pénale des dommages causés au Client ou à des tiers dans le cadre de son activité. Prestalia ne saurait être tenu responsable des actes, omissions ou manquements du Prestataire.</p>
+      </section>
+
+      <!-- 4. Client -->
+      <section id="client" class="legal-section">
+        <h2><span class="section-num">4.</span> Obligations légales du Client</h2>
+
+        <h3>4.1 Conditions d'accès et d'utilisation</h3>
+        <ul class="legal-list">
+          <li>Être une personne physique majeure et capable, ou une personne morale habilitée à contracter.</li>
+          <li>Fournir des informations exactes, complètes et à jour lors de la création du compte et lors de toute réservation.</li>
+          <li>Ne pas créer de faux profils, usurper l'identité d'autrui, ni contourner les mesures de sécurité de la Plateforme.</li>
+          <li>Conserver la confidentialité de ses identifiants de connexion et notifier immédiatement Prestalia en cas d'utilisation non autorisée de son compte.</li>
+        </ul>
+
+        <h3>4.2 Comportement et bonne foi contractuelle</h3>
+        <ul class="legal-list">
+          <li>Décrire de façon précise et complète les besoins et l'étendue de la prestation souhaitée afin de permettre au Prestataire d'établir un devis adéquat.</li>
+          <li>Assurer un accès aux lieux d'intervention conformément aux conditions convenues, et prévenir sans délai en cas d'empêchement.</li>
+          <li>Régler les sommes dues au Prestataire selon les modalités et échéances convenues, dans le respect de l'article 1353 du Code civil.</li>
+          <li>S'abstenir de publier des avis frauduleux, diffamatoires ou contraires aux règles de bonne conduite de la Plateforme.</li>
+        </ul>
+
+        <h3>4.3 Utilisation conforme de la Plateforme</h3>
+        <ul class="legal-list">
+          <li>N'utiliser la Plateforme qu'à des fins licites et conformes à son objet, en s'interdisant toute utilisation contraire à l'ordre public ou aux bonnes mœurs.</li>
+          <li>Ne pas tenter de contourner la Plateforme pour conclure directement avec un Prestataire référencé afin d'éviter les commissions (obligation de loyauté).</li>
+          <li>Respecter les droits de propriété intellectuelle de Prestalia (marque, logo, contenus) et ne pas reproduire, représenter ou exploiter ceux-ci sans autorisation écrite préalable.</li>
+        </ul>
+      </section>
+
+      <!-- 5. Données -->
+      <section id="donnees" class="legal-section">
+        <h2><span class="section-num">5.</span> Protection des données personnelles</h2>
+        <p>Conformément au RGPD et à la loi Informatique et Libertés modifiée, Prestalia traite les données personnelles des utilisateurs en qualité de responsable de traitement. Les utilisateurs disposent des droits suivants :</p>
+        <ul class="legal-list">
+          <li>Droit d'accès, de rectification, d'effacement et de portabilité des données (art. 15 à 20 RGPD).</li>
+          <li>Droit d'opposition et de limitation du traitement (art. 21 et 18 RGPD).</li>
+          <li>Droit d'introduire une réclamation auprès de la CNIL (<a href="https://www.cnil.fr" target="_blank" rel="noopener noreferrer">www.cnil.fr</a>).</li>
+        </ul>
+        <p>Pour toute demande relative à vos données : <a href="mailto:dpo@prestalia.fr">dpo@prestalia.fr</a>. La politique de confidentialité complète est consultable sur le site.</p>
+      </section>
+
+      <!-- 6. Litiges -->
+      <section id="litiges" class="legal-section">
+        <h2><span class="section-num">6.</span> Responsabilité – Litiges</h2>
+        <p>Prestalia met en œuvre tous les moyens raisonnables pour assurer la disponibilité de la Plateforme, sans toutefois garantir une accessibilité ininterrompue. En cas de litige entre un Client et un Prestataire, Prestalia pourra proposer sa médiation sans y être obligée.</p>
+        <p>Conformément aux articles L.616-1 et R.616-1 du Code de la consommation, Prestalia adhère à un service de médiation. En cas d'échec de la médiation, les litiges seront soumis aux juridictions compétentes françaises.</p>
+      </section>
+
+      <!-- 7. Loi applicable -->
+      <section id="loi" class="legal-section">
+        <h2><span class="section-num">7.</span> Loi applicable et juridiction compétente</h2>
+        <p>Les présentes mentions légales et les conditions générales de la Plateforme sont régies par le droit français. Tout litige relatif à leur interprétation ou à leur exécution relève de la compétence exclusive des tribunaux français, sous réserve des dispositions d'ordre public applicables aux consommateurs.</p>
+      </section>
+
+      <div class="legal-back">
+        <a href="/">&larr; Retour à l'accueil</a>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+  <div class="footer-container">
+
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="/" class="footer-logo">
+          <img src="/photos/Gemini_Generated_Image.png" alt="Logo Prestalia" width="44" height="44">
+          <span>Prestalia</span>
+        </a>
+        <p class="footer-tagline">La plateforme de confiance pour trouver les meilleurs prestataires de services en France.</p>
+        <div class="footer-socials">
+          <a href="" aria-label="Instagram" class="social-btn">
+            <img src="/svg/instagram-1-svgrepo-com.svg" alt="" width="18" height="18">
+          </a>
+          <a href="" aria-label="TikTok" class="social-btn">
+            <img src="/svg/tiktok-svgrepo-com.svg" alt="" width="18" height="18">
+          </a>
+          <a href="" aria-label="LinkedIn" class="social-btn">
+            <img src="/svg/linkedin-color-svgrepo-com.svg" alt="" width="18" height="18">
+          </a>
+          <a href="" aria-label="Facebook" class="social-btn">
+            <img src="/svg/facebook-color-svgrepo-com.svg" alt="" width="18" height="18">
+          </a>
+        </div>
+      </div>
+
+      <div class="footer-nav">
+        <div class="footer-col">
+          <h4>Services</h4>
+          <a href="/recherche">Trouver un prestataire</a>
+          <a href="/presta-inscription">Devenir prestataire</a>
+          <a href="/#how-work">Comment ça marche</a>
+        </div>
+        <div class="footer-col">
+          <h4>Entreprise</h4>
+          <a href="">À propos</a>
+          <a href="">Conditions d'utilisation</a>
+          <a href="">Confidentialité</a>
+          <!-- <a href="">Cookies</a> -->
+        </div>
+        <div class="footer-col">
+          <h4>Contact</h4>
+          <a href="mailto:contact@prestalia.fr">contact@prestalia.fr</a>
+          <a href="">Support</a>
+          <a href="">FAQ</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p class="footer-copy">© 2026 Prestalia. Tous droits réservés.</p>
+      <div class="footer-bottom-links">
+        <a href="/mentions-legales">Mentions légales</a>
+        <a href="">Confidentialité</a>
+        <!-- <a href="">Cookies</a> -->
+      </div>
+    </div>
+
+  </div>
+</footer>
+
+
+</body>
+</html>
