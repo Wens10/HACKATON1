@@ -3,11 +3,11 @@ import {
   CLEAR_TOKEN_COOKIE,
   DEFAULT_EJS_COMPONENT_DIR,
   DEFAULT_EJS_DYNAMIC_PAGE_DIR,
-} from "../utils/constants";
+} from "../../utils/constants";
 import {join} from "path";
-import {hasProps} from "../core";
-import {cookieToJSON, verifyJWT} from "../utils/functions";
-import {PageHandler} from "../utils/types";
+import {hasProps} from "../../core";
+import {cookieToJSON, verifyJWT} from "../../utils/functions";
+import {PageHandler} from "../../utils/types";
 import {RowDataPacket} from "mysql2";
 
 export default (async (context, db) => {
@@ -59,7 +59,7 @@ export default (async (context, db) => {
   }
 
   return renderFile(
-    join(DEFAULT_EJS_DYNAMIC_PAGE_DIR, "profile-user.ejs"),
+    join(DEFAULT_EJS_DYNAMIC_PAGE_DIR, "/profile/@me.ejs"),
     {user},
     {root: DEFAULT_EJS_COMPONENT_DIR},
   );
