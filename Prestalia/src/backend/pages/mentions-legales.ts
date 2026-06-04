@@ -2,7 +2,7 @@ import {renderFile} from "ejs";
 import {
   CLEAR_TOKEN_COOKIE,
   DEFAULT_EJS_COMPONENT_DIR,
-  DEFAULT_EJS_STATIC_PAGE_DIR,
+  DEFAULT_EJS_DYNAMIC_PAGE_DIR,
 } from "../utils/constants";
 import {join} from "path";
 import {hasProps} from "../core";
@@ -40,7 +40,7 @@ export default (async (context, db) => {
   }
 
   return renderFile(
-    join(DEFAULT_EJS_STATIC_PAGE_DIR, "mentions-legales.ejs"),
+    join(DEFAULT_EJS_DYNAMIC_PAGE_DIR, "mentions-legales.ejs"),
     data,
     {root: DEFAULT_EJS_COMPONENT_DIR},
   );

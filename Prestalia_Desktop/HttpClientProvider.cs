@@ -19,7 +19,7 @@ public static class HttpClientProvider
     {
         try
         {
-            var bytes = await HttpClientProvider.Http.GetByteArrayAsync(url);
+            var bytes = await Http.GetByteArrayAsync(url);
             var image = new BitmapImage();
 
             using var stream = new InMemoryRandomAccessStream();
