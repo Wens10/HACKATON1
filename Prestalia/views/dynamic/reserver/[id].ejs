@@ -144,6 +144,8 @@
     var MONTHS = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
     var DAYS_FR = ['dimanche','lundi','mardi','mercredi','jeudi','vendredi','samedi'];
 
+    var bookedSlots = <%- JSON.stringify(bookedSlots) %>;
+
     var today = new Date();
     today.setHours(0,0,0,0);
     var cur = new Date(today.getFullYear(), today.getMonth(), 1);
@@ -227,12 +229,33 @@
 
       var grid = document.getElementById('slotsGrid');
       grid.innerHTML = '';
+
+      var isToday = selectedDate.toDateString() === new Date().toDateString();
+      var nowMinutes = new Date().getHours() * 60 + new Date().getMinutes();
+      var selectedDateStr = fmtDate(selectedDate);
+
       SLOTS.forEach(function(t) {
+        var parts = t.split(':');
+        var slotMinutes = parseInt(parts[0]) * 60 + parseInt(parts[1]);
+
+        var isPast = isToday && slotMinutes <= nowMinutes;
+        var isBooked = bookedSlots.some(function(b) {
+          return b.date === selectedDateStr && b.time === t;
+        });
+
         var btn = document.createElement('button');
         btn.type = 'button';
-        btn.className = 'slot-btn' + (t === selectedTime ? ' active' : '');
         btn.textContent = t;
-        btn.addEventListener('click', function() { selectTime(t); });
+
+        if (isPast || isBooked) {
+          btn.className = 'slot-btn unavailable';
+          btn.disabled = true;
+          btn.title = isBooked ? 'Créneau déjà réservé' : 'Créneau passé';
+        } else {
+          btn.className = 'slot-btn' + (t === selectedTime ? ' active' : '');
+          btn.addEventListener('click', function() { selectTime(t); });
+        }
+
         grid.appendChild(btn);
       });
     }

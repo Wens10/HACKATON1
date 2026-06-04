@@ -69,9 +69,24 @@ export default (async (context, db, providerId) => {
       return null;
     }
 
+    const [resRows] = await db.execute<RowDataPacket[]>(
+      `SELECT DATE_FORMAT(date, '%Y-%m-%d') AS res_date,
+              DATE_FORMAT(date, '%H:%i')    AS res_time
+       FROM reservations
+       WHERE provider = ?
+         AND status != 'rejected'
+         AND DATE(date) >= CURDATE()`,
+      [provider["id"]],
+    );
+
+    const bookedSlots = resRows.map((r) => ({
+      date: r["res_date"] as string,
+      time: r["res_time"] as string,
+    }));
+
     return renderFile(
       join(DEFAULT_EJS_DYNAMIC_PAGE_DIR, "reserver/[id].ejs"),
-      {user, provider},
+      {user, provider, bookedSlots},
       {root: DEFAULT_EJS_COMPONENT_DIR},
     );
   } catch (err) {

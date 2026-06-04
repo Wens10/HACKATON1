@@ -14,6 +14,7 @@ export default (async (context, db) => {
   const data: Record<string, any> = {};
 
   const cookies = cookieToJSON(context.headers.cookie);
+  let loggedUserId: number | null = null;
 
   if (hasProps(cookies, {token: "string"})) {
     const payload = verifyJWT(cookies.token);
@@ -47,6 +48,7 @@ export default (async (context, db) => {
       return null;
     }
 
+    loggedUserId = payload.userId;
     data["user"] = user;
   }
 
@@ -69,6 +71,11 @@ export default (async (context, db) => {
   `;
   const params: any[] = [];
 
+  if (loggedUserId !== null) {
+    query += " AND u.id != ?";
+    params.push(loggedUserId);
+  }
+
   if (q) {
     query +=
       " AND (u.name LIKE ? OR c.name LIKE ? OR p.descr LIKE ? OR p.city LIKE ?)";
@@ -86,17 +93,12 @@ export default (async (context, db) => {
   const [providers] = await db.execute<RowDataPacket[]>(query, params);
 
   // Récupérer les IDs favoris de l'utilisateur connecté
-  if (data["user"]) {
-    const payload = verifyJWT(
-      cookieToJSON(context.headers.cookie)["token"] ?? "",
+  if (loggedUserId !== null) {
+    const [favRows] = await db.execute<RowDataPacket[]>(
+      "SELECT provider_id FROM favorites WHERE user_id = ?",
+      [loggedUserId],
     );
-    if (hasProps(payload, {userId: "number"})) {
-      const [favRows] = await db.execute<RowDataPacket[]>(
-        "SELECT provider_id FROM favorites WHERE user_id = ?",
-        [payload.userId],
-      );
-      data["favoriteIds"] = favRows.map((r) => r["provider_id"]);
-    }
+    data["favoriteIds"] = favRows.map((r) => r["provider_id"]);
   } else {
     data["favoriteIds"] = [];
   }

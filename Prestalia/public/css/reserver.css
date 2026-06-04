@@ -248,6 +248,14 @@ main {
 
 .slot-btn:hover  { border-color: var(--accent); color: var(--accent); }
 .slot-btn.active { background: var(--primary); border-color: var(--primary); color: white; }
+.slot-btn.unavailable {
+  background: #f8fafc;
+  border-color: #e2e8f0;
+  color: #c7d2fe;
+  cursor: not-allowed;
+  text-decoration: line-through;
+}
+.slot-btn.unavailable:hover { border-color: #e2e8f0; color: #c7d2fe; }
 
 /* ── Résumé sidebar ──────────────────────────────────── */
 .summary-row {
