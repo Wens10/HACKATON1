@@ -70,7 +70,7 @@ export default (async (context, db) => {
 
   if (q) {
     query +=
-      " AND (u.name LIKE ? OR c.name LIKE ? OR u.descr LIKE ? OR u.city LIKE ?)";
+      " AND (u.name LIKE ? OR c.name LIKE ? OR p.descr LIKE ? OR p.city LIKE ?)";
     params.push(`%${q}%`, `%${q}%`);
   }
   if (catFilter) {
