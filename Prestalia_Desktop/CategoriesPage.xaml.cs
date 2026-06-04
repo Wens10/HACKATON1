@@ -206,7 +206,6 @@ namespace Prestalia_Desktop
                 EditCategoryInfoBar.IsOpen = true;
 
                 args.Cancel = true;
-
             }
             else if (categories.Any(category => category.Name.Equals(newCategoryName, StringComparison.OrdinalIgnoreCase) && category != selectedCategory))
             {

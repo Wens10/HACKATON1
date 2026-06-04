@@ -3,7 +3,8 @@ import {writeFile} from "fs/promises";
 import {join} from "path";
 import {getCategory} from "../../utils/functions";
 import {randomUUID} from "crypto";
-import {Pool, RowDataPacket} from "mysql2/promise";
+import {Pool, ResultSetHeader, RowDataPacket} from "mysql2/promise";
+import config from "../../config";
 
 export default (async (body, db) => {
   if (!hasProps(body, {name: "string"})) return {ok: false, status: 400};
@@ -24,10 +25,10 @@ export default (async (body, db) => {
       ? body.icon[0].data
       : null;
 
-  const [result] = (await db.execute(
+  const [result] = await db.execute<ResultSetHeader>(
     "INSERT INTO categories (name) VALUES (?)",
     [body.name],
-  )) as any;
+  );
 
   const catId = result.insertId;
 
@@ -49,13 +50,13 @@ export default (async (body, db) => {
       ok: true,
       status: 201,
       data: JSON.stringify(cat),
-      location: `https://localhost:8443/api/categories/${catId}`,
+      location: `https://${config.hostname}:${config.httpsPort}/api/categories/${catId}`,
     };
   else
     return {
       ok: true,
       status: 201,
-      location: `https://localhost:8443/api/categories/${catId}`,
+      location: `https://${config.hostname}:${config.httpsPort}/api/categories/${catId}`,
     };
 }) satisfies (
   // eslint-disable-next-line no-unused-vars

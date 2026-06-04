@@ -69,7 +69,7 @@
                                     Spacing="8">
                                     <ComboBox
                                         PlaceholderText="Trier par"
-                                        Width="114"
+                                        Width="200"
                                         SelectionChanged="FilterComboBox_SelectionChanged">
                                         <x:String>Nom</x:String>
                                         <x:String>Nombre de prestataires</x:String>
@@ -264,16 +264,11 @@
                                             VerticalAlignment="Center"
                                             Text="{x:Bind CreationDate}"/>
 
-                                        <StackPanel
+                                        <Button
                                             Grid.Column="4"
-                                            Spacing="8"
-                                            Orientation="Horizontal"
-                                            VerticalAlignment="Center">
-                                            <Button
-                                                Content="Modifier"
-                                                Tag="{x:Bind}"
-                                                Click="EditCategory_Click"/>
-                                        </StackPanel>
+                                            Content="Modifier"
+                                            Tag="{x:Bind}"
+                                            Click="EditCategory_Click"/>
                                     </Grid>
                                 </DataTemplate>
                             </ListView.ItemTemplate>

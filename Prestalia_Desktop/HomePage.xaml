@@ -447,11 +447,129 @@
 
                                             <Button
                                                 Grid.Column="5"
-                                                Content="Détails"/>
+                                                Tag="{x:Bind}"
+                                                Content="Détails"
+                                                Click="CheckProviderButton_Click"/>
                                         </Grid>
                                     </DataTemplate>
                                 </ListView.ItemTemplate>
                             </ListView>
+                            <ContentDialog
+                                x:Name="CheckProviderDialog"
+                                Title="Détails du prestataire"
+                                DefaultButton="Primary"
+                                PrimaryButtonText="Approuver"
+                                SecondaryButtonText="Rejeter"
+                                CloseButtonText="Annuler"
+                                PrimaryButtonClick="CheckProviderDialog_PrimaryButtonClick"
+                                SecondaryButtonClick="CheckProviderDialog_SecondaryButtonClick">
+                                <StackPanel Spacing="8">
+                                    <InfoBar
+                                        x:Name="CheckProviderInfoBar"
+                                        IsOpen="False"
+                                        Severity="Error"
+                                        Title="Erreur"
+                                        Message="Erreur lors de la modification"/>
+
+                                    <Grid
+                                        Grid.Column="0"
+                                        ColumnSpacing="8"
+                                        VerticalAlignment="Center">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <PersonPicture
+                                            Grid.Column="0"
+                                            Width="40"
+                                            Height="40"
+                                            DisplayName="{Binding Name}"/>
+
+                                        <StackPanel
+                                            Grid.Column="1"
+                                            Spacing="4">
+                                            <TextBlock
+                                                VerticalAlignment="Center"
+                                                Style="{StaticResource BodyStrongTextBlockStyle}"
+                                                Text="{Binding Name}"/>
+
+                                            <TextBlock
+                                                VerticalAlignment="Center"
+                                                Text="{Binding Email}"/>
+                                        </StackPanel>
+                                    </Grid>
+
+                                    <TextBlock>
+                                        <Run Text="Catégorie: "/>
+                                        <Run Text="{Binding Category}"/>
+                                    </TextBlock>
+
+                                    <TextBlock>
+                                        <Run Text="Ville: "/>
+                                        <Run Text="{Binding City}"/>
+                                    </TextBlock>
+
+                                    <TextBlock>
+                                        <Run Text="Statut: "/>
+                                        <Run Text="{Binding Statut}"/>
+                                    </TextBlock>
+
+                                    <TextBlock
+                                        Text="Documents fournis"
+                                        Style="{StaticResource BodyStrongTextBlockStyle}"/>
+
+                                    <ProgressRing
+                                        x:Name="DocumentsLoadingRing"
+                                        IsActive="False"/>
+
+                                    <TextBlock
+                                        x:Name="NoDocumentsText"
+                                        Text="Aucun document fourni"
+                                        Visibility="Collapsed"
+                                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+
+                                    <StackPanel
+                                        x:Name="DocumentsPanel"
+                                        Visibility="Collapsed"
+                                        Spacing="8">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Button
+                                                x:Name="PrevDocButton"
+                                                Grid.Column="0"
+                                                Content="&#xE76B;"
+                                                FontFamily="{StaticResource SymbolThemeFontFamily}"
+                                                Click="PrevDocButton_Click"/>
+                                            <TextBlock
+                                                x:Name="DocNameText"
+                                                Grid.Column="1"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                Style="{StaticResource BodyStrongTextBlockStyle}"/>
+                                            <Button
+                                                x:Name="NextDocButton"
+                                                Grid.Column="2"
+                                                Content="&#xE76C;"
+                                                FontFamily="{StaticResource SymbolThemeFontFamily}"
+                                                Click="NextDocButton_Click"/>
+                                        </Grid>
+                                        <Border
+                                            CornerRadius="4"
+                                            Width="300"
+                                            Height="150">
+                                            <WebView2
+                                                x:Name="DocWebView"
+                                                HorizontalAlignment="Stretch"
+                                                VerticalAlignment="Stretch"/>
+                                        </Border>
+                                    </StackPanel>
+                                </StackPanel>
+                            </ContentDialog>
                         </Grid>
                     </Border>
                 </ScrollViewer>

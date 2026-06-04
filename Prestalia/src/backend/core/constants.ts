@@ -76,6 +76,7 @@ export const MIME_TYPES: Record<SupportedExtname, string> = {
   ".svgz": "image/svg+xml" /* SVG compressed with GZIP */,
   ".webp": "image/webp",
   // Texts
+  ".txt": "text/plain; charset=utf-8",
   ".css": "text/css; charset=utf-8",
   ".html": "text/html; charset=utf-8",
   ".js": "text/javascript; charset=utf-8",

@@ -6,7 +6,7 @@ import {
   isValidEmail,
   isValidPassword,
 } from "../../utils/functions";
-import {Pool, RowDataPacket} from "mysql2/promise";
+import {Pool, ResultSetHeader, RowDataPacket} from "mysql2/promise";
 
 const jwtSecret = process.env["JWT_SECRET"];
 
@@ -51,10 +51,10 @@ export default (async (name, email, password, db) => {
   )
     .then(async (hash) => {
       try {
-        const [result] = (await db.execute(
+        const [result] = await db.execute<ResultSetHeader>(
           "INSERT INTO users (name, email, password) VALUES (?, ?, ?)",
           [normalizedName, normalizedEmail, hash],
-        )) as any;
+        );
 
         const userId = result.insertId;
 
