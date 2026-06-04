@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="shortcut icon" href="/photos/Gemini_Generated_Image.png" type="image/png">
-  <title>Profil Utilisateur</title>
+  <title>Mon profil — Prestalia</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <link rel="stylesheet" href="/css/header.css">
   <link rel="stylesheet" href="/css/footer.css">
@@ -12,23 +12,133 @@
 </head>
 <body>
   <%- include("/header") %>
-  <main>
-    <div class="container">
-      <div class="profile-header">
-        <div class="header-info">
-          <h1><%= user.name %></h1>
-          <div class="user-details">
-            <p><strong>Email:</strong> <%= user.email %></p>
-            <p><strong>Date d'inscription:</strong> <%= new Date(user.created_at).toLocaleDateString("fr-FR") %></p>
-          </div>
-          <div class="header-actions">
-            <button class="btn btn-primary"><i class="fa-solid fa-edit"></i>Modifier le profil</button>
-            <a class="btn btn-outline" href="/logout"><i class="fa-solid fa-sign-out-alt"></i>Déconnexion</a>
-          </div>
-        </div>
+
+  <!-- ── Bannière ──────────────────────────────────────── -->
+  <div class="profile-banner">
+    <div class="banner-inner">
+      <div class="banner-avatar">
+        <%= user.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase() %>
+      </div>
+      <div class="banner-text">
+        <h1><%= user.name %></h1>
+        <span class="banner-role">
+          <% if (user.role === 'provider') { %>
+            <i class="fa-solid fa-briefcase"></i> Prestataire
+          <% } else if (user.role === 'admin') { %>
+            <i class="fa-solid fa-shield-halved"></i> Administrateur
+          <% } else { %>
+            <i class="fa-solid fa-user"></i> Utilisateur
+          <% } %>
+        </span>
       </div>
     </div>
+  </div>
+
+  <main>
+    <div class="container">
+
+      <!-- ── Colonne principale ─────────────────────────── -->
+      <div class="main-col">
+
+        <!-- Informations personnelles -->
+        <div class="section-card">
+          <div class="section-title">
+            <i class="fa-solid fa-circle-info" style="margin-right:6px;"></i>Informations personnelles
+          </div>
+          <ul class="info-list">
+            <li>
+              <div class="info-icon"><i class="fa-regular fa-user"></i></div>
+              <div class="info-content">
+                <div class="info-label">Nom complet</div>
+                <div class="info-value"><%= user.name %></div>
+              </div>
+            </li>
+            <li>
+              <div class="info-icon"><i class="fa-regular fa-envelope"></i></div>
+              <div class="info-content">
+                <div class="info-label">Adresse email</div>
+                <div class="info-value"><%= user.email %></div>
+              </div>
+            </li>
+            <li>
+              <div class="info-icon"><i class="fa-solid fa-tag"></i></div>
+              <div class="info-content">
+                <div class="info-label">Rôle</div>
+                <div class="info-value">
+                  <% if (user.role === 'provider') { %>Prestataire
+                  <% } else if (user.role === 'admin') { %>Administrateur
+                  <% } else { %>Utilisateur<% } %>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Sécurité -->
+        <div class="section-card">
+          <div class="section-title">
+            <i class="fa-solid fa-lock" style="margin-right:6px;"></i>Sécurité
+          </div>
+          <div class="security-item">
+            <div class="security-left">
+              <i class="fa-solid fa-key"></i>
+              Mot de passe
+            </div>
+            <span class="badge-ok"><i class="fa-solid fa-check"></i> Défini</span>
+          </div>
+          <div class="security-item">
+            <div class="security-left">
+              <i class="fa-regular fa-envelope"></i>
+              Email vérifié
+            </div>
+            <span class="badge-ok"><i class="fa-solid fa-check"></i> Vérifié</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ── Sidebar ────────────────────────────────────── -->
+      <aside class="sidebar-col">
+
+        <!-- Membre depuis -->
+        <div class="member-card">
+          <div class="member-icon"><i class="fa-regular fa-calendar-check"></i></div>
+          <h3>Membre depuis</h3>
+          <div class="member-date">
+            <%= new Date(user.created_at).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" }) %>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="section-card">
+          <div class="section-title">
+            <i class="fa-solid fa-bolt" style="margin-right:6px;"></i>Actions
+          </div>
+          <ul class="action-list">
+            <li>
+              <button><i class="fa-regular fa-pen-to-square"></i> Modifier le profil</button>
+            </li>
+            <li>
+              <a href="/tableau"><i class="fa-regular fa-calendar-check"></i> Mes réservations</a>
+            </li>
+            <li>
+              <a href="/recherche"><i class="fa-solid fa-magnifying-glass"></i> Trouver un prestataire</a>
+            </li>
+            <% if (user.role === 'provider') { %>
+            <li>
+              <a href="/tableau_presta"><i class="fa-solid fa-chart-line"></i> Tableau prestataire</a>
+            </li>
+            <% } %>
+            <li>
+              <a href="/logout" class="danger"><i class="fa-solid fa-right-from-bracket"></i> Se déconnecter</a>
+            </li>
+          </ul>
+        </div>
+
+      </aside>
+    </div>
   </main>
+
   <%- include("/footer") %>
 </body>
 </html>

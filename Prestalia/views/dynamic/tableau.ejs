@@ -3,91 +3,159 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="/photos/Gemini_Generated_Image.png" type="image/png">
+  <title>Mon tableau de bord — Prestalia</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <link rel="stylesheet" href="/css/header.css">
   <link rel="stylesheet" href="/css/footer.css">
   <link rel="stylesheet" href="/css/tableau.css">
-  <title>Tableau de Bord</title>
 </head>
 <body>
   <%- include("/header") %>
-  <div class="container">
-    <div class="title">
-      <h1>Bonjour et bienvenue, <%= user.name %> !</h1>
-      <p>Gérez vos réservations et vos favoris</p>
+
+  <!-- ── Bannière ──────────────────────────────────────── -->
+  <div class="dashboard-banner">
+    <div class="banner-inner">
+      <div class="banner-text">
+        <h1>Bonjour, <%= user.name %> 👋</h1>
+        <p>Gérez vos réservations et retrouvez vos prestataires favoris</p>
+      </div>
+      <div class="banner-avatar">
+        <%= user.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase() %>
+      </div>
     </div>
+  </div>
+
+  <div class="container">
+
+    <!-- ── Stats ──────────────────────────────────────── -->
     <div class="stats-grid">
       <div class="stat-card">
-        <div><span>Réservations</span>
-          <h2>3</h2>
+        <div class="stat-icon blue"><i class="fa-regular fa-calendar-check"></i></div>
+        <div>
+          <div class="stat-label">Réservations</div>
+          <div class="stat-value">3</div>
         </div>
-        <div class="icon blue">📅</div>
       </div>
       <div class="stat-card">
-        <div><span>Favoris</span>
-          <h2>8</h2>
+        <div class="stat-icon red"><i class="fa-solid fa-heart"></i></div>
+        <div>
+          <div class="stat-label">Favoris</div>
+          <div class="stat-value">8</div>
         </div>
-        <div class="icon red">❤️</div>
       </div>
       <div class="stat-card">
-        <div><span>Messages</span>
-          <h2>5</h2>
+        <div class="stat-icon green"><i class="fa-regular fa-comment-dots"></i></div>
+        <div>
+          <div class="stat-label">Messages</div>
+          <div class="stat-value">5</div>
         </div>
-        <div class="icon green">💬</div>
       </div>
       <div class="stat-card">
-        <div><span>Notifications</span>
-          <h2>2</h2>
+        <div class="stat-icon yellow"><i class="fa-regular fa-bell"></i></div>
+        <div>
+          <div class="stat-label">Notifications</div>
+          <div class="stat-value">2</div>
         </div>
-        <div class="icon yellow">🔔</div>
       </div>
     </div>
+
+    <!-- ── Contenu principal ──────────────────────────── -->
     <div class="main-content">
       <div class="left-col">
+
+        <!-- Réservations -->
         <section class="section-card">
           <div class="section-header">
-            <h2>Mes réservations</h2>
-            <button class="btn-primary">Nouvelle réservation</button>
+            <h2><i class="fa-regular fa-calendar-check" style="margin-right:6px;"></i>Mes réservations</h2>
+            <button class="btn-primary">+ Nouvelle</button>
           </div>
           <div class="reservation-item">
             <div class="res-info">
               <strong>Dépannage plomberie</strong>
               <span>Jean Dupont</span>
-              <small>📅 16/12/2025 ⏰ 14:00</small>
+              <small><i class="fa-regular fa-calendar"></i> 16/12/2025 &nbsp; <i class="fa-regular fa-clock"></i> 14:00</small>
             </div>
             <span class="status warning">En attente</span>
           </div>
           <div class="reservation-item">
             <div class="res-info">
-              <strong>Dépannage plomberie</strong>
-              <span>Jean Dupont</span>
-              <small>📅 17/12/2025 ⏰ 14:00</small>
+              <strong>Installation électrique</strong>
+              <span>Marc Bernard</span>
+              <small><i class="fa-regular fa-calendar"></i> 17/12/2025 &nbsp; <i class="fa-regular fa-clock"></i> 09:00</small>
             </div>
             <span class="status success">Confirmé</span>
           </div>
         </section>
+
+        <!-- Favoris -->
         <section class="section-card">
-          <h2>Prestataires favoris</h2>
+          <div class="section-header">
+            <h2><i class="fa-solid fa-heart" style="margin-right:6px;"></i>Prestataires favoris</h2>
+          </div>
           <div class="fav-grid">
-            <div class="fav-item">
-              <div class="avatar"></div> Prestataire 1 <span class="heart">❤️</span>
-            </div>
-            <div class="fav-item">
-              <div class="avatar"></div> Prestataire 2 <span class="heart">❤️</span>
-            </div>
+            <a href="#" class="fav-item">
+              <div class="fav-avatar">JD</div>
+              Jean Dupont
+              <span class="heart"><i class="fa-solid fa-heart"></i></span>
+            </a>
+            <a href="#" class="fav-item">
+              <div class="fav-avatar">MB</div>
+              Marc Bernard
+              <span class="heart"><i class="fa-solid fa-heart"></i></span>
+            </a>
           </div>
         </section>
+
       </div>
+
+      <!-- ── Sidebar ──────────────────────────────────── -->
       <aside class="sidebar">
+
         <div class="section-card profile-card">
-          <div class="profile-img">👤</div>
+          <div class="profile-avatar">
+            <%= user.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase() %>
+          </div>
           <h3><%= user.name %></h3>
           <p><%= user.email %></p>
-          <button class="btn-outline">Modifier le profil</button>
+          <button class="btn-outline">
+            <i class="fa-regular fa-pen-to-square"></i> Modifier le profil
+          </button>
+        </div>
+
+        <div class="cta-card">
+          <h3>Trouver un prestataire</h3>
+          <p>Parcourez nos professionnels vérifiés près de chez vous</p>
+          <a href="/recherche" class="btn-white">Explorer →</a>
+        </div>
+
+        <div class="section-card">
+          <div class="section-header" style="margin-bottom:0; padding-bottom:0; border-bottom:none;">
+            <h2><i class="fa-solid fa-bolt" style="margin-right:6px;"></i>Accès rapide</h2>
+          </div>
+          <ul style="list-style:none; margin-top:1rem;">
+            <li style="padding:9px 0; border-bottom:1px solid var(--border); font-size:0.85rem;">
+              <a href="/recherche" style="color:var(--text-main); text-decoration:none; display:flex; align-items:center; gap:8px;">
+                <i class="fa-solid fa-magnifying-glass" style="color:var(--accent); width:16px;"></i> Rechercher
+              </a>
+            </li>
+            <li style="padding:9px 0; border-bottom:1px solid var(--border); font-size:0.85rem;">
+              <a href="#" style="color:var(--text-main); text-decoration:none; display:flex; align-items:center; gap:8px;">
+                <i class="fa-regular fa-calendar" style="color:var(--accent); width:16px;"></i> Mes réservations
+              </a>
+            </li>
+            <li style="padding:9px 0; font-size:0.85rem;">
+              <a href="/logout" style="color:#e11d48; text-decoration:none; display:flex; align-items:center; gap:8px;">
+                <i class="fa-solid fa-right-from-bracket" style="width:16px;"></i> Se déconnecter
+              </a>
+            </li>
+          </ul>
         </div>
 
       </aside>
     </div>
   </div>
+
   <%- include("/footer") %>
 </body>
 </html>

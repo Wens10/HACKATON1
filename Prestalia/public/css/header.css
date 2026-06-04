@@ -59,6 +59,12 @@ header {
   background: rgba(47,47,184,.07);
 }
 
+.pnav-links a.active {
+  color: var(--main-color);
+  background: rgba(47,47,184,.10);
+  font-weight: 700;
+}
+
 /* Boutons droite */
 .pnav-actions {
   display: flex;
@@ -192,6 +198,12 @@ header {
 .drawer-links a:hover {
   background: rgba(47,47,184,.07);
   color: var(--main-color);
+}
+
+.drawer-links a.active {
+  background: rgba(47,47,184,.10);
+  color: var(--main-color);
+  font-weight: 700;
 }
 
 .drawer-cta {

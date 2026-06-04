@@ -3,59 +3,83 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tableau de bord Prestataire</title>
+  <link rel="shortcut icon" href="/photos/Gemini_Generated_Image.png" type="image/png">
+  <title>Tableau de bord — Prestalia</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <link rel="stylesheet" href="/css/header.css">
   <link rel="stylesheet" href="/css/footer.css">
   <link rel="stylesheet" href="/css/tableau_presta.css">
 </head>
 <body>
   <%- include("/header") %>
-  <div class="container">
-    <header class="header">
-      <h1>Tableau de bord Prestataire</h1>
-      <p>Bienvenue, <%= user.name %></p>
-    </header>
-    <div class="stats-grid">
-      <div class="card stat-box">
-        <div class="stat-content">
-          <span>Revenus ce mois</span>
-          <h2>2,450€</h2>
-          <small class="trend up">↗ +12% vs mois dernier</small>
+
+  <!-- ── Bannière ──────────────────────────────────────── -->
+  <div class="dashboard-banner">
+    <div class="banner-inner">
+      <div class="banner-left">
+        <div class="banner-avatar">
+          <%= user.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase() %>
         </div>
-        <div class="icon green">$</div>
+        <div class="banner-text">
+          <h1>Bonjour, <%= user.name %> 👋</h1>
+          <p>Voici un aperçu de votre activité</p>
+        </div>
       </div>
-      <div class="card stat-box">
-        <div class="stat-content">
-          <span>Prestations</span>
-          <h2>18</h2>
-          <small>8 cette semaine</small>
-        </div>
-        <div class="icon blue">📅</div>
-      </div>
-      <div class="card stat-box">
-        <div class="stat-content">
-          <span>Note moyenne</span>
-          <h2>4.8</h2>
-          <small>124 avis</small>
-        </div>
-        <div class="icon yellow">⭐</div>
-      </div>
-      <div class="card stat-box">
-        <div class="stat-content">
-          <span>Taux de réponse</span>
-          <h2>95%</h2>
-          <small>Excellent</small>
-        </div>
-        <div class="icon purple">💬</div>
+      <div class="banner-badge">
+        <i class="fa-solid fa-circle-check"></i> Prestataire vérifié
       </div>
     </div>
+  </div>
+
+  <div class="container">
+
+    <!-- ── Stats ──────────────────────────────────────── -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon green"><i class="fa-solid fa-euro-sign"></i></div>
+        <div>
+          <div class="stat-label">Revenus ce mois</div>
+          <div class="stat-value">2 450€</div>
+          <div class="stat-trend"><i class="fa-solid fa-arrow-trend-up"></i> +12% vs mois dernier</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon blue"><i class="fa-regular fa-calendar-check"></i></div>
+        <div>
+          <div class="stat-label">Prestations</div>
+          <div class="stat-value">18</div>
+          <div class="stat-sub">8 cette semaine</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon yellow"><i class="fa-solid fa-star"></i></div>
+        <div>
+          <div class="stat-label">Note moyenne</div>
+          <div class="stat-value">4.8</div>
+          <div class="stat-sub">124 avis</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon purple"><i class="fa-regular fa-comment-dots"></i></div>
+        <div>
+          <div class="stat-label">Taux de réponse</div>
+          <div class="stat-value">95%</div>
+          <div class="stat-sub">Excellent</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Layout principal ──────────────────────────── -->
     <div class="main-layout">
       <div class="content-left">
-        <section class="card section-main">
+
+        <!-- Interventions -->
+        <section class="section-card">
           <div class="section-header">
-            <h2>Prochaines interventions</h2>
+            <h2><i class="fa-regular fa-calendar" style="margin-right:6px;"></i>Prochaines interventions</h2>
             <button class="btn-text">Voir tout</button>
           </div>
+
           <div class="intervention-item">
             <div class="int-header">
               <div>
@@ -65,27 +89,28 @@
               <span class="badge today">Aujourd'hui</span>
             </div>
             <div class="int-details">
-              <span>📅 16/12/2025</span>
-              <span>⏰ 11:00</span>
-              <span>📍 Paris</span>
+              <span><i class="fa-regular fa-calendar"></i> 16/12/2025</span>
+              <span><i class="fa-regular fa-clock"></i> 11:00</span>
+              <span><i class="fa-solid fa-location-dot"></i> Paris</span>
             </div>
             <div class="int-actions">
               <button class="btn-blue">Détails</button>
               <button class="btn-outline">Contacter</button>
             </div>
           </div>
+
           <div class="intervention-item">
             <div class="int-header">
               <div>
-                <strong>Dépannage plomberie</strong>
+                <strong>Installation électrique</strong>
                 <p class="client-name">Client 2</p>
               </div>
               <span class="badge future">Dans 2 jours</span>
             </div>
             <div class="int-details">
-              <span>📅 17/12/2025</span>
-              <span>⏰ 12:00</span>
-              <span>📍 Paris</span>
+              <span><i class="fa-regular fa-calendar"></i> 17/12/2025</span>
+              <span><i class="fa-regular fa-clock"></i> 12:00</span>
+              <span><i class="fa-solid fa-location-dot"></i> Lyon</span>
             </div>
             <div class="int-actions">
               <button class="btn-blue">Détails</button>
@@ -93,60 +118,105 @@
             </div>
           </div>
         </section>
-        <br>
-        <section class="card chart-section">
-          <h2>Évolution des revenus</h2>
+
+        <!-- Graphique -->
+        <section class="section-card">
+          <div class="section-header">
+            <h2><i class="fa-solid fa-chart-line" style="margin-right:6px;"></i>Évolution des revenus</h2>
+          </div>
           <div class="chart-placeholder">
-            <div class="bars">📊</div>
-            <p>Graphique des performances</p>
+            <i class="fa-solid fa-chart-bar"></i>
+            <p>Graphique disponible prochainement</p>
           </div>
         </section>
+
       </div>
+
+      <!-- ── Sidebar ────────────────────────────────── -->
       <aside class="content-right">
-        <div class="card side-card">
-          <h3>Actions rapides</h3>
-          <ul class="nav-list">
-            <li>Gérer mes services</li>
-            <li>Modifier mon profil</li>
-            <li>Calendrier</li>
-            <li><a href="/messagerie">Messages clients</a></li>
+
+        <!-- Actions rapides -->
+        <div class="section-card">
+          <div class="section-header" style="margin-bottom:0; padding-bottom:0; border-bottom:none;">
+            <h2><i class="fa-solid fa-bolt" style="margin-right:6px;"></i>Actions rapides</h2>
+          </div>
+          <ul class="nav-list" style="margin-top:1rem;">
+            <li>
+              <span><i class="fa-solid fa-sliders"></i> Gérer mes services</span>
+            </li>
+            <li>
+              <a href="#"><i class="fa-regular fa-pen-to-square"></i> Modifier mon profil</a>
+            </li>
+            <li>
+              <span><i class="fa-regular fa-calendar"></i> Calendrier</span>
+            </li>
+            <li>
+              <a href="#"><i class="fa-regular fa-comment-dots"></i> Messages clients</a>
+            </li>
+            <li style="border-bottom:none;">
+              <a href="/logout" style="color:#e11d48;">
+                <i class="fa-solid fa-right-from-bracket" style="color:#e11d48;"></i> Se déconnecter
+              </a>
+            </li>
           </ul>
         </div>
-        <br>
-        <div class="card side-card">
-          <h3>Derniers avis</h3>
+
+        <!-- Derniers avis -->
+        <div class="section-card">
+          <div class="section-header">
+            <h2><i class="fa-solid fa-star" style="margin-right:6px;"></i>Derniers avis</h2>
+          </div>
           <div class="review-item">
-            <span class="stars">⭐⭐⭐⭐⭐</span>
-            <p>Excellent travail !</p>
+            <div class="review-stars">★★★★★</div>
+            <p>Excellent travail, très professionnel !</p>
             <small>Il y a 1 jour</small>
           </div>
           <div class="review-item">
-            <span class="stars">⭐⭐⭐⭐⭐</span>
-            <p>Excellent travail !</p>
+            <div class="review-stars">★★★★★</div>
+            <p>Rapide et efficace, je recommande.</p>
             <small>Il y a 2 jours</small>
           </div>
         </div>
-        <br>
-        <div class="card side-card">
-          <h3>Profil complété</h3>
-          <div class="progress-container">
-            <div class="progress-bar" style="width: 85%;"></div>
+
+        <!-- Profil complété -->
+        <div class="section-card">
+          <div class="section-header">
+            <h2><i class="fa-solid fa-user-check" style="margin-right:6px;"></i>Profil complété</h2>
           </div>
-          <p><small>85% complété</small></p>
+          <div class="progress-wrap">
+            <div class="progress-bar-bg">
+              <div class="progress-bar-fill" style="width: 85%;"></div>
+            </div>
+          </div>
+          <span class="progress-label">85% complété</span>
           <ul class="check-list">
-            <li class="done">Informations de base</li>
-            <li class="done">Certifications</li>
-            <li>Galerie photos</li>
+            <li class="done">
+              <span class="check-icon"><i class="fa-solid fa-circle-check"></i></span>
+              Informations de base
+            </li>
+            <li class="done">
+              <span class="check-icon"><i class="fa-solid fa-circle-check"></i></span>
+              Certifications
+            </li>
+            <li>
+              <span class="check-icon"><i class="fa-regular fa-circle"></i></span>
+              Galerie photos
+            </li>
           </ul>
         </div>
-        <br>
-        <div class="card tip-card">
-          💡 <strong>Astuce du jour</strong>
-          <p>Les prestataires qui répondent en moins d'une heure ont 3x plus de chances d'obtenir une réservation.</p>
+
+        <!-- Astuce -->
+        <div class="tip-card">
+          <div class="tip-header">
+            <i class="fa-solid fa-lightbulb"></i> Astuce du jour
+          </div>
+          <p>Les prestataires qui répondent en moins d'une heure ont 3× plus de chances d'obtenir une réservation.</p>
         </div>
+
       </aside>
     </div>
   </div>
+
   <%- include("/footer") %>
 </body>
 </html>

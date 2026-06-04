@@ -84,7 +84,7 @@
         </div>
         <div class="categories-grid" id="popular">
           <% for (const category of categories) { %>
-            <a href="/recherche?category=<%= category.name %>" class="category-card reveal">
+            <a href="/recherche?cat=<%= category.id %>" class="category-card reveal">
               <div class="category-icon">
                 <% if (category.icon) { %>
                   <img src="<%= category.icon %>" alt="" width="32" height="32">

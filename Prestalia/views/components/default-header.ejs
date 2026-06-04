@@ -37,5 +37,12 @@
   function open(){d.classList.add('open');o.classList.add('open');bars[0].style.transform='translateY(7px) rotate(45deg)';bars[1].style.opacity='0';bars[2].style.transform='translateY(-7px) rotate(-45deg)';document.body.style.overflow='hidden';}
   function close(){d.classList.remove('open');o.classList.remove('open');bars[0].style.transform='';bars[1].style.opacity='';bars[2].style.transform='';document.body.style.overflow='';}
   b.addEventListener('click',open);c.addEventListener('click',close);o.addEventListener('click',close);
+
+  var path=window.location.pathname;
+  document.querySelectorAll('.pnav-links a, .drawer-links a').forEach(function(a){
+    var href=a.getAttribute('href');
+    var active=href==='/'?path==='/':path===href||path.startsWith(href+'/');
+    if(active)a.classList.add('active');
+  });
 })();
 </script>

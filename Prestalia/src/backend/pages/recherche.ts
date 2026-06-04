@@ -26,7 +26,6 @@ export default (async (context, db) => {
         },
         end: true,
       });
-
       return null;
     }
 
@@ -45,12 +44,50 @@ export default (async (context, db) => {
         },
         end: true,
       });
-
       return null;
     }
 
     data["user"] = user;
   }
+
+  const [categories] = await db.execute<RowDataPacket[]>(
+    "SELECT id, name FROM categories ORDER BY name",
+  );
+
+  const q = context.url?.searchParams.get("q") ?? "";
+  const catFilter = context.url?.searchParams.get("cat") ?? "";
+  const maxPrice = context.url?.searchParams.get("price") ?? "";
+
+  let query = `
+    SELECT u.id, u.name, p.id AS provider_id, p.valided AS verified,
+           p.city AS address, p.price, p.category, c.name AS category_name, p.descr
+    FROM users u
+    JOIN providers p ON p.user_id = u.id
+    LEFT JOIN categories c ON p.category = c.id
+    WHERE u.role = 'provider'
+  `;
+  const params: any[] = [];
+
+  if (q) {
+    query += " AND (u.name LIKE ? OR c.name LIKE ?)";
+    params.push(`%${q}%`, `%${q}%`);
+  }
+  if (catFilter) {
+    query += " AND p.category = ?";
+    params.push(Number(catFilter));
+  }
+  if (maxPrice) {
+    query += " AND p.price <= ?";
+    params.push(Number(maxPrice));
+  }
+
+  const [providers] = await db.execute<RowDataPacket[]>(query, params);
+
+  data["categories"] = categories;
+  data["providers"] = providers;
+  data["query"] = q;
+  data["selectedCat"] = catFilter;
+  data["selectedPrice"] = maxPrice ? Number(maxPrice) : null;
 
   return renderFile(join(DEFAULT_EJS_DYNAMIC_PAGE_DIR, "recherche.ejs"), data, {
     root: DEFAULT_EJS_COMPONENT_DIR,

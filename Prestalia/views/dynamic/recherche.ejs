@@ -4,99 +4,98 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="shortcut icon" href="/photos/Gemini_Generated_Image.png" type="image/png">
-  <title>Recherche </title>
+  <title>Recherche — Prestalia</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-  <link rel="stylesheet" href="/css/recherche.css">
   <link rel="stylesheet" href="/css/header.css">
   <link rel="stylesheet" href="/css/footer.css">
+  <link rel="stylesheet" href="/css/recherche.css">
 </head>
 <body>
   <%- include(typeof user !== "undefined" ? "/header" : "/default-header") %>
-  <main>
-    <div class="container">
-      <div class="search-bar">
-        <div class="search-input-wrapper">
-          <input type="text" placeholder="Rechercher un service (ex: plombier, jardinier)...">
+
+  <div class="search-hero">
+    <h2>Trouvez le prestataire idéal</h2>
+    <form class="search-row" action="/recherche" method="get">
+      <input type="text" name="q" placeholder="Plombier, électricien, développeur..." value="<%= query ?? '' %>">
+      <button type="submit">
+        <i class="fa-solid fa-magnifying-glass"></i> Rechercher
+      </button>
+    </form>
+  </div>
+
+  <div class="main-body">
+    <form class="sidebar" action="/recherche" method="get">
+      <% if (query) { %><input type="hidden" name="q" value="<%= query %>"><% } %>
+      <h3><i class="fa-solid fa-sliders"></i> Filtres</h3>
+
+      <div class="filter-group">
+        <label>Catégorie</label>
+        <div class="cat-list">
+          <% categories.forEach(cat => { %>
+            <label>
+              <input type="checkbox" name="cat" value="<%= cat.id %>"
+                <%= String(selectedCat) === String(cat.id) ? 'checked' : '' %>> <%= cat.name %>
+            </label>
+          <% }) %>
         </div>
-        <button class="btn-search"> Rechercher</button>
       </div>
-      <div class="main-layout">
-        <aside class="filters-sidebar">
-          <h3 style="margin-top: 0;">Filtres</h3>
-          <div class="filter-group">
-            <label for="">Adresse</label>
-            <input type="text" placeholder="Entrez votre adresse">
-          </div>
-          <div class="filter-group">
-            <label>Distance : <span id="KilomètreLabel">80</span>Km</label>
-            <input type="range" class="price-slider" min="10" max="500" value="50"
-              oninput="document.getElementById('KilomètreLabel').innerText = this.value">
-            <div class="price-display">
-              <span>10Km</span>
-              <span>500Km</span>
-            </div>
-          </div>
-          <div class="filter-group">
-            <label>Catégorie</label>
-            <div class="checkbox-list">
-              <label><input type="checkbox"> Plomberie</label>
-              <label><input type="checkbox"> Électricité</label>
-              <label><input type="checkbox"> Informatique</label>
-            </div>
-          </div>
-          <div class="filter-group">
-            <label>Prix max : <span id="priceLabel">80</span>€/h</label>
-            <input type="range" class="price-slider" min="10" max="500" value="80"
-              oninput="document.getElementById('priceLabel').innerText = this.value">
-            <div class="price-display">
-              <span>10€</span>
-              <span>500€</span>
-            </div>
-          </div>
-        </aside>
-        <div class="cards-grid">
-          <a href="/profile" class="card-link">
-            <article class="card">
-              <div class="card-image">
-                <img src="https://images.unsplash.com/photo-1581244276892-ecfb6122044c?auto=format&fit=crop&w=400" alt="Plombier">
-                <span class="badge-verified">VÉRIFIÉ</span>
+
+      <div class="filter-group">
+        <label>Prix maximum</label>
+        <span class="price-val" id="priceVal"><%= selectedPrice ? selectedPrice + ' €/h' : 'Sans limite' %></span>
+        <input type="range" class="price-slider" name="price" min="10" max="500"
+          value="<%= selectedPrice ?? 500 %>" step="10"
+          oninput="document.getElementById('priceVal').textContent = this.value + ' €/h'">
+        <div class="price-ends"><span>10 €</span><span>500 €</span></div>
+      </div>
+
+      <button type="submit" class="apply-btn">Appliquer</button>
+    </form>
+
+    <div class="results-area">
+      <div class="results-count">
+        <%= providers.length %> prestataire<%= providers.length > 1 ? 's' : '' %> trouvé<%= providers.length > 1 ? 's' : '' %>
+      </div>
+
+      <div class="cards-grid">
+        <% if (providers.length > 0) { %>
+          <% providers.forEach(p => { %>
+            <a href="/profile/providers/<%= p.provider_id %>" class="card">
+              <div class="card-avatar">
+                <%= p.name.split(' ').map(n => n[0]).join('').slice(0,2).toUpperCase() %>
               </div>
-              <div class="card-content">
-                <h3 class="card-name">Jean Dupont</h3>
-                <div class="card-category">Plomberie</div>
-                <div style="margin-top: 10px; color: #fbbf24; font-size: 14px;">
-                  <i class="fas fa-star"></i> 4.8 <span style="color: #94a3b8">(124)</span>
+              <div class="card-body">
+                <div class="card-top">
+                  <span class="card-name"><%= p.name %></span>
+                  <% if (p.verified) { %>
+                    <span class="badge-verified">✓ Vérifié</span>
+                  <% } %>
+                </div>
+                <div class="card-cat"><%= p.category_name ?? 'Non renseigné' %></div>
+                <div class="card-addr">
+                  <i class="fa-solid fa-location-dot"></i> <%= p.address ?? 'Non renseigné' %>
                 </div>
                 <div class="card-footer">
-                  <span class="price">45€/h</span>
-                  <span class="btn-profile">Voir profil →</span>
+                  <span class="price"><%= p.price ? p.price + ' €/h' : 'Sur devis' %></span>
+                  <button class="btn-profil">Voir profil →</button>
                 </div>
               </div>
-            </article>
-          </a>
-          <a href="/profile" class="card-link">
-            <article class="card">
-              <div class="card-image">
-                <img src="https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=400" alt="Électricien">
-                <span class="badge-verified">VÉRIFIÉ</span>
-              </div>
-              <div class="card-content">
-                <h3 class="card-name">Thomas Bernard</h3>
-                <div class="card-category">Informatique</div>
-                <div style="margin-top: 10px; color: #fbbf24; font-size: 14px;">
-                  <i class="fas fa-star"></i> 5.0 <span style="color: #94a3b8">(42)</span>
-                </div>
-                <div class="card-footer">
-                  <span class="price">60€/h</span>
-                  <span class="btn-profile">Voir profil →</span>
-                </div>
-              </div>
-            </article>
-          </a>
-        </div>
+            </a>
+          <% }) %>
+        <% } else { %>
+          <p class="empty">Aucun prestataire trouvé.</p>
+        <% } %>
       </div>
     </div>
-  </main>
+  </div>
+
   <%- include("/footer") %>
+  <script>
+    const priceSlider = document.querySelector('.price-slider');
+    const sidebarForm = document.querySelector('.sidebar');
+    sidebarForm.addEventListener('submit', function() {
+      if (parseInt(priceSlider.value) >= 500) priceSlider.disabled = true;
+    });
+  </script>
 </body>
 </html>
