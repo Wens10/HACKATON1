@@ -29,8 +29,6 @@ export default (async (context, headers, db, providerId) => {
       )
     )[0][0];
 
-    console.log("Y", provider);
-
     if (!provider)
       return context.respond(400, {
         headers: {"content-type": "application/json"},
@@ -42,8 +40,6 @@ export default (async (context, headers, db, providerId) => {
         headers: {"content-type": "application/json"},
         end: true,
       });
-
-    console.log("Z");
 
     await db.execute("UPDATE providers SET valided = true WHERE id = ?", [
       providerId,

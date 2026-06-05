@@ -67,7 +67,7 @@ export default (async (context, db) => {
     FROM users u
     JOIN providers p ON p.user_id = u.id
     LEFT JOIN categories c ON p.category = c.id
-    WHERE u.role = 'provider'
+    WHERE u.role = 'provider' AND p.valided = TRUE
   `;
   const params: any[] = [];
 

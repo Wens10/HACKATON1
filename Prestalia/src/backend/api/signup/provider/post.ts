@@ -54,21 +54,28 @@ export default (async (context, headers, db) => {
       > = {};
 
     bb.on("file", (name, stream, info) => {
-      const filename = Buffer.from(info.filename, "latin1").toString("utf8");
+      if (info.filename) {
+        const filename = Buffer.from(info.filename, "latin1").toString("utf8");
 
-      let data = Buffer.from([]);
+        let data = Buffer.from([]);
 
-      body[name] ??= [];
+        body[name] ??= [];
 
-      stream
-        .on(
-          "data",
-          (chunk) => (data = Buffer.concat([data, Buffer.from(chunk)])),
-        )
-        .on("end", () => {
-          if (Array.isArray(body[name])) body[name].push({filename, data});
-        });
+        stream
+          .on(
+            "data",
+            (chunk) => (data = Buffer.concat([data, Buffer.from(chunk)])),
+          )
+          .on("end", () => {
+            if (Array.isArray(body[name])) body[name].push({filename, data});
+          });
+      } else stream.on("data", () => null).on("end", () => null);
     })
+      .on("error", (err) => {
+        console.error(err);
+
+        return context.respond(500, {end: true});
+      })
       .on("field", (name, value) => (body[name] ??= value))
       .on("close", async () =>
         signup(body, userId, db).then((result) => {

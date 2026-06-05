@@ -68,6 +68,9 @@ export default (async () => {
       exp INTEGER,
       price FLOAT,
       days INTEGER,
+      instagram VARCHAR(255) DEFAULT NULL,
+      tiktok VARCHAR(255) DEFAULT NULL,
+      gallery TEXT DEFAULT NULL,
       FOREIGN KEY(category) REFERENCES categories(id),
       FOREIGN KEY(user_id) REFERENCES users(id)
     );
@@ -110,16 +113,6 @@ export default (async () => {
       FOREIGN KEY(provider_id) REFERENCES providers(id)
     );
   `);
-
-  // Migration : ajouter status si la table existait déjà sans cette colonne
-  try {
-    await db.execute(`
-      ALTER TABLE reservations
-      ADD COLUMN status ENUM('pending','confirmed','rejected') NOT NULL DEFAULT 'pending'
-    `);
-  } catch (_) {
-    /* colonne déjà présente */
-  }
 
   renderStaticEJSFiles();
 }) satisfies () => any;
