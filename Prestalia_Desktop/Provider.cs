@@ -8,6 +8,6 @@
         public string Category { get; private set; } = category;
         public string City { get; private set; } = city;
         public float Rating { get; private set; } = rating;
-        public string Statut { get; private set; } = statut;
+        public string Statut { get; set; } = statut;
     }
 }

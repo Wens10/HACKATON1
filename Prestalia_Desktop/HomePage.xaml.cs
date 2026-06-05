@@ -166,16 +166,6 @@ namespace Prestalia_Desktop
             OrderAndFilter();
         }
 
-        private void CheckProviderDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
-        {
-
-        }
-
-        private void CheckProviderDialog_SecondaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
-        {
-
-        }
-
         private async void CheckProviderButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
             if (sender is Button btn && btn.Tag is Provider provider)
@@ -191,8 +181,6 @@ namespace Prestalia_Desktop
                 DocumentsPanel.Visibility = Visibility.Collapsed;
                 NoDocumentsText.Visibility = Visibility.Collapsed;
                 DocumentsLoadingRing.IsActive = true;
-
-                var _ = CheckProviderDialog.ShowAsync();
 
                 var response = await HttpClientProvider.Http.GetAsync($"/api/providers/{provider.Id}/docs");
                 var body = await response.Content.ReadAsStringAsync();
@@ -210,6 +198,30 @@ namespace Prestalia_Desktop
                     currentDocIndex = 0;
                     DocumentsPanel.Visibility = Visibility.Visible;
                     ShowDocument(0);
+                }
+
+                var result = await CheckProviderDialog.ShowAsync();
+
+                if (result == ContentDialogResult.Primary)
+                {
+                    var res = await HttpClientProvider.Http.PostAsync($"/api/providers/{provider.Id}/approve", null);
+
+                    if (res.IsSuccessStatusCode)
+                    {
+                        if (selectedProvider != null) selectedProvider.Statut = "Approuvé";
+
+                        OrderAndFilter();
+                    }
+                } else if (result == ContentDialogResult.Secondary)
+                {
+                    var res = await HttpClientProvider.Http.PostAsync($"/api/providers/{provider.Id}/reject", null);
+
+                    if (res.IsSuccessStatusCode)
+                    {
+                        if (selectedProvider != null) selectedProvider.Statut = "Rejeté";
+
+                        OrderAndFilter();
+                    }
                 }
             }
         }

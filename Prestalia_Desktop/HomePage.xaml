@@ -460,9 +460,7 @@
                                 DefaultButton="Primary"
                                 PrimaryButtonText="Approuver"
                                 SecondaryButtonText="Rejeter"
-                                CloseButtonText="Annuler"
-                                PrimaryButtonClick="CheckProviderDialog_PrimaryButtonClick"
-                                SecondaryButtonClick="CheckProviderDialog_SecondaryButtonClick">
+                                CloseButtonText="Annuler">
                                 <StackPanel Spacing="8">
                                     <InfoBar
                                         x:Name="CheckProviderInfoBar"
