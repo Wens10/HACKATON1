@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="/photos/Gemini_Generated_Image.png" type="image/png">
+  <title>Réinitialiser le mot de passe – Prestalia</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/header.css">
+  <link rel="stylesheet" href="/css/footer.css">
+  <link rel="stylesheet" href="/css/auth.css">
+  <style>
+    .reset-wrapper {
+      min-height: 70vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 1rem;
+    }
+    .reset-card {
+      background: #fff;
+      border: 1px solid var(--border, #e2e8f0);
+      border-radius: 20px;
+      padding: 2.5rem 2rem;
+      max-width: 440px;
+      width: 100%;
+      box-shadow: 0 4px 24px rgba(35,64,160,0.08);
+    }
+    .reset-icon {
+      width: 56px;
+      height: 56px;
+      background: #eef2ff;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.25rem;
+    }
+    .reset-icon i {
+      font-size: 1.5rem;
+      color: var(--primary-color, #2340a0);
+    }
+    .reset-card h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.5rem;
+      color: var(--text-main, #1e293b);
+      margin: 0 0 0.5rem;
+    }
+    .reset-card p.subtitle {
+      color: var(--text-muted, #64748b);
+      font-size: 0.95rem;
+      margin: 0 0 1.75rem;
+      line-height: 1.5;
+    }
+    .form-error {
+      background: #fdecea;
+      color: #c0392b;
+      border: 1px solid #e74c3c;
+      border-radius: 10px;
+      padding: 0.85rem 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+      margin-bottom: 1.25rem;
+    }
+    .invalid-card {
+      text-align: center;
+    }
+    .invalid-card .reset-icon {
+      margin: 0 auto 1.25rem;
+      background: #fdecea;
+    }
+    .invalid-card .reset-icon i {
+      color: #c0392b;
+    }
+    .password-hint {
+      font-size: 0.82rem;
+      color: var(--text-muted, #64748b);
+      margin-top: 0.4rem;
+    }
+    .password-strength {
+      height: 4px;
+      border-radius: 4px;
+      background: #e2e8f0;
+      margin-top: 0.5rem;
+      overflow: hidden;
+    }
+    .password-strength-bar {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 0.3s, background 0.3s;
+      width: 0%;
+    }
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      color: var(--primary-color, #2340a0);
+      font-size: 0.9rem;
+      text-decoration: none;
+      margin-top: 1.25rem;
+    }
+    .back-link:hover {
+      text-decoration: underline;
+    }
+    .toggle-pw {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text-muted, #64748b);
+      padding: 0;
+      font-size: 0.95rem;
+    }
+  </style>
+</head>
+<body>
+  <% if (user) { %>
+    <%- include("/header") %>
+  <% } else { %>
+    <%- include("/default-header") %>
+  <% } %>
+
+  <main>
+    <div class="reset-wrapper">
+      <div class="reset-card">
+
+        <% if (!token) { %>
+          <%# Pas de token dans l'URL %>
+          <div class="invalid-card">
+            <div class="reset-icon">
+              <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <h1>Lien invalide</h1>
+            <p class="subtitle">Ce lien de réinitialisation est invalide ou manquant.</p>
+            <a href="/mot-de-passe-oublie" class="btn-submit" style="display:inline-block;text-align:center;">
+              Demander un nouveau lien
+            </a>
+          </div>
+
+        <% } else { %>
+          <div class="reset-icon">
+            <i class="fa-solid fa-key"></i>
+          </div>
+          <h1>Nouveau mot de passe</h1>
+          <p class="subtitle">Choisissez un mot de passe sécurisé pour votre compte.</p>
+
+          <% if (errorMessage) { %>
+            <div class="form-error">
+              <i class="fa-solid fa-circle-exclamation"></i>
+              <%= errorMessage %>
+            </div>
+          <% } %>
+
+          <form id="reset-form" action="/api/reset-password/confirm" method="post">
+            <input type="hidden" name="token" value="<%= token %>">
+
+            <div class="form-group">
+              <label for="password">Nouveau mot de passe</label>
+              <div class="input-wrapper" style="position:relative;">
+                <i class="fa-solid fa-lock"></i>
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  placeholder="Créer un mot de passe"
+                  required
+                  minlength="13"
+                  autocomplete="new-password"
+                >
+                <button type="button" class="toggle-pw" id="toggle-pw" aria-label="Afficher le mot de passe">
+                  <i class="fa-regular fa-eye" id="eye-icon"></i>
+                </button>
+              </div>
+              <div class="password-strength">
+                <div class="password-strength-bar" id="strength-bar"></div>
+              </div>
+              <p class="password-hint">Minimum 13 caractères avec au moins 8 caractères différents.</p>
+            </div>
+
+            <button type="submit" class="btn-submit" id="submit-btn">
+              Réinitialiser le mot de passe
+            </button>
+          </form>
+
+          <a href="/mot-de-passe-oublie" class="back-link">
+            <i class="fa-solid fa-arrow-left"></i> Demander un nouveau lien
+          </a>
+        <% } %>
+
+      </div>
+    </div>
+  </main>
+
+  <%- include("/footer") %>
+
+  <script>
+    // Afficher/masquer le mot de passe
+    const pwInput = document.getElementById("password");
+    const toggleBtn = document.getElementById("toggle-pw");
+    const eyeIcon = document.getElementById("eye-icon");
+
+    if (toggleBtn && pwInput) {
+      toggleBtn.addEventListener("click", function () {
+        const isHidden = pwInput.type === "password";
+        pwInput.type = isHidden ? "text" : "password";
+        eyeIcon.className = isHidden ? "fa-regular fa-eye-slash" : "fa-regular fa-eye";
+      });
+    }
+
+    // Barre de force du mot de passe
+    const strengthBar = document.getElementById("strength-bar");
+    if (pwInput && strengthBar) {
+      pwInput.addEventListener("input", function () {
+        const pw = pwInput.value;
+        const unique = new Set(pw).size;
+        let score = 0;
+        if (pw.length >= 13) score++;
+        if (pw.length >= 20) score++;
+        if (unique >= 8) score++;
+        if (/[A-Z]/.test(pw) && /[0-9]/.test(pw)) score++;
+        if (/[^A-Za-z0-9]/.test(pw)) score++;
+
+        const colors = ["#e74c3c", "#e67e22", "#f1c40f", "#27ae60", "#1e8449"];
+        const widths = ["20%", "40%", "60%", "80%", "100%"];
+        strengthBar.style.width = widths[score - 1] ?? "0%";
+        strengthBar.style.background = colors[score - 1] ?? "transparent";
+      });
+    }
+
+    // Désactiver le bouton à la soumission
+    const form = document.getElementById("reset-form");
+    if (form) {
+      form.addEventListener("submit", function () {
+        const btn = document.getElementById("submit-btn");
+        btn.disabled = true;
+        btn.textContent = "Réinitialisation…";
+      });
+    }
+  </script>
+</body>
+</html>
