@@ -119,16 +119,45 @@
         </div>
         <div class="form-section">
           <h2>Validation et documents</h2>
+
           <div class="form-group">
-            <label for="files">Uploader vos diplômes/certificats</label>
-            <div class="upload-zone" id="dropzone" style="position: relative ;">
+            <label for="files">Diplômes / Certificats</label>
+            <div class="upload-zone" id="dropzone" style="position:relative;">
               <p>Glissez vos fichiers ou <strong>cliquez ici</strong></p>
-              <input type="file" name="files" id="fileInput" multiple style="opacity: 0; position: absolute; top: 0; left: 0; width: 100%; height: 100% ;">
+              <input type="file" name="files" id="fileInput" multiple style="opacity:0;position:absolute;top:0;left:0;width:100%;height:100%;">
               <div class="file-list" id="fileList"></div>
             </div>
           </div>
-          <div class="summary-box">
-            <div id="summaryContent" style="font-size: 14px; line-height: 1.6;"></div>
+
+          <div class="form-group" style="margin-top:1.25rem;">
+            <label>
+              Photos de vos travaux *
+              <span style="font-weight:400;color:#64748b;font-size:0.85rem;">(minimum 3 photos — JPG, PNG, WEBP)</span>
+            </label>
+            <div class="upload-zone" id="galleryZone" style="position:relative;">
+              <p>Glissez vos photos ou <strong>cliquez ici</strong></p>
+              <input type="file" name="gallery" id="galleryInput" multiple accept="image/*"
+                     style="opacity:0;position:absolute;top:0;left:0;width:100%;height:100%;">
+              <div class="file-list" id="galleryList"></div>
+            </div>
+            <p id="galleryError" style="color:#dc2626;font-size:0.82rem;margin-top:4px;display:none;">
+              Veuillez sélectionner au moins 3 photos.
+            </p>
+          </div>
+
+          <div class="grid" style="margin-top:1.25rem;">
+            <div class="form-group">
+              <label for="instagram">Instagram <span style="font-weight:400;color:#64748b;">(optionnel)</span></label>
+              <input type="url" name="instagram" id="instagram" placeholder="https://instagram.com/votre_compte">
+            </div>
+            <div class="form-group">
+              <label for="tiktok">TikTok <span style="font-weight:400;color:#64748b;">(optionnel)</span></label>
+              <input type="url" name="tiktok" id="tiktok" placeholder="https://tiktok.com/@votre_compte">
+            </div>
+          </div>
+
+          <div class="summary-box" style="margin-top:1.25rem;">
+            <div id="summaryContent" style="font-size:14px;line-height:1.6;"></div>
           </div>
           <div class="warning-box">
             <span>⚠️</span>
@@ -170,25 +199,38 @@
     }
 
     btnNext.addEventListener("click", () => {
-      if (currentStep < sections.length - 1) showStep(++currentStep);
-      else form.submit();
+      if (currentStep < sections.length - 1) {
+        showStep(++currentStep);
+      } else {
+        const galleryInput = document.getElementById("galleryInput");
+        if (galleryInput.files.length < 3) {
+          document.getElementById("galleryError").style.display = "block";
+          return;
+        }
+        form.submit();
+      }
     });
 
     btnPrev.addEventListener("click", () => {
       if (currentStep > 0) showStep(--currentStep);
     });
 
-    // Upload de fichiers
+    // Upload certificats
     const fileInput = document.getElementById("fileInput");
-    
-    document.getElementById("dropzone").addEventListener("click", fileInput.click);
-
     fileInput.addEventListener("change", () => {
       const list = document.getElementById("fileList");
-
       list.innerHTML = "";
-
       Array.from(fileInput.files).forEach(f => list.innerHTML += `<span class="file-badge">${f.name}</span>`);
+    });
+
+    // Upload galerie
+    const galleryInput = document.getElementById("galleryInput");
+    galleryInput.addEventListener("change", () => {
+      const list = document.getElementById("galleryList");
+      list.innerHTML = "";
+      Array.from(galleryInput.files).forEach(f => list.innerHTML += `<span class="file-badge">${f.name}</span>`);
+      document.getElementById("galleryError").style.display =
+        galleryInput.files.length < 3 ? "block" : "none";
     });
 
     function updateSummary() {

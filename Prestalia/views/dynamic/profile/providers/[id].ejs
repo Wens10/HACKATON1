@@ -49,7 +49,7 @@
             <% if (typeof user !== 'undefined') { %>
               <button class="btn btn-outline fav-toggle-btn <%= isFavorite ? 'fav-active' : '' %>"
                       id="favBtn"
-                      onclick="toggleFav(<%= provider.id %>)"
+                      data="toggleFav(<%= provider.id %>)"
                       title="<%= isFavorite ? 'Retirer des favoris' : 'Ajouter aux favoris' %>">
                 <i class="<%= isFavorite ? 'fa-solid' : 'fa-regular' %> fa-heart"></i>
               </button>
@@ -74,9 +74,34 @@
 
           <section>
             <h2>Galerie</h2>
-            <div class="galerie-grid">
-              <img src="https://images.unsplash.com/photo-1504148455328-c376907d081c?q=80&w=600" alt="Travail 2">
-            </div>
+            <% if (gallery && gallery.length > 0) { %>
+              <div class="galerie-grid">
+                <% gallery.forEach(function(img) { %>
+                  <a href="<%= img %>" target="_blank" rel="noopener">
+                    <img src="<%= img %>" alt="Photo de travail" loading="lazy">
+                  </a>
+                <% }) %>
+              </div>
+            <% } else { %>
+              <p style="color:#94a3b8;font-size:0.9rem;">Aucune photo disponible.</p>
+            <% } %>
+
+            <% if (provider.instagram || provider.tiktok) { %>
+              <div style="margin-top:1rem;display:flex;gap:12px;flex-wrap:wrap;">
+                <% if (provider.instagram) { %>
+                  <a href="<%= provider.instagram %>" target="_blank" rel="noopener"
+                     style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:8px;background:#fce4ec;color:#c2185b;font-size:0.85rem;font-weight:600;text-decoration:none;">
+                    <i class="fa-brands fa-instagram"></i> Instagram
+                  </a>
+                <% } %>
+                <% if (provider.tiktok) { %>
+                  <a href="<%= provider.tiktok %>" target="_blank" rel="noopener"
+                     style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:8px;background:#e8f5e9;color:#1b5e20;font-size:0.85rem;font-weight:600;text-decoration:none;">
+                    <i class="fa-brands fa-tiktok"></i> TikTok
+                  </a>
+                <% } %>
+              </div>
+            <% } %>
           </section>
 
           <section>

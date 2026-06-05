@@ -54,25 +54,15 @@ export default (async (context, db, providerId) => {
   try {
     const provider = (
       await db.execute<RowDataPacket[]>(
-        `
-        SELECT
-          p.id,
-          p.created_at,
-          p.valided,
-          p.tel,
-          p.city,
-          p.descr,
-          p.exp,
-          p.price,
-          p.days,
-          c.name as category_name,
-          u.name,
-          u.email
-        FROM providers p
-        LEFT JOIN categories c ON p.category = c.id
-        LEFT JOIN users u ON p.user_id = u.id
-        WHERE u.role = 'provider' AND p.id = ?
-      `,
+        `SELECT
+           p.id, p.created_at, p.valided, p.tel, p.city, p.descr,
+           p.exp, p.price, p.days, p.instagram, p.tiktok, p.gallery,
+           c.name as category_name,
+           u.name, u.email
+         FROM providers p
+         LEFT JOIN categories c ON p.category = c.id
+         LEFT JOIN users u ON p.user_id = u.id
+         WHERE u.role = 'provider' AND p.id = ?`,
         [providerId],
       )
     )[0][0];
@@ -83,7 +73,15 @@ export default (async (context, db, providerId) => {
       return null;
     }
 
+    let gallery: string[] = [];
+    try {
+      gallery = JSON.parse(provider["gallery"] ?? "[]");
+    } catch {
+      gallery = [];
+    }
+
     data["provider"] = provider;
+    data["gallery"] = gallery;
 
     // Vérifier si ce prestataire est en favori pour l'utilisateur connecté
     if (data["user"]) {

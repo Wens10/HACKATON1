@@ -8,6 +8,7 @@ import {randomUUID} from "crypto";
 import {Pool, RowDataPacket} from "mysql2/promise";
 
 const supportedExtForFiles = ["jpg", "pdf", "png", "apng", "webp"];
+const supportedExtForImages = ["jpg", "png", "apng", "webp"];
 
 export default (async (body, userId, db) => {
   if (typeof body["exp"] === "string") body["exp"] = parseInt(body["exp"]);
@@ -96,6 +97,56 @@ export default (async (body, userId, db) => {
     } else return {ok: false, status: 400};
   }
 
+  // ── Galerie (min 3 photos) ─────────────────────────────
+  const galleryPaths: string[] = [];
+  const rawBody = body as unknown as Record<string, unknown>;
+
+  if (!Array.isArray(rawBody["gallery"]) || rawBody["gallery"].length < 3)
+    return {ok: false, status: 400};
+
+  const galleryFiles = rawBody["gallery"] as {
+    filename: string;
+    data: Buffer<ArrayBuffer>;
+  }[];
+
+  const galleryTypeChecks = await Promise.all(
+    galleryFiles.map(async (file) => {
+      const ft = await fileTypeFromBuffer(file.data);
+      return ft && supportedExtForImages.includes(ft.ext);
+    }),
+  );
+
+  if (
+    galleryTypeChecks.includes(false) ||
+    galleryTypeChecks.includes(undefined)
+  )
+    return {ok: false, status: 400};
+
+  const galleryDir = join(workingDirPath, "public", "gallery", String(userId));
+
+  try {
+    await mkdir(galleryDir, {recursive: true});
+
+    for (const file of galleryFiles) {
+      const ft = await fileTypeFromBuffer(file.data);
+      const ext = ft?.ext ?? "jpg";
+      const filename = `${randomUUID()}.${ext}`;
+      await writeFile(join(galleryDir, filename), file.data);
+      galleryPaths.push(`/gallery/${userId}/${filename}`);
+    }
+  } catch (err) {
+    error("Erreur lors de la sauvegarde de la galerie", err);
+    return {ok: false, status: 500};
+  }
+
+  // ── Réseaux sociaux ────────────────────────────────────
+  const instagram =
+    typeof rawBody["instagram"] === "string"
+      ? rawBody["instagram"].trim()
+      : null;
+  const tiktok =
+    typeof rawBody["tiktok"] === "string" ? rawBody["tiktok"].trim() : null;
+
   try {
     const categoryId = (
       await db.execute<RowDataPacket[]>(
@@ -124,7 +175,9 @@ export default (async (body, userId, db) => {
 
   try {
     await db.execute(
-      "INSERT INTO providers (tel, city, category, descr, exp, price, days, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+      `INSERT INTO providers
+         (tel, city, category, descr, exp, price, days, user_id, instagram, tiktok, gallery)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         body.tel,
         body.city,
@@ -134,6 +187,9 @@ export default (async (body, userId, db) => {
         body.price,
         body.days,
         userId,
+        instagram ?? null,
+        tiktok ?? null,
+        JSON.stringify(galleryPaths),
       ],
     );
 

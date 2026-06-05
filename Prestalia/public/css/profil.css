@@ -180,8 +180,14 @@ main { padding: 2rem; }
 
 .galerie-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(3, 1fr);
   gap: 12px;
+}
+
+.galerie-grid a {
+  display: block;
+  border-radius: 10px;
+  overflow: hidden;
 }
 
 .galerie-grid img {
@@ -189,6 +195,11 @@ main { padding: 2rem; }
   height: 180px;
   object-fit: cover;
   border-radius: 10px;
+  transition: transform 0.2s;
+}
+
+.galerie-grid a:hover img {
+  transform: scale(1.04);
 }
 
 /* Reviews */
