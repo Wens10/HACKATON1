@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="/photos/Gemini_Generated_Image.png" type="image/png">
+  <title>Mot de passe oublié – Prestalia</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/header.css">
+  <link rel="stylesheet" href="/css/footer.css">
+  <link rel="stylesheet" href="/css/auth.css">
+  <style>
+    .reset-wrapper {
+      min-height: 70vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 1rem;
+    }
+    .reset-card {
+      background: #fff;
+      border: 1px solid var(--border, #e2e8f0);
+      border-radius: 20px;
+      padding: 2.5rem 2rem;
+      max-width: 440px;
+      width: 100%;
+      box-shadow: 0 4px 24px rgba(35,64,160,0.08);
+    }
+    .reset-icon {
+      width: 56px;
+      height: 56px;
+      background: #eef2ff;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.25rem;
+    }
+    .reset-icon i {
+      font-size: 1.5rem;
+      color: var(--primary-color, #2340a0);
+    }
+    .reset-card h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.5rem;
+      color: var(--text-main, #1e293b);
+      margin: 0 0 0.5rem;
+    }
+    .reset-card p.subtitle {
+      color: var(--text-muted, #64748b);
+      font-size: 0.95rem;
+      margin: 0 0 1.75rem;
+      line-height: 1.5;
+    }
+    .form-success {
+      background: #eafaf1;
+      color: #1e8449;
+      border: 1px solid #27ae60;
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.65rem;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      margin-bottom: 1.5rem;
+    }
+    .form-success i {
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      color: var(--primary-color, #2340a0);
+      font-size: 0.9rem;
+      text-decoration: none;
+      margin-top: 1.25rem;
+    }
+    .back-link:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <% if (user) { %>
+    <%- include("/header") %>
+  <% } else { %>
+    <%- include("/default-header") %>
+  <% } %>
+
+  <main>
+    <div class="reset-wrapper">
+      <div class="reset-card">
+        <div class="reset-icon">
+          <i class="fa-solid fa-lock"></i>
+        </div>
+
+        <% if (sent) { %>
+          <h1>Email envoyé !</h1>
+          <p class="subtitle">Vérifiez votre boîte mail.</p>
+          <div class="form-success">
+            <i class="fa-solid fa-circle-check"></i>
+            <span>
+              Si un compte est associé à cette adresse email, vous recevrez un lien de réinitialisation valable <strong>1 heure</strong>.
+              Pensez à vérifier vos spams.
+            </span>
+          </div>
+          <a href="/auth" class="back-link">
+            <i class="fa-solid fa-arrow-left"></i> Retour à la connexion
+          </a>
+        <% } else { %>
+          <h1>Mot de passe oublié ?</h1>
+          <p class="subtitle">
+            Entrez votre adresse email et nous vous enverrons un lien pour réinitialiser votre mot de passe.
+          </p>
+
+          <form id="reset-form" action="/api/reset-password" method="post">
+            <div class="form-group">
+              <label for="email">Adresse email</label>
+              <div class="input-wrapper">
+                <i class="fa-regular fa-envelope"></i>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  placeholder="votre@email.com"
+                  required
+                  autocomplete="email"
+                >
+              </div>
+            </div>
+            <button type="submit" class="btn-submit" id="submit-btn">
+              Envoyer le lien de réinitialisation
+            </button>
+          </form>
+
+          <a href="/auth" class="back-link">
+            <i class="fa-solid fa-arrow-left"></i> Retour à la connexion
+          </a>
+        <% } %>
+      </div>
+    </div>
+  </main>
+
+  <%- include("/footer") %>
+
+  <script>
+    const form = document.getElementById("reset-form");
+    if (form) {
+      form.addEventListener("submit", function () {
+        const btn = document.getElementById("submit-btn");
+        btn.disabled = true;
+        btn.textContent = "Envoi en cours…";
+      });
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="/photos/Gemini_Generated_Image.png" type="image/png">
+  <title>À propos — Prestalia</title>
+  <link rel="stylesheet" href="/css/header.css">
+  <link rel="stylesheet" href="/css/footer.css">
+  <link rel="stylesheet" href="/css/mentions-legales.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    .about-hero {
+      background: linear-gradient(135deg, #2340a0 0%, #4f4fd4 100%);
+      color: #fff;
+      padding: 72px 24px 80px;
+      text-align: center;
+    }
+    .about-hero h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 800;
+      margin-bottom: 16px;
+    }
+    .about-hero p {
+      font-size: 1.1rem;
+      opacity: 0.88;
+      max-width: 560px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 16px;
+      margin: 32px 0 0;
+    }
+    .stat-card {
+      background: rgba(255,255,255,0.12);
+      border-radius: 12px;
+      padding: 20px 16px;
+      text-align: center;
+    }
+    .stat-card strong {
+      display: block;
+      font-family: 'Syne', sans-serif;
+      font-size: 2rem;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+    .stat-card span {
+      font-size: 0.88rem;
+      opacity: 0.82;
+    }
+    .value-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-top: 4px;
+    }
+    .value-card {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 20px;
+    }
+    .value-card .icon {
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+    }
+    .value-card h4 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 6px;
+    }
+    .value-card p {
+      font-size: 0.88rem !important;
+      color: #64748b !important;
+      margin: 0 !important;
+      line-height: 1.55 !important;
+    }
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 20px;
+      margin-top: 4px;
+    }
+    .team-card {
+      text-align: center;
+    }
+    .team-avatar {
+      width: 72px;
+      height: 72px;
+      background: linear-gradient(135deg, #2340a0, #4f4fd4);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 12px;
+      font-family: 'Syne', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #fff;
+    }
+    .team-card h4 {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 3px;
+    }
+    .team-card span {
+      font-size: 0.82rem;
+      color: #64748b;
+    }
+  </style>
+</head>
+<body>
+  <%- include(typeof user !== "undefined" ? "/header" : "/default-header") %>
+
+  <div class="about-hero">
+    <h1>À propos de Prestalia</h1>
+    <p>La plateforme de confiance qui connecte les particuliers avec les meilleurs prestataires de services en France.</p>
+    <div class="legal-container" style="padding:0 24px;">
+      <div class="stat-grid">
+        <div class="stat-card">
+          <strong>500+</strong>
+          <span>Prestataires vérifiés</span>
+        </div>
+        <div class="stat-card">
+          <strong>10 000+</strong>
+          <span>Réservations réalisées</span>
+        </div>
+        <div class="stat-card">
+          <strong>50+</strong>
+          <span>Catégories de services</span>
+        </div>
+        <div class="stat-card">
+          <strong>4.8/5</strong>
+          <span>Note moyenne</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <main class="legal-main">
+    <div class="legal-container">
+
+      <!-- Notre mission -->
+      <section class="legal-section">
+        <h2><span class="section-num">01</span> Notre mission</h2>
+        <p>
+          Prestalia est née d'un constat simple : trouver un prestataire de confiance est souvent long, incertain et stressant.
+          Notre mission est de <strong>simplifier la mise en relation</strong> entre particuliers et professionnels qualifiés,
+          en apportant transparence, sécurité et qualité à chaque étape.
+        </p>
+        <p>
+          Nous croyons que chaque personne mérite d'accéder facilement à des services de qualité,
+          et que chaque professionnel mérite une plateforme qui valorise son expertise et lui permet de développer son activité.
+        </p>
+      </section>
+
+      <!-- Notre histoire -->
+      <section class="legal-section">
+        <h2><span class="section-num">02</span> Notre histoire</h2>
+        <p>
+          Fondée en 2024, Prestalia est une startup française dont l'ambition est de devenir la référence nationale
+          en matière de marketplace de services à la personne et aux entreprises.
+        </p>
+        <p>
+          Portée par une équipe passionnée de développeurs, designers et experts métiers, la plateforme a été conçue
+          dès le départ avec une priorité absolue : <strong>la confiance</strong>. Chaque prestataire est vérifié manuellement
+          avant d'apparaître sur la plateforme.
+        </p>
+      </section>
+
+      <!-- Nos valeurs -->
+      <section class="legal-section">
+        <h2><span class="section-num">03</span> Nos valeurs</h2>
+        <div class="value-grid">
+          <div class="value-card">
+            <div class="icon">🔒</div>
+            <h4>Confiance</h4>
+            <p>Chaque prestataire est vérifié manuellement. Vos données sont protégées et vos échanges sécurisés.</p>
+          </div>
+          <div class="value-card">
+            <div class="icon">⭐</div>
+            <h4>Qualité</h4>
+            <p>Nous sélectionnons uniquement des professionnels compétents et engagés dans l'excellence de leur service.</p>
+          </div>
+          <div class="value-card">
+            <div class="icon">🤝</div>
+            <h4>Équité</h4>
+            <p>Des conditions justes pour les clients comme pour les prestataires, avec une totale transparence sur les tarifs.</p>
+          </div>
+          <div class="value-card">
+            <div class="icon">🚀</div>
+            <h4>Innovation</h4>
+            <p>Nous améliorons continuellement la plateforme pour offrir la meilleure expérience possible.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Comment ça marche -->
+      <section class="legal-section">
+        <h2><span class="section-num">04</span> Comment ça marche</h2>
+
+        <h3>Pour les clients</h3>
+        <ul class="legal-list">
+          <li>Créez votre compte gratuitement en quelques secondes.</li>
+          <li>Recherchez un prestataire par catégorie, ville ou tarif.</li>
+          <li>Consultez les profils, les disponibilités et réservez directement en ligne.</li>
+          <li>Gérez toutes vos réservations depuis votre tableau de bord.</li>
+        </ul>
+
+        <h3>Pour les prestataires</h3>
+        <ul class="legal-list">
+          <li>Inscrivez-vous en renseignant votre profil et votre domaine d'expertise.</li>
+          <li>Soumettez vos justificatifs pour la vérification manuelle par notre équipe.</li>
+          <li>Une fois validé, votre profil est visible par des milliers de clients potentiels.</li>
+          <li>Gérez vos réservations, confirmez ou refusez les demandes depuis votre tableau de bord.</li>
+        </ul>
+      </section>
+
+      <!-- L'équipe -->
+      <section class="legal-section">
+        <h2><span class="section-num">05</span> L'équipe</h2>
+        <p>Prestalia est portée par une équipe pluridisciplinaire passionnée par la tech et l'impact social.</p>
+        <div class="team-grid">
+          <div class="team-card">
+            <div class="team-avatar">W</div>
+            <h4>Wenceslas</h4>
+            <span>Co-fondateur & Lead Dev</span>
+          </div>
+          <div class="team-card">
+            <div class="team-avatar">J</div>
+            <h4>Jude</h4>
+            <span>Co-fondateur & Backend</span>
+          </div>
+          <div class="team-card">
+            <div class="team-avatar">P</div>
+            <h4>Équipe Produit</h4>
+            <span>Design & UX</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Contact -->
+      <section class="legal-section">
+        <h2><span class="section-num">06</span> Nous contacter</h2>
+        <p>Vous avez une question, une suggestion ou souhaitez rejoindre l'aventure Prestalia ?</p>
+        <ul class="legal-list">
+          <li><span class="label">Email général :</span> <a href="mailto:contact@prestalia.fr">contact@prestalia.fr</a></li>
+          <li><span class="label">Partenariats :</span> <a href="mailto:partenaires@prestalia.fr">partenaires@prestalia.fr</a></li>
+          <li><span class="label">Support :</span> <a href="mailto:support@prestalia.fr">support@prestalia.fr</a></li>
+        </ul>
+      </section>
+
+      <div class="legal-back">
+        <a href="/">&larr; Retour à l'accueil</a>
+      </div>
+
+    </div>
+  </main>
+
+  <%- include("/footer") %>
+</body>
+</html>

@@ -47,6 +47,7 @@
       <div id="login"></div>
       <div id="signup"></div>
       <div id="login-form" class="form-content">
+        <div id="reset-success"></div>
         <div id="login-error"></div>
         <form id="form-login" action="/api/login<%= to ? '?to=' + to : '' %>" method="post">
           <div class="form-group">
@@ -63,7 +64,7 @@
               <input type="password" placeholder="••••••••" name="password" required>
             </div>
           </div>
-          <a href="#" class="forgot-pass">Mot de passe oublié ?</a>
+          <a href="/mot-de-passe-oublie" class="forgot-pass">Mot de passe oublié ?</a>
           <button type="submit" class="btn-submit">Se connecter</button>
         </form>
       </div>
@@ -171,6 +172,15 @@
 
     handleForm("form-login", "login-error", "login");
     handleForm("form-signup", "signup-error", "signup");
+
+    // Message de succès après réinitialisation du mot de passe
+    if (new URLSearchParams(window.location.search).get("success") === "reset") {
+      document.getElementById("reset-success").innerHTML = `
+        <div class="form-success">
+          <i class="fa-solid fa-circle-check"></i>
+          Mot de passe réinitialisé avec succès ! Vous pouvez maintenant vous connecter.
+        </div>`;
+    }
   </script>
 </body>
 </html>
