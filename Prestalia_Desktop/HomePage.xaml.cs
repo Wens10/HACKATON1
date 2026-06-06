@@ -14,6 +14,36 @@ using static Prestalia_Desktop.CategoriesPage;
 
 namespace Prestalia_Desktop
 {
+    // Convertisseur Json pour accepter 0/1/"0"/"1"/true/false en tant que bool?
+    public class NullableBoolJsonConverter : JsonConverter<bool?>
+    {
+        public override bool? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        {
+            if (reader.TokenType == JsonTokenType.Null) return null;
+            if (reader.TokenType == JsonTokenType.True) return true;
+            if (reader.TokenType == JsonTokenType.False) return false;
+            if (reader.TokenType == JsonTokenType.Number)
+            {
+                if (reader.TryGetInt32(out int i)) return i != 0;
+                return reader.GetDouble() != 0;
+            }
+            if (reader.TokenType == JsonTokenType.String)
+            {
+                var s = reader.GetString();
+                if (bool.TryParse(s, out var b)) return b;
+                if (int.TryParse(s, out var n)) return n != 0;
+                if (double.TryParse(s, out var d)) return d != 0;
+            }
+            throw new JsonException($"Impossible de convertir {reader.TokenType} en bool?");
+        }
+
+        public override void Write(Utf8JsonWriter writer, bool? value, JsonSerializerOptions options)
+        {
+            if (value.HasValue) writer.WriteBooleanValue(value.Value);
+            else writer.WriteNullValue();
+        }
+    }
+
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
@@ -26,6 +56,16 @@ namespace Prestalia_Desktop
 
     public sealed partial class HomePage : Page
     {
+        private static readonly JsonSerializerOptions ApiJsonOptions = new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true
+        };
+
+        static HomePage()
+        {
+            ApiJsonOptions.Converters.Add(new NullableBoolJsonConverter());
+        }
+
         private List<Provider> providers = [];
         private string filter = "all";
         private string order = "asc";
@@ -58,7 +98,9 @@ namespace Prestalia_Desktop
             {
                 var response = await HttpClientProvider.Http.GetAsync("/api/providers");
                 var body = await response.Content.ReadAsStringAsync();
-                var data = String.IsNullOrEmpty(body) ? [] : JsonSerializer.Deserialize<List<APIProvider>>(body) ?? [];
+                var data = String.IsNullOrEmpty(body)
+                    ? new List<APIProvider>()
+                    : JsonSerializer.Deserialize<List<APIProvider>>(body, ApiJsonOptions) ?? new List<APIProvider>();
 
                 foreach (var provider in data) AddAPIProvider(provider);
 
@@ -184,7 +226,7 @@ namespace Prestalia_Desktop
 
                 var response = await HttpClientProvider.Http.GetAsync($"/api/providers/{provider.Id}/docs");
                 var body = await response.Content.ReadAsStringAsync();
-                var docs = string.IsNullOrEmpty(body) ? [] : JsonSerializer.Deserialize<List<APIDocument>>(body) ?? [];
+                var docs = string.IsNullOrEmpty(body) ? new List<APIDocument>() : JsonSerializer.Deserialize<List<APIDocument>>(body, ApiJsonOptions) ?? new List<APIDocument>();
 
                 DocumentsLoadingRing.IsActive = false;
 
